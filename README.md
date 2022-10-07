@@ -1,1 +1,1 @@
-# Cosmost-auth
+# cosmost-auth
