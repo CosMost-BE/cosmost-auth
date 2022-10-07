@@ -9,10 +9,10 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 @Getter
 @ToString
-public class FindCourseQuery {
+public class FindAuthQuery {
     private String id;
 
-    public FindCourseQuery(String id) {
+    public FindAuthQuery(String id) {
         this.id = id;
     }
 }
