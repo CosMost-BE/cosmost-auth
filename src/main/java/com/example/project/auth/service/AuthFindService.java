@@ -1,4 +1,4 @@
 package com.example.project.auth.service;
 
-public interface AuthFIndService {
+public interface AuthFindService {
 }
