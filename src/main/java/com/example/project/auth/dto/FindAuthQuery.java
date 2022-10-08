@@ -1,7 +1,5 @@
 package com.example.project.auth.dto;
 
-
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

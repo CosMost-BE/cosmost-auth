@@ -12,9 +12,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+
+#  mvc:
+#    pathmatch:
+#      matching-strategy: ant_path_matcher
 
 #  profiles:
 #    include: oauth
