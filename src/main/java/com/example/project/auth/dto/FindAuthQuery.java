@@ -11,7 +11,6 @@ import lombok.ToString;
 @ToString
 public class FindAuthQuery {
     private String id;
-
     public FindAuthQuery(String id) {
         this.id = id;
     }
