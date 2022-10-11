@@ -1,6 +1,8 @@
 package com.example.project.auth.model;
 
+import com.example.project.auth.infrastructure.entity.AuthMarried;
 import com.example.project.auth.infrastructure.entity.AuthRole;
+import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.infrastructure.entity.AuthStatus;
 import lombok.*;
 
@@ -26,7 +28,8 @@ public class Auth {
 
     private Timestamp loginDate;
 
-    private boolean sns;
+    @Enumerated(EnumType.STRING)
+    private AuthSns authSns;
 
     private String nickName;
 
@@ -34,7 +37,8 @@ public class Auth {
 
     private String birthdate;
 
-    private boolean married;
+    @Enumerated(EnumType.STRING)
+    private AuthMarried authMarried;
 
     private String profileImgOriginName;
 

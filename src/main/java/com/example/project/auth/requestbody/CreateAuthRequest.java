@@ -1,6 +1,8 @@
 package com.example.project.auth.requestbody;
 
+import com.example.project.auth.infrastructure.entity.AuthMarried;
 import com.example.project.auth.infrastructure.entity.AuthRole;
+import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.infrastructure.entity.AuthStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +33,7 @@ public class CreateAuthRequest {
 
     private Timestamp loginDate;
 
-    private boolean sns;
+    private AuthMarried authMarried;
 
     private String nickName;
 
@@ -39,7 +41,7 @@ public class CreateAuthRequest {
 
     private String birthdate;
 
-    private boolean married;
+    private AuthSns authSns;
 
     private String profileImgOriginName;
 
@@ -50,7 +52,5 @@ public class CreateAuthRequest {
     private AuthRole authRole;
 
     private AuthStatus authStatus;
-
-
 
 }
