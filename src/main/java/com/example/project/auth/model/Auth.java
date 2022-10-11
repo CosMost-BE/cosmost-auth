@@ -28,7 +28,6 @@ public class Auth {
 
     private Timestamp loginDate;
 
-    @Enumerated(EnumType.STRING)
     private AuthSns authSns;
 
     private String nickName;
@@ -37,7 +36,6 @@ public class Auth {
 
     private String birthdate;
 
-    @Enumerated(EnumType.STRING)
     private AuthMarried authMarried;
 
     private String profileImgOriginName;
@@ -46,9 +44,7 @@ public class Auth {
 
     private String profileImgSaveUrl;
 
-    @Enumerated(EnumType.STRING)
     private AuthRole authRole;
 
-    @Enumerated(EnumType.STRING)
     private AuthStatus authStatus;
 }
