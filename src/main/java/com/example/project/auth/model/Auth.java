@@ -28,7 +28,7 @@ public class Auth {
 
     private Timestamp loginDate;
 
-    private AuthSns authSns;
+    private AuthSns sns;
 
     private String nickName;
 
@@ -36,7 +36,7 @@ public class Auth {
 
     private String birthdate;
 
-    private AuthMarried authMarried;
+    private AuthMarried married;
 
     private String profileImgOriginName;
 
@@ -44,7 +44,7 @@ public class Auth {
 
     private String profileImgSaveUrl;
 
-    private AuthRole authRole;
+    private AuthRole role;
 
-    private AuthStatus authStatus;
+    private AuthStatus status;
 }

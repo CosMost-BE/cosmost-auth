@@ -25,7 +25,7 @@ public class CreateAuthRequest {
 
     private String email;
 
-    private AuthMarried authMarried;
+    private AuthMarried married;
 
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")
     private String nickName;
@@ -34,7 +34,7 @@ public class CreateAuthRequest {
 
     private String ageGroup;
 
-    private AuthSns authSns;
+    private AuthSns sns;
 
     private String profileImgOriginName;
 
@@ -42,8 +42,8 @@ public class CreateAuthRequest {
 
     private String profileImgSaveUrl;
 
-    private AuthRole authRole;
+    private AuthRole role;
 
-    private AuthStatus authStatus;
+    private AuthStatus status;
 
 }

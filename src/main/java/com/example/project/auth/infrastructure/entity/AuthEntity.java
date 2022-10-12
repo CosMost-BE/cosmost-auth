@@ -34,10 +34,10 @@ public class AuthEntity extends BaseTimeEntity {
     private String ageGroup;
 
     @Enumerated(EnumType.STRING)
-    private AuthMarried authMarried;
+    private AuthMarried married;
 
     @Enumerated(EnumType.STRING)
-    private AuthSns authSns;
+    private AuthSns sns;
 
     private String profileImgOriginName;
 
@@ -46,9 +46,9 @@ public class AuthEntity extends BaseTimeEntity {
     private String profileImgSaveUrl;
 
     @Enumerated(EnumType.STRING)
-    private AuthRole authRole;
+    private AuthRole role;
 
     @Enumerated(EnumType.STRING)
-    private AuthStatus authStatus;
+    private AuthStatus status;
 
 }

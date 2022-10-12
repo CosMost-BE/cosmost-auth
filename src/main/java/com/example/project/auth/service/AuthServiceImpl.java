@@ -37,9 +37,9 @@ public class AuthServiceImpl implements AuthService {
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(auth != null && encoder.matches(putAuthRequest.getLoginPwd(), auth.getLoginPwd()) &
-                auth.getAuthSns() == AuthSns.NO && auth.getAuthStatus() == AuthStatus.INACTIVE) {
-            return jwtTokenProvider.createToken((auth.getId()), String.valueOf(auth.getAuthRole()));
+        if(auth != null && encoder.matches(putAuthRequest.getLoginPwd(), auth.getLoginPwd()) &&
+                auth.getSns() == AuthSns.NO && auth.getStatus() == AuthStatus.SIGN_OUT && auth.getStatus() == AuthStatus.INACTIVE) {
+            return jwtTokenProvider.createToken((auth.getId()), String.valueOf(auth.getRole()));
         }
         return null;
     }
