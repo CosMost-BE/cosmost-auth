@@ -26,14 +26,12 @@ public class AuthEntity extends BaseTimeEntity {
 
     private String email;
 
-    private Timestamp loginDate;
-
     @NotNull
     private String nickName;
 
     private String address;
 
-    private String birthdate;
+    private String ageGroup;
 
     @Enumerated(EnumType.STRING)
     private AuthMarried authMarried;

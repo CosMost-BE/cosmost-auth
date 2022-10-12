@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import java.sql.Timestamp;
 
 @Getter
 @AllArgsConstructor
@@ -33,7 +32,7 @@ public class CreateAuthRequest {
 
     private String address;
 
-    private String birthdate;
+    private String ageGroup;
 
     private AuthSns authSns;
 

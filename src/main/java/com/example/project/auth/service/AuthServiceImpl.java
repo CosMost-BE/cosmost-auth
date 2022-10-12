@@ -2,6 +2,8 @@ package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
+import com.example.project.auth.infrastructure.entity.AuthSns;
+import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.PutAuthRequest;
@@ -35,8 +37,8 @@ public class AuthServiceImpl implements AuthService {
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(auth != null && encoder.matches(putAuthRequest.getLoginPwd(), auth.getLoginPwd())) {
-
+        if(auth != null && encoder.matches(putAuthRequest.getLoginPwd(), auth.getLoginPwd()) &
+                auth.getAuthSns() == AuthSns.NO && auth.getAuthStatus() == AuthStatus.INACTIVE) {
             return jwtTokenProvider.createToken((auth.getId()), String.valueOf(auth.getAuthRole()));
         }
         return null;

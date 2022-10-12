@@ -1,8 +1,6 @@
 package com.example.project.auth.service;
 
-import com.example.project.auth.infrastructure.entity.AuthEntity;
-import com.example.project.auth.infrastructure.entity.AuthRole;
-import com.example.project.auth.infrastructure.entity.AuthStatus;
+import com.example.project.auth.infrastructure.entity.*;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.PutAuthRequest;
 
@@ -23,7 +21,12 @@ public interface AuthService {
                 .authStatus(AuthStatus.ACTIVE)
                 .nickName(createAuthRequest.getNickName())
                 .address(createAuthRequest.getAddress())
-                .birthdate(createAuthRequest.getBirthdate())
+                .authSns(createAuthRequest.getAuthSns())
+                .authMarried(createAuthRequest.getAuthMarried())
+                .ageGroup(createAuthRequest.getAgeGroup())
+                .profileImgOriginName(createAuthRequest.getProfileImgOriginName())
+                .profileImgSaveName(createAuthRequest.getProfileImgSaveName())
+                .profileImgSaveUrl(createAuthRequest.getProfileImgSaveUrl())
                 .build();
         return auth;
     };
