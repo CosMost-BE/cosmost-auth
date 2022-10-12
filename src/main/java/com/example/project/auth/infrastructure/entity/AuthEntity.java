@@ -24,13 +24,11 @@ public class AuthEntity extends BaseTimeEntity {
     @NotNull
     private String loginPwd;
 
-    @NotNull
-    private String name;
-
     private String email;
 
     private Timestamp loginDate;
 
+    @NotNull
     private String nickName;
 
     private String address;
@@ -49,6 +47,7 @@ public class AuthEntity extends BaseTimeEntity {
 
     private String profileImgSaveUrl;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private AuthRole authRole;
 

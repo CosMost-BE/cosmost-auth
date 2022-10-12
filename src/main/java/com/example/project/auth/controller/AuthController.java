@@ -1,6 +1,7 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.requestbody.CreateAuthRequest;
+import com.example.project.auth.requestbody.PutAuthRequest;
 import com.example.project.auth.service.AuthService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -31,12 +32,17 @@ public class AuthController {
             @ApiResponse(code=404, message = "리뷰를 찾을 수 없습니다.")
     })
 
-
     @ApiOperation(value = "회원가입을 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "auth", value = "회원가입", dataType = "AuthVoReq")
     @PostMapping("/auths")
     public ResponseEntity<String> createAuth(@Valid @RequestBody CreateAuthRequest createAuthRequest) {
         authService.createAuth(createAuthRequest);
         return ResponseEntity.ok().body("회원가입이 되었습니다.");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> putAuth(@Valid @RequestBody PutAuthRequest putAuthRequest) {
+        authService.putAuth(putAuthRequest);
+        return ResponseEntity.ok().body("로그인이 되었습니다.");
     }
 }
