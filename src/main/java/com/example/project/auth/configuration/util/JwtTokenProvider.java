@@ -68,7 +68,6 @@ public class JwtTokenProvider {
     public String getToken(HttpServletRequest request) {
         return request.getHeader("Authorization");
     }
-
     public String getHeader() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         return request.getHeader("Authorization");
