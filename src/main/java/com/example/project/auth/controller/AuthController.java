@@ -44,7 +44,7 @@ public class AuthController {
 
     @ApiOperation(value = "로그인 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "login", value = "로그인", dataType = "LoginVoReq")
-    @PostMapping("/login")
+    @PutMapping("/login")
     public ResponseEntity<String> putAuth(@Valid @RequestBody PutAuthRequest putAuthRequest) {
         authService.putAuth(putAuthRequest);
         return ResponseEntity.ok().body("로그인이 되었습니다.");

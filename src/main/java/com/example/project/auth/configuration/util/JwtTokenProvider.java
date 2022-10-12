@@ -73,7 +73,6 @@ public class JwtTokenProvider {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         return request.getHeader("Authorization");
     }
-
     public boolean validateToken(String jwtToken) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);

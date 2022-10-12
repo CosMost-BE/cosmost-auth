@@ -7,6 +7,7 @@ import com.example.project.auth.infrastructure.entity.AuthStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
@@ -14,9 +15,8 @@ import java.sql.Timestamp;
 @Getter
 @AllArgsConstructor
 @Builder
+@NoArgsConstructor
 public class CreateAuthRequest {
-
-    private String id;
 
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
     private String loginId;

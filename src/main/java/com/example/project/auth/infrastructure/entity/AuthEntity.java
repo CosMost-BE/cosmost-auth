@@ -47,7 +47,6 @@ public class AuthEntity extends BaseTimeEntity {
 
     private String profileImgSaveUrl;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private AuthRole authRole;
 
