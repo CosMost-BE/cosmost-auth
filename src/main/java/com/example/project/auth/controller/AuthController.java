@@ -1,5 +1,9 @@
 package com.example.project.auth.controller;
 
+import com.example.project.auth.infrastructure.entity.AuthEntity;
+import com.example.project.auth.infrastructure.entity.AuthSns;
+import com.example.project.auth.infrastructure.entity.AuthStatus;
+import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.PutAuthRequest;
 import com.example.project.auth.service.AuthService;
@@ -7,7 +11,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +23,11 @@ import javax.validation.Valid;
 @RestController
 public class AuthController {
     private final AuthService authService;
+    private final AuthEntityRepository authEntityRepository;
     @Autowired
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, AuthEntityRepository authEntityRepository) {
         this.authService = authService;
+        this.authEntityRepository = authEntityRepository;
     }
 
     // 코스리뷰에 등록하는 api
@@ -47,8 +52,13 @@ public class AuthController {
     @ApiImplicitParam(name = "login", value = "로그인", dataType = "LoginVoReq")
     @PutMapping("/login")
     public ResponseEntity<String> putAuth(@RequestBody @Valid PutAuthRequest putAuthRequest) {
-        authService.putAuth(putAuthRequest);
-        log.info(String.valueOf(putAuthRequest));
-        return ResponseEntity.ok().body("로그인이 되었습니다.");
+        String auth = authService.putAuth(putAuthRequest);
+
+        if(auth != null) {
+            return ResponseEntity.status(200).body(auth);
+        } else {
+            return ResponseEntity.status(400).body("오류 떴어용");
+        }
+
     }
 }

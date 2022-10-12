@@ -34,6 +34,8 @@ public class Auth {
 
     private String address;
 
+    private String ageGroup;
+
     private String birthdate;
 
     private AuthMarried married;
