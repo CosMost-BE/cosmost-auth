@@ -14,7 +14,7 @@ public interface AuthService {
 
     String putAuth(PutAuthRequest putAuthRequest);
 
-    default AuthEntity dtoEntity(CreateAuthRequest createAuthRequest){
+    default AuthEntity signUpDtoEntity(CreateAuthRequest createAuthRequest){
         AuthEntity auth = AuthEntity.builder()
                 .loginId(createAuthRequest.getLoginId())
                 .loginPwd(createAuthRequest.getLoginPwd())
@@ -28,7 +28,7 @@ public interface AuthService {
         return auth;
     };
 
-    default AuthEntity dtoEntity(PutAuthRequest putAuthRequest) {
+    default AuthEntity loginDtoEntity(PutAuthRequest putAuthRequest) {
         AuthEntity auth = AuthEntity.builder()
                 .loginId(putAuthRequest.getLoginId())
                 .loginPwd(putAuthRequest.getLoginPwd())

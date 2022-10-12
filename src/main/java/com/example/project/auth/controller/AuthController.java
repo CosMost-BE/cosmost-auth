@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class AuthController {
     @ApiOperation(value = "회원가입을 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "auth", value = "회원가입", dataType = "AuthVoReq")
     @PostMapping("/auths")
-    public ResponseEntity<String> createAuth(@Valid @RequestBody CreateAuthRequest createAuthRequest) {
+    public ResponseEntity<String> createAuth(@RequestBody @Valid CreateAuthRequest createAuthRequest) {
         authService.createAuth(createAuthRequest);
         return ResponseEntity.ok().body("회원가입이 되었습니다.");
     }
@@ -45,8 +46,9 @@ public class AuthController {
     @ApiOperation(value = "로그인 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "login", value = "로그인", dataType = "LoginVoReq")
     @PutMapping("/login")
-    public ResponseEntity<String> putAuth(@Valid @RequestBody PutAuthRequest putAuthRequest) {
+    public ResponseEntity<String> putAuth(@RequestBody @Valid PutAuthRequest putAuthRequest) {
         authService.putAuth(putAuthRequest);
+        log.info(String.valueOf(putAuthRequest));
         return ResponseEntity.ok().body("로그인이 되었습니다.");
     }
 }

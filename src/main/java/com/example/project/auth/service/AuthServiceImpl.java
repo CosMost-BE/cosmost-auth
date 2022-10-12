@@ -24,14 +24,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String createAuth(CreateAuthRequest createAuthRequest) {
-        AuthEntity auth = dtoEntity(createAuthRequest);
+        AuthEntity auth = signUpDtoEntity(createAuthRequest);
         authEntityRepository.save(auth);
         return String.valueOf(auth.getId());
     }
 
     @Override
     public String putAuth(PutAuthRequest putAuthRequest) { // 로그인
-        AuthEntity auth = dtoEntity(authEntityRepository.findByLoginId(putAuthRequest.getLoginId()));
+        AuthEntity auth = authEntityRepository.findByLoginId(putAuthRequest.getLoginId());
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

@@ -26,8 +26,6 @@ public class CreateAuthRequest {
 
     private String email;
 
-    private Timestamp loginDate;
-
     private AuthMarried authMarried;
 
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")
@@ -41,13 +39,10 @@ public class CreateAuthRequest {
 
     private String profileImgOriginName;
 
-    private String type;
-
     private String profileImgSaveName;
 
     private String profileImgSaveUrl;
 
-    @NotBlank(message = "권한은 필수입니다.")
     private AuthRole authRole;
 
     private AuthStatus authStatus;
