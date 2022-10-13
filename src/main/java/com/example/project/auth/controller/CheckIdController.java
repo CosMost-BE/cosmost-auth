@@ -1,7 +1,5 @@
 package com.example.project.auth.controller;
 
-
-import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.ReadAuthRequest;
 import com.example.project.auth.service.AuthService;
 import io.swagger.annotations.ApiImplicitParam;
