@@ -6,10 +6,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Builder
 @Setter
 @Table(name = "auth")
 public class AuthEntity extends BaseTimeEntity {
