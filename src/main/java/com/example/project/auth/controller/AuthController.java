@@ -40,7 +40,6 @@ public class AuthController {
             @ApiResponse(code=404, message = "리뷰를 찾을 수 없습니다.")
     })
 
-
     @ApiOperation(value = "회원가입을 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "auth", value = "회원가입", dataType = "AuthVoReq")
     @PostMapping("/auths")
@@ -48,7 +47,6 @@ public class AuthController {
         authService.createAuth(createAuthRequest);
         return ResponseEntity.ok().body("회원가입이 되었습니다.");
     }
-
 
     @ApiOperation(value = "로그인 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "login", value = "로그인", dataType = "LoginVoReq")

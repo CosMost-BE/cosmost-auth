@@ -40,23 +40,4 @@ public class CreateAuthRequest {
     private AuthRole role;
 
     private AuthStatus status;
-
-    public AuthEntity signUpDtoEntity(CreateAuthRequest createAuthRequest) {
-        return AuthEntity.builder()
-                .loginId(createAuthRequest.getLoginId())
-                .loginPwd(createAuthRequest.getLoginPwd())
-                .email(createAuthRequest.getEmail())
-                .role(AuthRole.USER)
-                .status(AuthStatus.ACTIVE)
-                .nickName(createAuthRequest.getNickName())
-                .address(createAuthRequest.getAddress())
-                .sns(createAuthRequest.getSns())
-                .married(createAuthRequest.getMarried())
-                .ageGroup(createAuthRequest.getAgeGroup())
-                .profileImgOriginName(createAuthRequest.getProfileImgOriginName())
-                .profileImgSaveName(createAuthRequest.getProfileImgSaveName())
-                .profileImgSaveUrl(createAuthRequest.getProfileImgSaveUrl())
-                .build();
-    }
-
 }

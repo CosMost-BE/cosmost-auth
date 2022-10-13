@@ -10,6 +10,6 @@ import java.util.Optional;
  * Create
  */
 public interface AuthService {
-    String createAuth(CreateAuthRequest createAuthRequest);
+    AuthEntity createAuth(CreateAuthRequest createAuthRequest);
     String putAuth(PutAuthRequest putAuthRequest);
 }
