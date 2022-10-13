@@ -18,6 +18,7 @@ import javax.validation.Valid;
 @Slf4j
 @RequestMapping("/v1")
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*" )
 public class AuthController {
     private final AuthService authService;
     private final AuthEntityRepository authEntityRepository;
