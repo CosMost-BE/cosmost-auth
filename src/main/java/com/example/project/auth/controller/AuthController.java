@@ -32,7 +32,6 @@ public class AuthController {
         this.authEntityRepository = authEntityRepository;
     }
 
-    // 코스리뷰에 등록하는 api
     @ApiResponses({
             @ApiResponse(code=201, message = "리뷰 등록완료 !!!!!!"),
             @ApiResponse(code=401, message = "리뷰가 등록되지 않았습니다, 다시 확인하세요"),
