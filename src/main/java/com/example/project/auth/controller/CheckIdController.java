@@ -1,6 +1,8 @@
 package com.example.project.auth.controller;
 
-import com.example.project.auth.requestbody.ReadAuthRequest;
+import com.example.project.auth.exception.DuplicatedIdException;
+import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
+import com.example.project.auth.responsebody.ReadAuthResponse;
 import com.example.project.auth.service.AuthService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -22,9 +24,12 @@ import javax.validation.Valid;
 public class CheckIdController {
     private final AuthService authService;
 
+    private final AuthEntityRepository authEntityRepository;
+
     @Autowired
-    public CheckIdController(AuthService authService) {
+    public CheckIdController(AuthService authService, AuthEntityRepository authEntityRepository) {
         this.authService = authService;
+        this.authEntityRepository = authEntityRepository;
     }
 
     @ApiResponses({
@@ -37,8 +42,25 @@ public class CheckIdController {
     @ApiOperation(value = "중복 아이디를 확인할 때 쓰는 메소드")
     @ApiImplicitParam(name = "checkId", value = "중복된 아이디 확인", dataType = "CheckIdVoReq")
     @GetMapping("/duplication")
-    public ResponseEntity<String> checkId(@RequestBody @Valid ReadAuthRequest readAuthRequest) {
-        authService.checkId(String.valueOf(readAuthRequest));
-        return ResponseEntity.ok().body("사용할 수 있는 아이디입니다.");
+    public ResponseEntity<String> checkId(@RequestBody @Valid ReadAuthResponse readAuthResponse) {
+        String result = "";
+
+        String auth = authService.checkId(String.valueOf(readAuthResponse));
+//        try {
+//            authService.checkId(String.valueOf(authEntityRepository.existsByLoginId(auth)));
+//            result = "사용할 수 있는 아이디입니다.";
+//            return new ResponseEntity<>(result);
+//        } catch (DuplicatedIdException) {
+//            return new ResponseEntity<>(exception.get);
+//        }
+
+
+
+//        authService.checkId(String.valueOf(readAuthResponse));
+//        return ResponseEntity.ok().body("사용할 수 있는 아이디입니다.");
+
+        if (authService.checkId(readAuthResponse.getLoginId(auth))) {
+
+        }
     }
 }
