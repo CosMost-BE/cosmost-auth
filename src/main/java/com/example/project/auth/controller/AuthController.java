@@ -56,4 +56,7 @@ public class AuthController {
             return ResponseEntity.status(400).body("오류 떴어용");
         }
     }
+
+    @GetMapping("/validation/duplicate")
+    public ResponseEntity<String> checkUserId(@RequestBody @Valid String checkUserId)
 }
