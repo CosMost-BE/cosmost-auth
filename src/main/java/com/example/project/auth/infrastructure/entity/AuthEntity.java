@@ -5,12 +5,11 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-
-@Builder
-@AllArgsConstructor
 @Entity
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "auth")
 public class AuthEntity extends BaseTimeEntity {
 

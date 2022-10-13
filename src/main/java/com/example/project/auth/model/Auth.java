@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 
 @Getter
 @ToString
-@AllArgsConstructor
+@NoArgsConstructor
 public class Auth {
 
     private String id;
