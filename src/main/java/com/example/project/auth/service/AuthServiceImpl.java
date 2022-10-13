@@ -33,8 +33,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthEntity createAuth(CreateAuthRequest createAuthRequest) {
-        // 아이디 중복 검사
-        checkUserId(createAuthRequest.getLoginId());
 
         return authEntityRepository.save(
                 AuthEntity.builder()
@@ -54,14 +52,14 @@ public class AuthServiceImpl implements AuthService {
                         .build());
 
     }
+
     @Override
-    public String checkUserId(String loginId) {
+    public String checkId(String loginId) {
         if (authEntityRepository.existsByLoginId(loginId)) {
             throw new DuplicatedIdException();
         }
         return loginId;
     }
-
 
     @Override
     public String putAuth(PutAuthRequest putAuthRequest) { // 로그인

@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface AuthService {
     AuthEntity createAuth(CreateAuthRequest createAuthRequest);
 
-    String checkUserId(String loginId);
+    String checkId(String loginId);
 
     String putAuth(PutAuthRequest putAuthRequest);
 }
