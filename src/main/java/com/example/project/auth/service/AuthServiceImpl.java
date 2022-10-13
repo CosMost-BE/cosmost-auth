@@ -1,6 +1,7 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
+import com.example.project.auth.exception.DuplicatedIdException;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
@@ -32,6 +33,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthEntity createAuth(CreateAuthRequest createAuthRequest) {
+        // 아이디 중복 검사
+        checkUserId(createAuthRequest.getLoginId());
 
         return authEntityRepository.save(
                 AuthEntity.builder()
@@ -49,7 +52,16 @@ public class AuthServiceImpl implements AuthService {
                         .profileImgSaveName(createAuthRequest.getProfileImgSaveName())
                         .profileImgSaveUrl(createAuthRequest.getProfileImgSaveUrl())
                         .build());
+
     }
+    @Override
+    public String checkUserId(String loginId) {
+        if (authEntityRepository.existsByLoginId(loginId)) {
+            throw new DuplicatedIdException();
+        }
+        return loginId;
+    }
+
 
     @Override
     public String putAuth(PutAuthRequest putAuthRequest) { // 로그인
@@ -58,7 +70,8 @@ public class AuthServiceImpl implements AuthService {
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if(auth != null && encoder.matches(putAuthRequest.getLoginPwd(), auth.getLoginPwd()) &&
-                auth.getSns() == AuthSns.NO && auth.getStatus() == AuthStatus.ACTIVE) {
+                // ==(identity) equals(equality)
+                auth.getSns().equals(AuthSns.NO) && auth.getStatus().equals(AuthStatus.ACTIVE)) {
             return jwtTokenProvider.createToken((auth.getId()), String.valueOf(auth.getRole()));
         }
         return null;
