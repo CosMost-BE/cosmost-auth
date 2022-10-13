@@ -16,7 +16,7 @@ public class UserDetailsImpl implements UserDetails {
     private final AuthEntity authEntity;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        AuthRole authRole = authEntity.getAuthRole();
+        AuthRole authRole = authEntity.getRole();
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(ROLE_PREFIX + authRole.toString());
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(authority);

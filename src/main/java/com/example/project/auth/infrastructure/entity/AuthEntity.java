@@ -4,13 +4,13 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
+@Setter
 @Table(name = "auth")
 public class AuthEntity extends BaseTimeEntity {
 
@@ -24,24 +24,20 @@ public class AuthEntity extends BaseTimeEntity {
     @NotNull
     private String loginPwd;
 
-    @NotNull
-    private String name;
-
     private String email;
 
-    private Timestamp loginDate;
-
+    @NotNull
     private String nickName;
 
     private String address;
 
-    private String birthdate;
+    private String ageGroup;
 
     @Enumerated(EnumType.STRING)
-    private AuthMarried authMarried;
+    private AuthMarried married;
 
     @Enumerated(EnumType.STRING)
-    private AuthSns authSns;
+    private AuthSns sns;
 
     private String profileImgOriginName;
 
@@ -50,9 +46,9 @@ public class AuthEntity extends BaseTimeEntity {
     private String profileImgSaveUrl;
 
     @Enumerated(EnumType.STRING)
-    private AuthRole authRole;
+    private AuthRole role;
 
     @Enumerated(EnumType.STRING)
-    private AuthStatus authStatus;
+    private AuthStatus status;
 
 }
