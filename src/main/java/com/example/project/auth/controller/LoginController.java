@@ -25,10 +25,10 @@ public class LoginController {
         this.authService = authService;
     }
     @ApiResponses({
-            @ApiResponse(code=201, message = "리뷰 등록완료 !!!!!!"),
-            @ApiResponse(code=401, message = "리뷰가 등록되지 않았습니다, 다시 확인하세요"),
+            @ApiResponse(code=201, message = "로그인 완료"),
+            @ApiResponse(code=401, message = "로그인이 되지 않았습니다. 다시 확인하세요"),
             @ApiResponse(code=403, message = "권한이 존재하지 않습니다."),
-            @ApiResponse(code=404, message = "리뷰를 찾을 수 없습니다.")
+            @ApiResponse(code=404, message = "데이터가 없습니다. 요청한 페이지를 찾을 수 없습니다.")
     })
 
     @ApiOperation(value = "로그인 할 때 쓰는 메소드")
