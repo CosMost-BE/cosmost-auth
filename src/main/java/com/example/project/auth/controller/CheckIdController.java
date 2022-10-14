@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Slf4j
@@ -43,24 +45,12 @@ public class CheckIdController {
     @ApiImplicitParam(name = "checkId", value = "중복된 아이디 확인", dataType = "CheckIdVoReq")
     @GetMapping("/duplication")
     public ResponseEntity<String> checkId(@RequestBody @Valid ReadAuthResponse readAuthResponse) {
-        String result = "";
 
-        String auth = authService.checkId(String.valueOf(readAuthResponse));
-//        try {
-//            authService.checkId(String.valueOf(authEntityRepository.existsByLoginId(auth)));
-//            result = "사용할 수 있는 아이디입니다.";
-//            return new ResponseEntity<>(result);
-//        } catch (DuplicatedIdException) {
-//            return new ResponseEntity<>(exception.get);
-//        }
-
-
-
-//        authService.checkId(String.valueOf(readAuthResponse));
-//        return ResponseEntity.ok().body("사용할 수 있는 아이디입니다.");
-
-        if (authService.checkId(readAuthResponse.getLoginId(auth))) {
-
+        if (authService.checkId(readAuthResponse)) {
+            return ResponseEntity.status(200).body("사용할 수 있습니다.");
+        } else {
+            return ResponseEntity.status(200).body("중복된 아이디 입니다.");
         }
+
     }
 }

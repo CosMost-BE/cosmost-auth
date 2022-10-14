@@ -3,8 +3,7 @@ package com.example.project.auth.service;
 import com.example.project.auth.infrastructure.entity.*;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.PutAuthRequest;
-
-import java.util.Optional;
+import com.example.project.auth.responsebody.ReadAuthResponse;
 
 /**
  * Create
@@ -12,7 +11,7 @@ import java.util.Optional;
 public interface AuthService {
     AuthEntity createAuth(CreateAuthRequest createAuthRequest);
 
-    String checkId(String loginId);
+    boolean checkId(ReadAuthResponse readAuthResponse);
 
     String putAuth(PutAuthRequest putAuthRequest);
 }

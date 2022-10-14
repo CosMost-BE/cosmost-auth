@@ -1,7 +1,6 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
-import com.example.project.auth.exception.DuplicatedIdException;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
@@ -9,11 +8,14 @@ import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.PutAuthRequest;
+import com.example.project.auth.responsebody.ReadAuthResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -23,12 +25,15 @@ public class AuthServiceImpl implements AuthService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final PasswordEncoder passwordEncoder;
 
+    private final ReadAuthResponse readAuthResponse;
+
     @Autowired
-    public AuthServiceImpl(AuthEntityRepository authEntityRepository, JwtTokenProvider jwtTokenProvider, BCryptPasswordEncoder bCryptPasswordEncoder, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(AuthEntityRepository authEntityRepository, JwtTokenProvider jwtTokenProvider, BCryptPasswordEncoder bCryptPasswordEncoder, PasswordEncoder passwordEncoder, ReadAuthResponse authResponse, ReadAuthResponse readAuthResponse) {
         this.authEntityRepository = authEntityRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.passwordEncoder = passwordEncoder;
+        this.readAuthResponse = readAuthResponse;
     }
 
     @Override
@@ -54,11 +59,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String checkId(String loginId) {
-        if (authEntityRepository.existsByLoginId(loginId)) {
-            throw new DuplicatedIdException();
-        }
-        return loginId;
+    public boolean checkId(ReadAuthResponse readAuthResponse) { // 아이디 중복확인
+        List<AuthEntity> idList = (List<AuthEntity>) authEntityRepository.findByLoginId(readAuthResponse.getLoginId());
+        return idList.size() == 0 ? true : false;
     }
 
     @Override
