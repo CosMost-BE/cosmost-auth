@@ -54,13 +54,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String checkId(String loginId) { // 아이디 중복확인
+    public boolean checkId(String loginId) { // 아이디 중복확인
 //        return authEntityRepository.existsByLoginId(loginId);
 //        checkId()
-        if (authEntityRepository.existsByLoginId(loginId)) {
+        boolean s = authEntityRepository.existsByLoginId(loginId);
+        if (s == true) {
             throw new DuplicatedIdException();
         }
-        return loginId;
+        return false;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.project.auth.controller;
 
-import com.example.project.auth.exception.DuplicatedIdException;
 import com.example.project.auth.service.AuthService;
 import com.example.project.auth.service.AuthServiceImpl;
 import io.swagger.annotations.ApiOperation;
@@ -37,10 +36,12 @@ public class CheckIdController {
     @ApiOperation(value = "중복 아이디를 확인할 때 쓰는 메소드")
     @GetMapping("/duplication")
     public ResponseEntity<?> checkId(@RequestParam(value="id") String id) {
-        if(String.valueOf(id).equals(authServiceImpl)) {
-            throw new DuplicatedIdException();
-        } else {
-            return ResponseEntity.status(200).body("사용할 수 있는 아이디입니다.");
-        }
+
+        return ResponseEntity.ok(authService.checkId(id));
+//        if(String.valueOf(id).equals(authService.checkId(id))) {
+//            throw new DuplicatedIdException();
+//        } else {
+//            return ResponseEntity.status(200).body("사용할 수 있는 아이디입니다.");
+//        }
     }
 }

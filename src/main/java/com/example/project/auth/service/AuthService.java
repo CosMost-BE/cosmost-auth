@@ -10,7 +10,7 @@ import com.example.project.auth.requestbody.PutAuthRequest;
 public interface AuthService {
     AuthEntity createAuth(CreateAuthRequest createAuthRequest);
 
-    String checkId(String loginId);
+    boolean checkId(String loginId);
 
     String putAuth(PutAuthRequest putAuthRequest);
 }
