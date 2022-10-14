@@ -1,7 +1,7 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
-import com.example.project.auth.exception.DuplicatedIdException;
+import com.example.project.auth.exception.DuplicatedId;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -59,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
 //        checkId()
         boolean s = authEntityRepository.existsByLoginId(loginId);
         if (s == true) {
-            throw new DuplicatedIdException();
+            throw new DuplicatedId();
         }
         return false;
     }
