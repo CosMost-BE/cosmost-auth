@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Slf4j
-@RequestMapping("/vi/signin")
+@RequestMapping("/v1/signin")
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class LoginController {
@@ -31,14 +31,14 @@ public class LoginController {
 
     @ApiOperation(value = "로그인 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "login", value = "로그인", dataType = "LoginVoReq")
-    @PutMapping("/")
+    @PutMapping("")
     public ResponseEntity<String> putAuth(@RequestBody @Valid PutAuthRequest putAuthRequest) {
         String auth = authService.putAuth(putAuthRequest);
 
         if(auth != null) {
             return ResponseEntity.status(200).body(auth);
         } else {
-            return ResponseEntity.status(400).body("오류 떴어용");
+            return ResponseEntity.status(400).body("로그인 실패");
         }
     }
 }

@@ -9,8 +9,7 @@ import java.util.Optional;
 @Repository
 public interface AuthEntityRepository extends JpaRepository<AuthEntity, Long> {
     Optional<AuthEntity> findById(Long id);
-    AuthEntity findByLoginId(String loginId);
-
+    Optional<AuthEntity> findByLoginId(String loginId);
     boolean existsByLoginId(String loginId);
 
 }

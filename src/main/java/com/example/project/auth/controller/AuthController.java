@@ -32,7 +32,7 @@ public class AuthController {
 
     @ApiOperation(value = "회원가입을 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "auth", value = "회원가입", dataType = "AuthVoReq")
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<String> createAuth(@RequestBody @Valid CreateAuthRequest createAuthRequest) {
         authService.createAuth(createAuthRequest);
         return ResponseEntity.ok().body("회원가입이 되었습니다.");

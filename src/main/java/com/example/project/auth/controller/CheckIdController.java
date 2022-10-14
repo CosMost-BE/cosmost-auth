@@ -1,10 +1,8 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.exception.DuplicatedIdException;
-import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
-import com.example.project.auth.responsebody.ReadAuthResponse;
 import com.example.project.auth.service.AuthService;
-import io.swagger.annotations.ApiImplicitParam;
+import com.example.project.auth.service.AuthServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -16,22 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 @Slf4j
 @RequestMapping("/v1/validation")
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CheckIdController {
     private final AuthService authService;
-
-    private final AuthEntityRepository authEntityRepository;
+    private final AuthServiceImpl authServiceImpl;
 
     @Autowired
-    public CheckIdController(AuthService authService, AuthEntityRepository authEntityRepository) {
+    public CheckIdController(AuthService authService, AuthServiceImpl authServiceImpl) {
         this.authService = authService;
-        this.authEntityRepository = authEntityRepository;
+        this.authServiceImpl = authServiceImpl;
     }
 
     @ApiResponses({
@@ -40,17 +34,13 @@ public class CheckIdController {
             @ApiResponse(code=403, message = "권한이 존재하지 않습니다."),
             @ApiResponse(code=404, message = "데이터가 없습니다. 요청한 페이지를 찾을 수 없습니다.")
     })
-
     @ApiOperation(value = "중복 아이디를 확인할 때 쓰는 메소드")
-    @ApiImplicitParam(name = "checkId", value = "중복된 아이디 확인", dataType = "CheckIdVoReq")
     @GetMapping("/duplication")
-    public ResponseEntity<String> checkId(@RequestBody @Valid ReadAuthResponse readAuthResponse) {
-
-        if (authService.checkId(readAuthResponse)) {
-            return ResponseEntity.status(200).body("사용할 수 있습니다.");
+    public ResponseEntity<?> checkId(@RequestParam(value="id") String id) {
+        if(String.valueOf(id).equals(authServiceImpl)) {
+            throw new DuplicatedIdException();
         } else {
-            return ResponseEntity.status(200).body("중복된 아이디 입니다.");
+            return ResponseEntity.status(200).body("사용할 수 있는 아이디입니다.");
         }
-
     }
 }
