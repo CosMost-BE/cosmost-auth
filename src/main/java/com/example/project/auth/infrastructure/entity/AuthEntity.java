@@ -1,5 +1,4 @@
 package com.example.project.auth.infrastructure.entity;
-
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +9,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Getter
 @Builder
-@Setter
 @Table(name = "auth")
 public class AuthEntity extends BaseTimeEntity {
 

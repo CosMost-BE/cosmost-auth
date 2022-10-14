@@ -1,4 +1,4 @@
-package com.example.project.auth.configuration.util;
+package com.example.project.auth.service;
 
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
