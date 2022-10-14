@@ -1,6 +1,7 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
+import com.example.project.auth.exception.DuplicatedId;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
@@ -14,19 +15,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
     private final AuthEntityRepository authEntityRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthServiceImpl(AuthEntityRepository authEntityRepository, JwtTokenProvider jwtTokenProvider, BCryptPasswordEncoder bCryptPasswordEncoder, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(AuthEntityRepository authEntityRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
         this.authEntityRepository = authEntityRepository;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -52,14 +53,26 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public boolean checkId(String loginId) { // 아이디 중복확인
+//        return authEntityRepository.existsByLoginId(loginId);
+//        checkId()
+        boolean s = authEntityRepository.existsByLoginId(loginId);
+        if (s == true) {
+            throw new DuplicatedId();
+        }
+        return false;
+    }
+
+    @Override
     public String putAuth(PutAuthRequest putAuthRequest) { // 로그인
-        AuthEntity auth = authEntityRepository.findByLoginId(putAuthRequest.getLoginId());
+        // optional
+        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(putAuthRequest.getLoginId());
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(auth != null && encoder.matches(putAuthRequest.getLoginPwd(), auth.getLoginPwd()) &&
-                auth.getSns() == AuthSns.NO && auth.getStatus() == AuthStatus.ACTIVE) {
-            return jwtTokenProvider.createToken((auth.getId()), String.valueOf(auth.getRole()));
+        if(auth != null && encoder.matches(putAuthRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
+                auth.get().getSns().equals(AuthSns.NO) && auth.get().getStatus().equals(AuthStatus.ACTIVE)) {
+            return jwtTokenProvider.createToken((auth.get().getId()), String.valueOf(auth.get().getRole()));
         }
         return null;
     }
