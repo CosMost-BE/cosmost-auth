@@ -18,14 +18,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/validation")
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class CheckIdController {
+public class ValidationController {
     private final AuthService authService;
-    private final AuthServiceImpl authServiceImpl;
 
     @Autowired
-    public CheckIdController(AuthService authService, AuthServiceImpl authServiceImpl) {
+    public ValidationController(AuthService authService) {
         this.authService = authService;
-        this.authServiceImpl = authServiceImpl;
     }
 
     @ApiResponses({
@@ -35,10 +33,10 @@ public class CheckIdController {
             @ApiResponse(code=404, message = "데이터가 없습니다. 요청한 페이지를 찾을 수 없습니다.")
     })
     @ApiOperation(value = "중복 아이디를 확인할 때 쓰는 메소드")
-    @GetMapping("/duplication")
+    @GetMapping("/duplicate")
     public ResponseEntity<?> checkId(@RequestParam(value="id") String id) {
 
-        if(String.valueOf(id).equals(authService.checkId(id))) {
+        if(id.equals(authService.checkId(id))) {
             throw new DuplicatedIdException();
         } else {
             return ResponseEntity.status(200).body("사용할 수 있는 아이디입니다.");
