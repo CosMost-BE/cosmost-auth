@@ -1,11 +1,13 @@
 server:
   port: 9001
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     url: jdbc:mysql://localhost:3306/cosmost_db
     password: '1234'
+
   jpa:
     properties:
       hibernate:
@@ -19,8 +21,8 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-#  profiles:
-#    include: oauth
+  profiles:
+    include: mail, redis
 
 jwt:
   tokenValidTime: 1800000

@@ -1,0 +1,15 @@
+spring:
+  mail:
+    smtp:
+      auth: 'true'
+      socketFactory:
+        class: javax.net.ssl.SSLSocketFactory
+        fallback: 'false'
+        port: '465'
+      starttls:
+        enable: 'true'
+        required: 'true'
+      port: '465'
+  AdminMail:
+    id: kjh950601@gmail.com
+    password: apdlvmf1dlek!!!
