@@ -85,6 +85,7 @@ public class AuthServiceImpl implements AuthService {
     public String updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
+        log.info(String.valueOf(id));
         try {
             AuthEntity auth = authEntityRepository.findById(id).orElseThrow(() ->
                     new UpdateAuthFail()

@@ -35,41 +35,18 @@ public class AuthInfoController {
             @ApiResponse(code=403, message = "권한이 존재하지 않습니다."),
             @ApiResponse(code=404, message = "데이터가 없습니다. 요청한 페이지를 찾을 수 없습니다.")
     })
-
-//    @ApiOperation(value = "회원정보 수정할 때 쓰는 메소드")
-//    @ApiImplicitParam(name = "authInfo", value = "회원정보 수정", dataType = "AuthInfoVoReq")
-//    @PutMapping("/")
-//    public ResponseEntity<String> updateAuthInfo(@RequestBody @Valid UpdateAuthRequest updateAuthRequest) {
-//        String result = "";
-//        String token = jwtTokenProvider.getHeader();
-//        Long authInfoId = Long.valueOf(jwtTokenProvider.getUserPk(token));
-//
-//        try {
-//            authService.updateAuthInfo(updateAuthRequest, authInfoId);
-//            result = "회원정보를 변경하였습니다.";
-//            return new ResponseEntity<>(HttpStatus.valueOf(result));
-//        } catch (UpdateAuthFail updateAuthFail) {
-//            return new UpdateAuthFail();
-//        }
-//    }
-
-
-
     @ApiOperation(value = "회원정보 수정할 때 쓰는 메소드")
     @ApiImplicitParam(name = "authInfo", value = "회원정보 수정", dataType = "AuthInfoVoReq")
-    @PutMapping("/")
-
+    @PutMapping("")
     public ResponseEntity<?> updateAuthInfo(@RequestBody @Valid UpdateAuthRequest updateAuthRequest, HttpServletRequest request) {
         String auth = authService.updateAuthInfo(updateAuthRequest, request);
-        String token = jwtTokenProvider.getToken(request);
-        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
+//        String token = jwtTokenProvider.getToken(request);
+//        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
 
-        if(id!=null){
+        if(auth!=null){
             return ResponseEntity.status(200).body(auth);
         }else {
             return ResponseEntity.status(400).body("회원정보 수정에 실패했습니다.");
         }
     }
-
-
 }

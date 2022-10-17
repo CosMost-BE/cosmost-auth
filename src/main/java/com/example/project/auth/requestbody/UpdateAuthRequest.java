@@ -20,6 +20,8 @@ public class UpdateAuthRequest {
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
     private String loginId;
 
+    private String loginPwd;
+
     private String ageGroup;
 
     private AuthMarried married;
@@ -32,6 +34,7 @@ public class UpdateAuthRequest {
         return AuthEntity.builder()
                 .id(id)
                 .loginId(authEntity.getLoginId())
+                .loginPwd(authEntity.getLoginPwd())
                 .email(authEntity.getEmail())
                 .married(authEntity.getMarried())
                 .nickname(authEntity.getNickname())
