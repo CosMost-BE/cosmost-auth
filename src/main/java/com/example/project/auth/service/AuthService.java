@@ -2,7 +2,10 @@ package com.example.project.auth.service;
 
 import com.example.project.auth.infrastructure.entity.*;
 import com.example.project.auth.requestbody.CreateAuthRequest;
-import com.example.project.auth.requestbody.PutAuthRequest;
+import com.example.project.auth.requestbody.UpdateAuthRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 /**
  * Create
@@ -12,5 +15,7 @@ public interface AuthService {
 
     boolean checkId(String loginId);
 
-    String putAuth(PutAuthRequest putAuthRequest);
+    String putAuth(UpdateAuthRequest updateAuthRequest);
+
+    Optional<AuthEntity> deleteAuth(HttpServletRequest request);
 }

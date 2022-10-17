@@ -1,6 +1,6 @@
 package com.example.project.auth.controller;
 
-import com.example.project.auth.requestbody.PutAuthRequest;
+import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.service.AuthService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -32,8 +32,8 @@ public class LoginController {
     @ApiOperation(value = "로그인 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "login", value = "로그인", dataType = "LoginVoReq")
     @PutMapping("")
-    public ResponseEntity<String> putAuth(@RequestBody @Valid PutAuthRequest putAuthRequest) {
-        String auth = authService.putAuth(putAuthRequest);
+    public ResponseEntity<String> putAuth(@RequestBody @Valid UpdateAuthRequest updateAuthRequest) {
+        String auth = authService.putAuth(updateAuthRequest);
 
         if(auth != null) {
             return ResponseEntity.status(200).body(auth);

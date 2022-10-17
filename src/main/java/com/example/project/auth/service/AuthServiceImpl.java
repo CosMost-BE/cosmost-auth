@@ -8,13 +8,15 @@ import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.requestbody.CreateAuthRequest;
-import com.example.project.auth.requestbody.PutAuthRequest;
+import com.example.project.auth.requestbody.DeleteAuthRequest;
+import com.example.project.auth.requestbody.UpdateAuthRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Slf4j
@@ -64,16 +66,34 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String putAuth(PutAuthRequest putAuthRequest) { // 로그인
+    public String putAuth(UpdateAuthRequest updateAuthRequest) { // 로그인
         // optional
-        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(putAuthRequest.getLoginId());
+        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(updateAuthRequest.getLoginId());
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(auth != null && encoder.matches(putAuthRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
+        if(auth != null && encoder.matches(updateAuthRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
                 auth.get().getSns().equals(AuthSns.NO) && auth.get().getStatus().equals(AuthStatus.ACTIVE)) {
             return jwtTokenProvider.createToken((auth.get().getId()), String.valueOf(auth.get().getRole()));
         }
         return null;
+    }
+
+    @Override
+    @Transactional
+    // 회원 탈퇴
+    public Optional<AuthEntity> deleteAuth(Long id, DeleteAuthRequest deleteAuthRequest) {
+//        String id = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
+//        Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(id));
+//        if(auth.isPresent()) {
+//            auth.get().setIsLeave(true);
+//            return auth;
+//        }
+//        return null;
+        Optional<AuthEntity> check = Optional.ofNullable(
+                authEntityRepository.findById(id).orElseThrow(
+                        Auth
+                )
+        )
     }
 }

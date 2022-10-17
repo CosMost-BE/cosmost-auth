@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class PutAuthRequest {
+public class UpdateAuthRequest {
 
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
     private String loginId;
@@ -20,10 +20,10 @@ public class PutAuthRequest {
     @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
     private String loginPwd;
 
-    public AuthEntity loginDtoEntity(PutAuthRequest putAuthRequest) {
+    public AuthEntity loginDtoEntity(UpdateAuthRequest updateAuthRequest) {
         return AuthEntity.builder()
-                .loginId(putAuthRequest.getLoginId())
-                .loginPwd(putAuthRequest.getLoginPwd())
+                .loginId(updateAuthRequest.getLoginId())
+                .loginPwd(updateAuthRequest.getLoginPwd())
                 .build();
     }
 }
