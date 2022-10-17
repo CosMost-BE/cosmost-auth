@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Slf4j
@@ -43,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
                         .email(createAuthRequest.getEmail())
                         .role(AuthRole.USER)
                         .status(AuthStatus.ACTIVE)
-                        .nickName(createAuthRequest.getNickName())
+                        .nickname(createAuthRequest.getNickname())
                         .address(createAuthRequest.getAddress())
                         .sns(createAuthRequest.getSns())
                         .married(createAuthRequest.getMarried())
@@ -56,18 +57,6 @@ public class AuthServiceImpl implements AuthService {
 
 
 
-    @Override // 회원정보 수정
-    public AuthEntity updateAuthMember(UpdateAuthRequest updateAuthRequest, Long id) throws UpdateAuthFail {
-        try {
-            AuthEntity auth = authEntityRepository.findById(id).orElseThrow(() ->
-                    new UpdateAuthFail()
-            );
-            authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth));
-        } catch (Exception exception) {
-            throw new UpdateAuthFail();
-        }
-        return null;
-    }
 
     @Override
     public boolean checkId(String loginId) { // 아이디 중복확인
@@ -79,15 +68,30 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String putAuth(UpdateLoginRequest putAuthRequest) { // 로그인
+    public String updateAuth(UpdateLoginRequest updateAuthRequest) { // 로그인
         // optional
-        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(putAuthRequest.getLoginId());
+        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(updateAuthRequest.getLoginId());
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(auth != null && encoder.matches(putAuthRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
+        if(auth != null && encoder.matches(updateAuthRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
                 auth.get().getSns().equals(AuthSns.NO) && auth.get().getStatus().equals(AuthStatus.ACTIVE)) {
             return jwtTokenProvider.createToken((auth.get().getId()), String.valueOf(auth.get().getRole()));
+        }
+        return null;
+    }
+
+    @Override // 회원정보 수정
+    public String updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail {
+        String token = jwtTokenProvider.getToken(request);
+        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
+        try {
+            AuthEntity auth = authEntityRepository.findById(id).orElseThrow(() ->
+                    new UpdateAuthFail()
+            );
+            authEntityRepository.save(updateAuthRequest.infoDtoEntity(id, auth));
+        } catch (Exception exception) {
+            throw new UpdateAuthFail();
         }
         return null;
     }

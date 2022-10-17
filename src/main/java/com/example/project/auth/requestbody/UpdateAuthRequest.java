@@ -13,31 +13,30 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @NoArgsConstructor
 public class UpdateAuthRequest {
+
+    @NotBlank(message = "닉네임은 필수 입력 값입니다.")
+    private String nickname;
+
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
     private String loginId;
 
-    @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
-    private String loginPwd;
-
-    private String email;
+    private String ageGroup;
 
     private AuthMarried married;
 
-    @NotBlank(message = "닉네임은 필수 입력 값입니다.")
-    private String nickName;
+    private String email;
 
     private String address;
 
-    private String ageGroup;
-
-    public AuthEntity infoDtoEntity(AuthEntity updateAuthRequest) {
+    public AuthEntity infoDtoEntity(Long id, AuthEntity authEntity) {
         return AuthEntity.builder()
-                .loginId(updateAuthRequest.getLoginId())
-                .loginPwd(updateAuthRequest.getLoginPwd())
-                .email(updateAuthRequest.getEmail())
-                .married(updateAuthRequest.getMarried())
-                .nickName(updateAuthRequest.getAddress())
-                .ageGroup(updateAuthRequest.getAgeGroup())
+                .id(id)
+                .loginId(authEntity.getLoginId())
+                .email(authEntity.getEmail())
+                .married(authEntity.getMarried())
+                .nickname(authEntity.getNickname())
+                .address(authEntity.getAddress())
+                .ageGroup(authEntity.getAgeGroup())
                 .build();
     }
 }

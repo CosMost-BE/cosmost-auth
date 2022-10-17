@@ -6,16 +6,15 @@ import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
 
-/**
- * Create
- */
+import javax.servlet.http.HttpServletRequest;
+
 public interface AuthService {
     AuthEntity createAuth(CreateAuthRequest createAuthRequest);
 
-    AuthEntity updateAuthMember(UpdateAuthRequest updateAuthRequest, Long id);
-
     boolean checkId(String loginId);
 
-    String putAuth(UpdateLoginRequest putAuthRequest);
+    String updateAuth(UpdateLoginRequest putAuthRequest);
 
+    // 회원정보 수정
+    String updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail;
 }
