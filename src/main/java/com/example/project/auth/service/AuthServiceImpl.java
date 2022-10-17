@@ -1,7 +1,9 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
+import com.example.project.auth.exception.AuthIdNotFound;
 import com.example.project.auth.exception.DuplicatedId;
+import com.example.project.auth.exception.WithDrawalCheckNotFound;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -79,6 +82,7 @@ public class AuthServiceImpl implements AuthService {
         return null;
     }
 
+
     @Override
     @Transactional
     // 회원 탈퇴
@@ -92,8 +96,17 @@ public class AuthServiceImpl implements AuthService {
 //        return null;
         Optional<AuthEntity> check = Optional.ofNullable(
                 authEntityRepository.findById(id).orElseThrow(
-                        Auth
-                )
-        )
+                        WithDrawalCheckNotFound::new));
+
+        if (check.isPresent()) {
+            if (deleteAuthRequest.getAuthDropCheck().equals(true)) {
+                authEntityRepository.deleteById(id);
+            } else {
+                throw new WithDrawalCheckNotFound();
+            }
+        } else {
+            throw new AuthIdNotFound();
+        }
+        return null;
     }
 }
