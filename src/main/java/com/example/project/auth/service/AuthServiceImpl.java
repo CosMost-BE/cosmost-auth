@@ -2,13 +2,15 @@ package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
 import com.example.project.auth.exception.DuplicatedId;
+import com.example.project.auth.exception.UpdateAuthFail;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.requestbody.CreateAuthRequest;
-import com.example.project.auth.requestbody.PutAuthRequest;
+import com.example.project.auth.requestbody.UpdateAuthRequest;
+import com.example.project.auth.requestbody.UpdateLoginRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -52,10 +54,23 @@ public class AuthServiceImpl implements AuthService {
                         .build());
     }
 
+
+
+    @Override // 회원정보 수정
+    public AuthEntity updateAuthMember(UpdateAuthRequest updateAuthRequest, Long id) throws UpdateAuthFail {
+        try {
+            AuthEntity auth = authEntityRepository.findById(id).orElseThrow(() ->
+                    new UpdateAuthFail()
+            );
+            authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth));
+        } catch (Exception exception) {
+            throw new UpdateAuthFail();
+        }
+        return null;
+    }
+
     @Override
     public boolean checkId(String loginId) { // 아이디 중복확인
-//        return authEntityRepository.existsByLoginId(loginId);
-//        checkId()
         boolean s = authEntityRepository.existsByLoginId(loginId);
         if (s == true) {
             throw new DuplicatedId();
@@ -64,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String putAuth(PutAuthRequest putAuthRequest) { // 로그인
+    public String putAuth(UpdateLoginRequest putAuthRequest) { // 로그인
         // optional
         Optional<AuthEntity> auth = authEntityRepository.findByLoginId(putAuthRequest.getLoginId());
 
