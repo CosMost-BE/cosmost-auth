@@ -13,4 +13,5 @@ public interface AuthService {
     boolean checkId(String loginId);
 
     String putAuth(PutAuthRequest putAuthRequest);
+
 }

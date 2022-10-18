@@ -22,7 +22,7 @@ spring:
       matching-strategy: ant_path_matcher
 
   profiles:
-    include: mail, redis
+    include: email, redis
 
 jwt:
   tokenValidTime: 1800000

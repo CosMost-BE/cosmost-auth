@@ -1,92 +1,213 @@
 package com.example.project.auth.service;
 
-import com.example.project.auth.configuration.util.RedisUtil;
+import com.example.project.auth.infrastructure.entity.AuthEntity;
+import com.example.project.auth.infrastructure.entity.UserConfirmEntity;
+import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
+import com.example.project.auth.infrastructure.repository.IUserConfirmRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
+import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 @PropertySource(value = "classpath:/application-email.yml")
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class EmailServiceImpl {
-    private final JavaMailSender javaMailSender;
-    private final RedisUtil redisUtil;
+@Component
+public class EmailServiceImpl implements EmailService {
+    @Autowired
+    JavaMailSender emailSender;
 
-    //인증번호 생성
-    private final String ePw = createKey();
+    private final Environment env;
+    private final IUserConfirmRepository iUserConfirmRepository;
+    private final AuthEntityRepository authEntityRepository;
 
-    @Value("${spring.mail.username}")
-    private String id;
+    private MimeMessage reissuePassword(String to, String ePw)throws Exception{
+        System.out.println("보내는 대상 : "+ to);
+        System.out.println("인증 번호 : "+ePw);
+        MimeMessage message = emailSender.createMimeMessage();
 
-    public MimeMessage createMessage(String to)throws MessagingException, UnsupportedEncodingException {
-        log.info("보내는 대상 : "+ to);
-        log.info("인증 번호 : " + ePw);
-        MimeMessage  message = javaMailSender.createMimeMessage();
+        message.addRecipients(Message.RecipientType.TO, to);
+        message.setSubject("임시 비밀번호가 발급되었습니다.");
 
-        message.addRecipients(MimeMessage.RecipientType.TO, to); // to 보내는 대상
-        message.setSubject("ㅇㅇㅇ 회원가입 인증 코드: "); //메일 제목
-
-        // 메일 내용 메일의 subtype을 html로 지정하여 html문법 사용 가능
-        String msg="";
-        msg += "<h1 style=\"font-size: 30px; padding-right: 30px; padding-left: 30px;\">이메일 주소 확인</h1>";
-        msg += "<p style=\"font-size: 17px; padding-right: 30px; padding-left: 30px;\">아래 확인 코드를 회원가입 화면에서 입력해주세요.</p>";
-        msg += "<div style=\"padding-right: 30px; padding-left: 30px; margin: 32px 0 40px;\"><table style=\"border-collapse: collapse; border: 0; background-color: #F4F4F4; height: 70px; table-layout: fixed; word-wrap: break-word; border-radius: 6px;\"><tbody><tr><td style=\"text-align: center; vertical-align: middle; font-size: 30px;\">";
-        msg += ePw;
-        msg += "</td></tr></tbody></table></div>";
-
-        message.setText(msg, "utf-8", "html"); //내용, charset타입, subtype
-        message.setFrom(new InternetAddress(id,"prac_Admin")); //보내는 사람의 메일 주소, 보내는 사람 이름
+        String msgg = "";
+        msgg+= "<div style='margin:100px;'>";
+        msgg+= "<h1> 안녕하세요 COBAN 입니다. </h1>";
+        msgg+= "<br>";
+        msgg+= "<p>아래 임시 비밀번호로 로그인하시고 비밀번호를 변경하여 사용하여 주세요.<p>";
+        msgg+= "<br>";
+        msgg+= "<p>감사합니다!<p>";
+        msgg+= "<br>";
+        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msgg+= "<h3 style='color:purple;'>임시 비밀 번호입니다.</h3>";
+        msgg+= "<div style='font-size:130%'>";
+        msgg+= "CODE : <strong>";
+        msgg+= ePw+"</strong><div><br/> ";
+        msgg+= "</div>";
+        message.setText(msgg, "utf-8", "html");//내용
+        message.setFrom(new InternetAddress("kjh950601@naver.com","COSMOST"));//보내는 사람
 
         return message;
     }
 
-    // 인증코드 만들기
+
+    private MimeMessage createMessage(String to, String ePw)throws Exception{
+        System.out.println("보내는 대상 : "+ to);
+        System.out.println("인증 번호 : "+ePw);
+        MimeMessage message = emailSender.createMimeMessage();
+
+        message.addRecipients(Message.RecipientType.TO, to);
+        message.setSubject("비밀번호 찾기를 위한 인증번호입니다.");
+
+        String msgg = "";
+        msgg+= "<div style='margin:100px;'>";
+        msgg+= "<h1> 안녕하세요 COBAN 입니다. </h1>";
+        msgg+= "<br>";
+        msgg+= "<p>아래 코드를 인증 창으로 돌아가 입력해주세요<p>";
+        msgg+= "<br>";
+        msgg+= "<p>감사합니다!<p>";
+        msgg+= "<br>";
+        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msgg+= "<h3 style='color:purple;'>비밀번호 찾기 인증 코드입니다.</h3>";
+        msgg+= "<div style='font-size:130%'>";
+        msgg+= "CODE : <strong>";
+        msgg+= ePw+"</strong><div><br/> ";
+        msgg+= "</div>";
+        message.setText(msgg, "utf-8", "html");//내용
+        message.setFrom(new InternetAddress("sunjunam118@naver.com","COBAN"));//보내는 사람
+
+        return message;
+    }
+
+    private MimeMessage createEmailConfirmMessage(String to, String ePw)throws Exception{
+
+        System.out.println("보내는 대상 : "+ to);
+        System.out.println("인증 번호 : "+ePw);
+        MimeMessage message = emailSender.createMimeMessage();
+
+        message.addRecipients(Message.RecipientType.TO, to);
+        message.setSubject("회원가입 이메일 인증");
+
+        String msgg = "";
+        msgg+= "<div style='margin:100px;'>";
+        msgg+= "<h1> 안녕하세요 COBAN 입니다. </h1>";
+        msgg+= "<br>";
+        msgg+= "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
+        msgg+= "<br>";
+        msgg+= "<p>감사합니다!<p>";
+        msgg+= "<br>";
+        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msgg+= "<h3 style='color:purple;'>회원가입 인증 코드입니다.</h3>";
+        msgg+= "<div style='font-size:130%'>";
+        msgg+= "CODE : <strong>";
+        msgg+= ePw+"</strong><div><br/> ";
+        msgg+= "</div>";
+        message.setText(msgg, "utf-8", "html");//내용
+        message.setFrom(new InternetAddress("sunjunam118@naver.com","COBAN"));//보내는 사람
+
+        return message;
+    }
+
     public static String createKey() {
         StringBuffer key = new StringBuffer();
         Random rnd = new Random();
 
-        for (int i = 0; i < 6; i++) { // 인증코드 6자리
-            key.append((rnd.nextInt(10)));
+        for(int i = 0; i < 8; i++) {
+            int index = rnd.nextInt(3);
+
+            switch (index) {
+                case 0:
+                    key.append((char) ((int) (rnd.nextInt(26)) +97));
+                    break;
+                case 1:
+                    key.append((char) ((int) (rnd.nextInt(26)) + 65));
+                    break;
+                case 2:
+                    key.append((rnd.nextInt(10)));
+                    break;
+            }
         }
         return key.toString();
     }
 
-    /*
-        메일 발송
-        sendSimpleMessage의 매개변수로 들어온 to는 인증번호를 받을 메일주소
-        MimeMessage 객체 안에 내가 전송할 메일의 내용을 담아준다.
-        bean으로 등록해둔 javaMailSender 객체를 사용하여 이메일 send
-     */
-    public String sendSimpleMessage(String to)throws Exception {
-        MimeMessage message = createMessage(to);
-        try{
-            redisUtil.setDataExpire(ePw, to, 60 * 1L); // 유효시간 1분
-            javaMailSender.send(message); // 메일 발송
-        }catch(MailException es){
+
+    @Override
+    public String sendEmail(String email) throws Exception {
+        String ePw = createKey();
+        MimeMessage message = createMessage(email, ePw); // 비밀번호 변경
+
+        AuthEntity authEntity = authEntityRepository.findByEmail(email);
+        if (authEntity == null) {
+            return "입력하신 이메일은 등록되지 않은 메일입니다.";
+        }
+        try {
+            emailSender.send(message);
+            UserConfirmEntity userConfirmEntity = iUserConfirmRepository.findByEmail(email);
+            if(userConfirmEntity == null){
+                iUserConfirmRepository.save(UserConfirmEntity.builder()
+                        .confirmKey(ePw)
+                        .email(email)
+                        .build());
+            } else {
+                userConfirmEntity.setConfirmKey(ePw);
+                iUserConfirmRepository.save(userConfirmEntity);
+            }
+            log.info("이메일 전송, {}, pw", email, ePw);
+            return "success";
+        } catch (MailException es) {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        return ePw; // 메일로 보냈던 인증 코드를 서버로 리턴
     }
 
-    public String verifyEmail(String key) throws ChangeSetPersister.NotFoundException {
-        String memberEmail = redisUtil.getData(key);
-        if (memberEmail == null) {
-            throw new ChangeSetPersister.NotFoundException();
+    @Override
+    public String sendConfirmCodeByEmail(String email) throws Exception {
+        String ePw = createKey();
+        MimeMessage message = createEmailConfirmMessage(email, ePw); // 이메일 사용 인증
+
+        try {
+            emailSender.send(message);
+            UserConfirmEntity userConfirmEntity = iUserConfirmRepository.findByEmail(email);
+            if(userConfirmEntity == null){
+                iUserConfirmRepository.save(UserConfirmEntity.builder()
+                        .confirmKey(ePw)
+                        .email(email)
+                        .build());
+            } else {
+                userConfirmEntity.setConfirmKey(ePw);
+                iUserConfirmRepository.save(userConfirmEntity);
+            }
+
+            log.info("이메일 확인 인증 코드 전송, {}, pw", email, ePw);
+            return "success";
+
+        } catch (MailException es) {
+            es.printStackTrace();
+            throw new IllegalArgumentException();
         }
-        redisUtil.deleteData(key);
-        return ePw;
+    }
+
+    @Override
+    public String sendReissuePassword(String email) throws Exception {
+        String ePw = createKey();
+        log.info("패스워드 발송, {}, pw", email, ePw);
+        MimeMessage message = reissuePassword(email, ePw); // 비밀번호 변경
+        try {
+            emailSender.send(message);
+            return ePw;
+        } catch (MailException es) {
+            es.printStackTrace();
+            throw new IllegalArgumentException();
+        }
     }
 }

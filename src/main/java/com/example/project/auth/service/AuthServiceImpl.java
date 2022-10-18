@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
                         .email(createAuthRequest.getEmail())
                         .role(AuthRole.USER)
                         .status(AuthStatus.ACTIVE)
-                        .nickName(createAuthRequest.getNickName())
+                        .nickname(createAuthRequest.getNickname())
                         .address(createAuthRequest.getAddress())
                         .sns(createAuthRequest.getSns())
                         .married(createAuthRequest.getMarried())

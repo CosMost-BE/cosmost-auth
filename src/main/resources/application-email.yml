@@ -1,15 +1,31 @@
-spring:
-  mail:
-    smtp:
-      auth: 'true'
-      socketFactory:
-        class: javax.net.ssl.SSLSocketFactory
-        fallback: 'false'
-        port: '465'
-      starttls:
-        enable: 'true'
-        required: 'true'
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://172.19.0.3:8761/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+greeting:
+  message: Hello!
+
+token:
+  expiration-time: 86400000
+  secret: COSMOST-SERVICE
+
+mail:
+  smtp:
+    socketFactory:
+      class: javax.net.ssl.SSLSocketFactory
+      fallback: 'false'
       port: '465'
-  AdminMail:
-    id: kjh950601@gmail.com
-    password: apdlvmf1dlek!!!
+    starttls:
+      required: 'true'
+      enable: 'true'
+    port: '465'
+    auth: 'true'
+
+AdminMail:
+  password: apdlvmf1dlek
+  id: kjh950601
