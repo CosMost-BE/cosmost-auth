@@ -87,13 +87,6 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     // 회원 탈퇴
     public ResponseEntity<String> deleteAuth(Long id, DeleteAuthRequest deleteAuthRequest) {
-//        String id = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
-//        Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(id));
-//        if(auth.isPresent()) {
-//            auth.get().setIsLeave(true);
-//            return auth;
-//        }
-//        return null;
         Optional<AuthEntity> check = Optional.ofNullable(
                 authEntityRepository.findById(id).orElseThrow(
                         WithdrawalCheckNotFound::new));
