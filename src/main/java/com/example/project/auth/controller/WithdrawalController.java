@@ -39,8 +39,8 @@ public class WithdrawalController {
 
     @ApiOperation(value = "회원탈퇴를 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "a", value = "회원탈퇴", dataType = "WithdrawlVoReq")
-    @DeleteMapping("")
-    public ResponseEntity<String> deleteAuth(@RequestBody @Valid DeleteAuthRequest deleteAuthRequest, HttpServletRequest request) {
+    @PutMapping("")
+    public ResponseEntity<String> putAuth(@RequestBody @Valid DeleteAuthRequest deleteAuthRequest, HttpServletRequest request) {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
         return authService.deleteAuth(id, deleteAuthRequest);
