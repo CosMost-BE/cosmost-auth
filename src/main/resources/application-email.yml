@@ -14,3 +14,17 @@ mail:
 AdminMail:
   password: apdlvmf1dlek
   id: kjh950601
+
+
+#spring:
+#  mail:
+#    host: smtp.naver.com
+#    port: 465
+#    username: kjh950601
+#    password: apdlvmf1dlek
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          ssl:
+#            enable: true
