@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class DeleteAuthRequest {
-
-    private Boolean authDropCheck;
+    private Boolean withdrawlCheck;
 }

@@ -46,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
                         .email(createAuthRequest.getEmail())
                         .role(AuthRole.USER)
                         .status(AuthStatus.ACTIVE)
-                        .nickName(createAuthRequest.getNickName())
+                        .nickname(createAuthRequest.getNickname())
                         .address(createAuthRequest.getAddress())
                         .sns(createAuthRequest.getSns())
                         .married(createAuthRequest.getMarried())
@@ -99,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
                         WithdrawalCheckNotFound::new));
 
         if (check.isPresent()) {
-            if (deleteAuthRequest.getAuthDropCheck().equals(true)) {
+            if (deleteAuthRequest.getWithdrawlCheck().equals(true)) {
                 authEntityRepository.deleteById(id);
             } else {
                 throw new WithdrawalCheckNotFound();
