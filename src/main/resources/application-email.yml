@@ -1,4 +1,5 @@
 mail:
+  host: smtp.naver.com
   smtp:
     socketFactory:
       class: javax.net.ssl.SSLSocketFactory
