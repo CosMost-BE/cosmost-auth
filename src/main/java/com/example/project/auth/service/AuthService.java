@@ -16,5 +16,5 @@ public interface AuthService {
 
     String putAuth(UpdateAuthRequest updateAuthRequest);
 
-    ResponseEntity<String> deleteAuth(Long id, DeleteAuthRequest deleteAuthRequest);
+    ResponseEntity<String> putUserAuth(Long id, DeleteAuthRequest deleteAuthRequest);
 }

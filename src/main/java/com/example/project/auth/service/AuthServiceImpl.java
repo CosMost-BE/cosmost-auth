@@ -86,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     // 회원 탈퇴
-    public ResponseEntity<String> deleteAuth(Long id, DeleteAuthRequest deleteAuthRequest) {
+    public ResponseEntity<String> putUserAuth(Long id, DeleteAuthRequest deleteAuthRequest) {
         Optional<AuthEntity> check = Optional.ofNullable(
                 authEntityRepository.findById(id).orElseThrow(
                         WithdrawalCheckNotFound::new));

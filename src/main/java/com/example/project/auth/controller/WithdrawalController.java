@@ -43,6 +43,6 @@ public class WithdrawalController {
     public ResponseEntity<String> putAuth(@RequestBody @Valid DeleteAuthRequest deleteAuthRequest, HttpServletRequest request) {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
-        return authService.deleteAuth(id, deleteAuthRequest);
+        return authService.putUserAuth(id, deleteAuthRequest);
     }
 }
