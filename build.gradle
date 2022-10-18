@@ -25,7 +25,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	// mail
-	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.0'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 //      spring-boot-starter-security : 로그인 인증 절차를 위한 라이브러리
 	implementation 'org.springframework.boot:spring-boot-starter-security'
