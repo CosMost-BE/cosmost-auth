@@ -1,7 +1,6 @@
 package com.example.project.auth.controller;
 
-
-import com.example.project.auth.requestbody.CreateAuthRequest;
+import com.example.project.auth.configuration.util.JwtTokenProvider;
 import com.example.project.auth.requestbody.DeleteAuthRequest;
 import com.example.project.auth.service.AuthService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Slf4j
@@ -22,10 +22,12 @@ import javax.validation.Valid;
 public class WithdrawalController {
 
     private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public WithdrawalController(AuthService authService) {
+    public WithdrawalController(AuthService authService, JwtTokenProvider jwtTokenProvider) {
         this.authService = authService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @ApiResponses({
@@ -38,9 +40,9 @@ public class WithdrawalController {
     @ApiOperation(value = "회원탈퇴를 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "a", value = "회원탈퇴", dataType = "WithdrawlVoReq")
     @DeleteMapping("")
-    public ResponseEntity<String> createAuth(@RequestBody @Valid DeleteAuthRequest deleteAuthRequest) {
-        authService.deleteAuth(deleteAuthRequest);
-        return ResponseEntity.ok().body("회원탈퇴가 되었습니다.");
+    public ResponseEntity<String> deleteAuth(@RequestBody @Valid DeleteAuthRequest deleteAuthRequest, HttpServletRequest request) {
+        String token = jwtTokenProvider.getToken(request);
+        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
+        return authService.deleteAuth(id, deleteAuthRequest);
     }
-
 }

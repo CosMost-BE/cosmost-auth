@@ -3,7 +3,7 @@ package com.example.project.auth.service;
 import com.example.project.auth.configuration.util.JwtTokenProvider;
 import com.example.project.auth.exception.AuthIdNotFound;
 import com.example.project.auth.exception.DuplicatedId;
-import com.example.project.auth.exception.WithDrawalCheckNotFound;
+import com.example.project.auth.exception.WithdrawalCheckNotFound;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
@@ -14,11 +14,11 @@ import com.example.project.auth.requestbody.DeleteAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -86,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     // 회원 탈퇴
-    public Optional<AuthEntity> deleteAuth(Long id, DeleteAuthRequest deleteAuthRequest) {
+    public ResponseEntity<String> deleteAuth(Long id, DeleteAuthRequest deleteAuthRequest) {
 //        String id = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
 //        Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(id));
 //        if(auth.isPresent()) {
@@ -96,13 +96,13 @@ public class AuthServiceImpl implements AuthService {
 //        return null;
         Optional<AuthEntity> check = Optional.ofNullable(
                 authEntityRepository.findById(id).orElseThrow(
-                        WithDrawalCheckNotFound::new));
+                        WithdrawalCheckNotFound::new));
 
         if (check.isPresent()) {
             if (deleteAuthRequest.getAuthDropCheck().equals(true)) {
                 authEntityRepository.deleteById(id);
             } else {
-                throw new WithDrawalCheckNotFound();
+                throw new WithdrawalCheckNotFound();
             }
         } else {
             throw new AuthIdNotFound();

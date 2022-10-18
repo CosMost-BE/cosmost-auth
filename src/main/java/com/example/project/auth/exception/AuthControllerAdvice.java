@@ -19,6 +19,20 @@ public class AuthControllerAdvice {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler(AuthIdNotFound.class)
+    public ResponseEntity<String> AuthIdNotFoundException(AuthIdNotFound exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(WithdrawalCheckNotFound.class)
+    public ResponseEntity<String> WithdrawalCheckNotFound(WithdrawalCheckNotFound exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String processValidationError(MethodArgumentNotValidException exception) {
         BindingResult bindingResult = exception.getBindingResult();

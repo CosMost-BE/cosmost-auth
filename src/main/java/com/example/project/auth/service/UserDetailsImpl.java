@@ -20,7 +20,6 @@ public class UserDetailsImpl implements UserDetails {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(ROLE_PREFIX + authRole.toString());
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(authority);
-
         return authorities;
     }
 
