@@ -1,8 +1,11 @@
 package com.example.project.auth.service;
 
+import com.example.project.auth.exception.DuplicatedId;
 import com.example.project.auth.infrastructure.entity.*;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.PutAuthRequest;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Create
@@ -10,7 +13,11 @@ import com.example.project.auth.requestbody.PutAuthRequest;
 public interface AuthService {
     AuthEntity createAuth(CreateAuthRequest createAuthRequest);
 
-    boolean checkId(String loginId);
+    Boolean checkId(HttpServletRequest request) throws DuplicatedId;
+
+    Boolean checkNickname(HttpServletRequest request) throws DuplicatedId;
 
     String putAuth(PutAuthRequest putAuthRequest);
+
+
 }
