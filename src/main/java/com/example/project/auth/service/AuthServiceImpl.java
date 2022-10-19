@@ -1,7 +1,6 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
-import com.example.project.auth.exception.DuplicatedId;
 import com.example.project.auth.exception.UpdateAuthFail;
 import com.example.project.auth.exception.DuplicatedIdException;
 import com.example.project.auth.exception.DuplicatedNickname;
@@ -57,11 +56,7 @@ public class AuthServiceImpl implements AuthService {
                         .build());
     }
 
-    @Override
-    public boolean checkId(String loginId) { // 아이디 중복확인
-        boolean s = authEntityRepository.existsByLoginId(loginId);
-        if (s == true) {
-            throw new DuplicatedId();
+    @Override // 아이디 중복확인
     public Boolean checkId(HttpServletRequest request) throws DuplicatedIdException { // 아이디 중복확인
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
@@ -87,9 +82,6 @@ public class AuthServiceImpl implements AuthService {
     public String updateLoginAuth(UpdateLoginRequest updateAuthRequest) { // 로그인
         // optional
         Optional<AuthEntity> auth = authEntityRepository.findByLoginId(updateAuthRequest.getLoginId());
-    public String putAuth(PutAuthRequest putAuthRequest) { // 로그인
-
-        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(putAuthRequest.getLoginId());
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
