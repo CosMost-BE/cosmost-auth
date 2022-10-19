@@ -19,8 +19,8 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-#  profiles:
-#    include: oauth
+  profiles:
+    include: email, redis
 
 jwt:
   tokenValidTime: 1800000
