@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override // 아이디 중복확인
-    public Boolean checkId(HttpServletRequest request) throws DuplicatedIdException { // 아이디 중복확인
+    public Boolean checkId(HttpServletRequest request) throws DuplicatedIdException {
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
         if (header.equals(authEntityRepository.existsByLoginId(header))) {
