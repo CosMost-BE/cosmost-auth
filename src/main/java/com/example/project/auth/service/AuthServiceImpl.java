@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override // 회원정보 수정
-    public AuthEntity updateAuthMember(UpdateAuthRequest updateAuthRequest, Long id) throws UpdateAuthFail {
+    public AuthEntity updateAuth(UpdateAuthRequest updateAuthRequest, Long id) throws UpdateAuthFail {
         try {
             AuthEntity auth = authEntityRepository.findById(id).orElseThrow(() ->
                     new UpdateAuthFail()
@@ -79,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String putAuth(UpdateLoginRequest putAuthRequest) { // 로그인
+    public String updateLoginaAuth(UpdateLoginRequest putAuthRequest) { // 로그인
         // optional
         Optional<AuthEntity> auth = authEntityRepository.findByLoginId(putAuthRequest.getLoginId());
 

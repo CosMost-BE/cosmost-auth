@@ -34,8 +34,8 @@ public class LoginController {
     @ApiOperation(value = "로그인 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "login", value = "로그인", dataType = "LoginVoReq")
     @PutMapping("")
-    public ResponseEntity<String> putAuth(@RequestBody @Valid UpdateLoginRequest putAuthRequest) {
-        String auth = authService.putAuth(putAuthRequest);
+    public ResponseEntity<String> updateLoginaAuth(@RequestBody @Valid UpdateLoginRequest putAuthRequest) {
+        String auth = authService.updateLoginaAuth(putAuthRequest);
 
         if(auth != null) {
             return ResponseEntity.status(200).body(auth);

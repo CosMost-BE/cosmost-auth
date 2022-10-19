@@ -12,10 +12,10 @@ import com.example.project.auth.requestbody.UpdateLoginRequest;
 public interface AuthService {
     AuthEntity createAuth(CreateAuthRequest createAuthRequest);
 
-    AuthEntity updateAuthMember(UpdateAuthRequest updateAuthRequest, Long id);
+    AuthEntity updateAuth(UpdateAuthRequest updateAuthRequest, Long id);
 
     boolean checkId(String loginId);
 
-    String putAuth(UpdateLoginRequest putAuthRequest);
+    String updateLoginaAuth(UpdateLoginRequest putAuthRequest);
 
 }
