@@ -1,6 +1,6 @@
 package com.example.project.auth.controller;
 
-import com.example.project.auth.exception.DuplicatedId;
+import com.example.project.auth.exception.DuplicatedIdException;
 import com.example.project.auth.service.AuthService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -36,7 +36,7 @@ public class ValidationController {
     public ResponseEntity<?> checkId(@RequestParam(value="id") String id) {
 
         if(id.equals(authService.checkId(id))) {
-            throw new DuplicatedId();
+            throw new DuplicatedIdException();
         } else {
             return ResponseEntity.status(200).body("사용할 수 있는 아이디입니다.");
         }

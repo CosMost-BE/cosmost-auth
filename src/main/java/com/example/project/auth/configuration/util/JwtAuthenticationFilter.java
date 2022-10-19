@@ -1,6 +1,5 @@
 package com.example.project.auth.configuration.util;
 
-
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

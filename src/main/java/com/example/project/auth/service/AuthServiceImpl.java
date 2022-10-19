@@ -1,7 +1,7 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
-import com.example.project.auth.exception.DuplicatedId;
+import com.example.project.auth.exception.DuplicatedIdException;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
                         .email(createAuthRequest.getEmail())
                         .role(AuthRole.USER)
                         .status(AuthStatus.ACTIVE)
-                        .nickName(createAuthRequest.getNickName())
+                        .nickname(createAuthRequest.getNickname())
                         .address(createAuthRequest.getAddress())
                         .sns(createAuthRequest.getSns())
                         .married(createAuthRequest.getMarried())
@@ -54,18 +54,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean checkId(String loginId) { // 아이디 중복확인
-//        return authEntityRepository.existsByLoginId(loginId);
-//        checkId()
-        boolean s = authEntityRepository.existsByLoginId(loginId);
-        if (s == true) {
-            throw new DuplicatedId();
+        boolean check  = authEntityRepository.existsByLoginId(loginId);
+        if (check == true) {
+            throw new DuplicatedIdException();
         }
         return false;
     }
 
+
     @Override
     public String putAuth(PutAuthRequest putAuthRequest) { // 로그인
-        // optional
+
         Optional<AuthEntity> auth = authEntityRepository.findByLoginId(putAuthRequest.getLoginId());
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
