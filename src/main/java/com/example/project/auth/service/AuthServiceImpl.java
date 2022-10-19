@@ -1,7 +1,6 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
-import com.example.project.auth.exception.DuplicatedIdException;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
@@ -15,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Slf4j
@@ -53,12 +53,24 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean checkId(String loginId) { // 아이디 중복확인
-        boolean check  = authEntityRepository.existsByLoginId(loginId);
-        if (check == true) {
-            throw new DuplicatedIdException();
+    public Boolean checkId(HttpServletRequest request) throws DuplicatedId { // 아이디 중복확인
+        String header = jwtTokenProvider.getHeader(request);
+        log.info(String.valueOf(header));
+        if (header.equals(authEntityRepository.existsByLoginId(header))) {
+            throw new DuplicatedId();
         }
-        return false;
+        return true;
+    }
+
+
+    @Override
+    public Boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname { // 닉네임 중복확인
+        String header = jwtTokenProvider.getHeader(request);
+        log.info(String.valueOf(header));
+        if (header.equals(authEntityRepository.existsByNickname(header))) {
+            throw new DuplicatedNickname();
+        }
+        return true;
     }
 
 
