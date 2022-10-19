@@ -3,7 +3,7 @@ package com.example.project.auth.service;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.UserConfirmEntity;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
-import com.example.project.auth.infrastructure.repository.IUserConfirmRepository;
+import com.example.project.auth.infrastructure.repository.UserConfirmRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class EmailServiceImpl implements EmailService {
     JavaMailSender emailSender;
 
     private final Environment env;
-    private final IUserConfirmRepository iUserConfirmRepository;
+    private final UserConfirmRepository userConfirmRepository;
     private final AuthEntityRepository authEntityRepository;
 
     private MimeMessage reissuePassword(String to, String ePw)throws Exception{
@@ -152,15 +152,15 @@ public class EmailServiceImpl implements EmailService {
         }
         try {
             emailSender.send(message);
-            UserConfirmEntity userConfirmEntity = iUserConfirmRepository.findByEmail(email);
+            UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
             if(userConfirmEntity == null){
-                iUserConfirmRepository.save(UserConfirmEntity.builder()
+                userConfirmRepository.save(UserConfirmEntity.builder()
                         .confirmKey(ePw)
                         .email(email)
                         .build());
             } else {
                 userConfirmEntity.setConfirmKey(ePw);
-                iUserConfirmRepository.save(userConfirmEntity);
+                userConfirmRepository.save(userConfirmEntity);
             }
             log.info("이메일 전송, {}, pw", email, ePw);
             return "success";
@@ -177,15 +177,15 @@ public class EmailServiceImpl implements EmailService {
 
         try {
             emailSender.send(message);
-            UserConfirmEntity userConfirmEntity = iUserConfirmRepository.findByEmail(email);
+            UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
             if(userConfirmEntity == null){
-                iUserConfirmRepository.save(UserConfirmEntity.builder()
+                userConfirmRepository.save(UserConfirmEntity.builder()
                         .confirmKey(ePw)
                         .email(email)
                         .build());
             } else {
                 userConfirmEntity.setConfirmKey(ePw);
-                iUserConfirmRepository.save(userConfirmEntity);
+                userConfirmRepository.save(userConfirmEntity);
             }
 
             log.info("이메일 확인 인증 코드 전송, {}, pw", email, ePw);

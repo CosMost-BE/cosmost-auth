@@ -17,7 +17,6 @@ import javax.validation.Valid;
 @RequestMapping("/v1/signin")
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@ComponentScan
 public class LoginController {
     private final AuthService authService;
 

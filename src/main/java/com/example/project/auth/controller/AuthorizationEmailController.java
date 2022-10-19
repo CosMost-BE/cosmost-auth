@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@RequestMapping("/authorization")
+@RequestMapping("/v1/authorization")
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthorizationEmailController {
