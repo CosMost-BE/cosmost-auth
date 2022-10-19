@@ -1,6 +1,7 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.exception.DuplicatedId;
+import com.example.project.auth.exception.DuplicatedNickname;
 import com.example.project.auth.infrastructure.entity.*;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.PutAuthRequest;
@@ -15,7 +16,7 @@ public interface AuthService {
 
     Boolean checkId(HttpServletRequest request) throws DuplicatedId;
 
-    Boolean checkNickname(HttpServletRequest request) throws DuplicatedId;
+    Boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname;
 
     String putAuth(PutAuthRequest putAuthRequest);
 
