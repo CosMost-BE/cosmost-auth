@@ -87,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
             AuthEntity auth = authEntityRepository.findById(id).orElseThrow(() ->
                     new UpdateAuthFail()
             );
-            authEntityRepository.save(updateAuthRequest.infoDtoEntity(id, auth));
+            authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.getId(), updateAuthRequest));
         } catch (Exception exception) {
             throw new UpdateAuthFail();
         }
