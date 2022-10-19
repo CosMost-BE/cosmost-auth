@@ -20,7 +20,6 @@ import javax.validation.Valid;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class WithdrawalController {
-
     private final AuthService authService;
     private final JwtTokenProvider jwtTokenProvider;
 

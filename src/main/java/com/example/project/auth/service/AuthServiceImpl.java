@@ -28,12 +28,14 @@ public class AuthServiceImpl implements AuthService {
     private final AuthEntityRepository authEntityRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final AuthStatus authStatus;
 
     @Autowired
-    public AuthServiceImpl(AuthEntityRepository authEntityRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(AuthEntityRepository authEntityRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder, AuthStatus authStatus) {
         this.authEntityRepository = authEntityRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
+        this.authStatus = authStatus;
     }
 
     @Override
@@ -87,15 +89,28 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     // 회원 탈퇴
     public ResponseEntity<String> putUserAuth(Long id, DeleteAuthRequest deleteAuthRequest) {
+//        Optional<AuthEntity> check = Optional.ofNullable(
+//                authEntityRepository.findById(id).orElseThrow(
+//                        WithdrawalCheckNotFound::new));
+//
+//        if (check.isPresent()) {
+//            if (deleteAuthRequest.getWithdrawlCheck().equals(true)) {
+//                authEntityRepository.deleteById(id);
+//            } else {
+//                throw new WithdrawalCheckNotFound();
+//            }
+//        } else {
+//            throw new AuthIdNotFound();
+//        }
+//        return null;
         Optional<AuthEntity> check = Optional.ofNullable(
                 authEntityRepository.findById(id).orElseThrow(
                         WithdrawalCheckNotFound::new));
 
         if (check.isPresent()) {
             if (deleteAuthRequest.getWithdrawlCheck().equals(true)) {
-                authEntityRepository.deleteById(id);
-            } else {
-                throw new WithdrawalCheckNotFound();
+                authStatus.equals(AuthStatus.WITHDRAWAL);
+                AuthStatus withdrawal = AuthStatus.WITHDRAWAL;
             }
         } else {
             throw new AuthIdNotFound();
