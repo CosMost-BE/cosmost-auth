@@ -55,9 +55,6 @@ public class AuthServiceImpl implements AuthService {
                         .build());
     }
 
-
-
-
     @Override
     public boolean checkId(String loginId) { // 아이디 중복확인
         boolean s = authEntityRepository.existsByLoginId(loginId);
@@ -68,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String updateAuth(UpdateLoginRequest updateAuthRequest) { // 로그인
+    public String updateLoginAuth(UpdateLoginRequest updateAuthRequest) { // 로그인
         // optional
         Optional<AuthEntity> auth = authEntityRepository.findByLoginId(updateAuthRequest.getLoginId());
 
@@ -82,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override // 회원정보 수정
-    public String updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail {
+    public AuthEntity updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
         log.info(String.valueOf(id));

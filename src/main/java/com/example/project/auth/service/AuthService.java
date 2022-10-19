@@ -13,8 +13,10 @@ public interface AuthService {
 
     boolean checkId(String loginId);
 
-    String updateAuth(UpdateLoginRequest putAuthRequest);
+    String updateLoginAuth(UpdateLoginRequest updateLoginRequest);
 
     // 회원정보 수정
-    String updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail;
+    AuthEntity updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail;
+
+
 }

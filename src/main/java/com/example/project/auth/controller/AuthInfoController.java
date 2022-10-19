@@ -1,6 +1,10 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.requestbody.UpdateAuthRequest;
+<<<<<<< HEAD
+=======
+import com.example.project.auth.requestbody.UpdateLoginRequest;
+>>>>>>> c1d18f9a064f0a4ea17163e087ea14556a3c2f57
 import com.example.project.auth.service.AuthService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -12,7 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.project.auth.configuration.util.JwtTokenProvider;
 
+<<<<<<< HEAD
 import javax.servlet.http.HttpServletRequest;
+=======
+>>>>>>> c1d18f9a064f0a4ea17163e087ea14556a3c2f57
 import javax.validation.Valid;
 
 @Slf4j
@@ -38,15 +45,8 @@ public class AuthInfoController {
     @ApiOperation(value = "회원정보 수정할 때 쓰는 메소드")
     @ApiImplicitParam(name = "authInfo", value = "회원정보 수정", dataType = "AuthInfoVoReq")
     @PutMapping("")
-    public ResponseEntity<?> updateAuthInfo(@RequestBody @Valid UpdateAuthRequest updateAuthRequest, HttpServletRequest request) {
-        String auth = authService.updateAuthInfo(updateAuthRequest, request);
-//        String token = jwtTokenProvider.getToken(request);
-//        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
-
-        if(auth!=null){
-            return ResponseEntity.status(200).body(auth);
-        }else {
-            return ResponseEntity.status(400).body("회원정보 수정에 실패했습니다.");
-        }
+    public ResponseEntity<?> updateAuth(@RequestBody @Valid UpdateAuthRequest updateAuthRequest) {
+//        authService.updateAuthInfo(updateAuthRequest);
+//        return ResponseEntity.ok().body("회원정보 수정이 되었습니다.");
     }
 }

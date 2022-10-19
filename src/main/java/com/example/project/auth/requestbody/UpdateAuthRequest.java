@@ -22,13 +22,13 @@ public class UpdateAuthRequest {
 
     private String loginPwd;
 
-    private String ageGroup;
+    private String email;
 
     private AuthMarried married;
 
-    private String email;
-
     private String address;
+
+    private String ageGroup;
 
     public AuthEntity infoDtoEntity(Long id, AuthEntity authEntity) {
         return AuthEntity.builder()
