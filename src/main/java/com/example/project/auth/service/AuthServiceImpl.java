@@ -1,6 +1,8 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
+import com.example.project.auth.exception.DuplicatedIdException;
+import com.example.project.auth.exception.DuplicatedNickname;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
@@ -53,11 +55,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Boolean checkId(HttpServletRequest request) throws DuplicatedId { // 아이디 중복확인
+    public Boolean checkId(HttpServletRequest request) throws DuplicatedIdException { // 아이디 중복확인
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
         if (header.equals(authEntityRepository.existsByLoginId(header))) {
-            throw new DuplicatedId();
+            throw new DuplicatedIdException();
         }
         return true;
     }

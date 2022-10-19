@@ -1,5 +1,6 @@
 package com.example.project.auth.controller;
 
+import com.example.project.auth.exception.DuplicatedIdException;
 import com.example.project.auth.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,11 +33,12 @@ public class ValidationController {
             if (authService.checkId(request).equals(true)) {
                 return ResponseEntity.status(200).body("사용할 수 있는 아이디입니다.");
             } else {
-                throw new DuplicatedId();
+                throw new DuplicatedIdException();
             }
         } else if (id.equals("nickname")) {
             if (authService.checkNickname(request).equals(true)) {
                 return ResponseEntity.status(200).body("사용할 수 있는 닉네임입니다.");
+            }
         }
         return null;
     }
