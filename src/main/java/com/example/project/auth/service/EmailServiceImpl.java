@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.util.Optional;
 import java.util.Random;
 
 @PropertySource(value = "classpath:/application-email.yml")
@@ -42,14 +43,14 @@ public class EmailServiceImpl implements EmailService {
 
         String msgg = "";
         msgg+= "<div style='margin:100px;'>";
-        msgg+= "<h1> 안녕하세요 COBAN 입니다. </h1>";
+        msgg+= "<h1> 반갑습니다! COSMOST에서 보내드립니다. </h1>";
         msgg+= "<br>";
         msgg+= "<p>아래 임시 비밀번호로 로그인하시고 비밀번호를 변경하여 사용하여 주세요.<p>";
         msgg+= "<br>";
         msgg+= "<p>감사합니다!<p>";
         msgg+= "<br>";
         msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        msgg+= "<h3 style='color:purple;'>임시 비밀 번호입니다.</h3>";
+        msgg+= "<h3 style='color:blue;'>임시 비밀 번호입니다.</h3>";
         msgg+= "<div style='font-size:130%'>";
         msgg+= "CODE : <strong>";
         msgg+= ePw+"</strong><div><br/> ";
@@ -71,20 +72,49 @@ public class EmailServiceImpl implements EmailService {
 
         String msgg = "";
         msgg+= "<div style='margin:100px;'>";
-        msgg+= "<h1> 안녕하세요 COBAN 입니다. </h1>";
+        msgg+= "<h1> 반갑습니다! COSMOST에서 보내드립니다. </h1>";
         msgg+= "<br>";
         msgg+= "<p>아래 코드를 인증 창으로 돌아가 입력해주세요<p>";
         msgg+= "<br>";
         msgg+= "<p>감사합니다!<p>";
         msgg+= "<br>";
         msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        msgg+= "<h3 style='color:purple;'>비밀번호 찾기 인증 코드입니다.</h3>";
+        msgg+= "<h3 style='color:blue;'>비밀번호 찾기 인증 코드입니다.</h3>";
         msgg+= "<div style='font-size:130%'>";
         msgg+= "CODE : <strong>";
         msgg+= ePw+"</strong><div><br/> ";
         msgg+= "</div>";
         message.setText(msgg, "utf-8", "html");//내용
-        message.setFrom(new InternetAddress("sunjunam118@naver.com","COBAN"));//보내는 사람
+        message.setFrom(new InternetAddress("kjh950601@naver.com","COSMOST"));//보내는 사람
+
+        return message;
+    }
+
+
+    private MimeMessage idMessage(String to, String loginId)throws Exception{
+        System.out.println("보내는 대상 : "+ to);
+        System.out.println("인증 번호 : "+loginId);
+        MimeMessage message = emailSender.createMimeMessage();
+
+        message.addRecipients(Message.RecipientType.TO, to);
+        message.setSubject("아이디 찾기를 위한 인증번호입니다.");
+
+        String msgg = "";
+        msgg+= "<div style='margin:100px;'>";
+        msgg+= "<h1> 반갑습니다! COSMOST에서 보내드립니다. </h1>";
+        msgg+= "<br>";
+        msgg+= "<p>아래 코드를 인증 창으로 돌아가 입력해주세요<p>";
+        msgg+= "<br>";
+        msgg+= "<p>감사합니다!<p>";
+        msgg+= "<br>";
+        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msgg+= "<h3 style='color:blue;'>아이디 찾기 인증 코드입니다.</h3>";
+        msgg+= "<div style='font-size:130%'>";
+        msgg+= "CODE : <strong>";
+        msgg+= loginId+"</strong><div><br/> ";
+        msgg+= "</div>";
+        message.setText(msgg, "utf-8", "html");//내용
+        message.setFrom(new InternetAddress("kjh950601@naver.com","COSMOST"));//보내는 사람
 
         return message;
     }
@@ -100,14 +130,14 @@ public class EmailServiceImpl implements EmailService {
 
         String msgg = "";
         msgg+= "<div style='margin:100px;'>";
-        msgg+= "<h1> 안녕하세요 COBAN 입니다. </h1>";
+        msgg+= "<h1> 반갑습니다! COSMOST에서 보내드립니다. </h1>";
         msgg+= "<br>";
         msgg+= "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
         msgg+= "<br>";
         msgg+= "<p>감사합니다!<p>";
         msgg+= "<br>";
         msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        msgg+= "<h3 style='color:purple;'>회원가입 인증 코드입니다.</h3>";
+        msgg+= "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
         msgg+= "<div style='font-size:130%'>";
         msgg+= "CODE : <strong>";
         msgg+= ePw+"</strong><div><br/> ";
@@ -140,9 +170,38 @@ public class EmailServiceImpl implements EmailService {
         return key.toString();
     }
 
+    @Override
+    public String sendEmailId(String email) throws Exception {
+        AuthEntity authEntity = authEntityRepository.findByEmail(email);
+//        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(email); // 아이디 조회
+        MimeMessage message = idMessage(authEntity.getLoginId(), email);
+        if (authEntity == null) {
+            return "입력하신 이메일은 등록되지 않은 메일입니다.";
+        }
+
+        try {
+            emailSender.send(message);
+            UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
+            if (userConfirmEntity == null) {
+                userConfirmRepository.save(UserConfirmEntity.builder()
+                        .email(email)
+                        .build());
+            } else {
+                userConfirmEntity.setConfirmKey(String.valueOf(authEntity));
+                userConfirmRepository.save(userConfirmEntity);
+            }
+            log.info("이메일 전송, {}, pw", email, authEntity);
+            return "success";
+        } catch (MailException es) {
+            es.printStackTrace();
+            throw new IllegalArgumentException();
+        }
+    }
+
+
 
     @Override
-    public String sendEmail(String email) throws Exception {
+    public String sendEmailPwd(String email) throws Exception {
         String ePw = createKey();
         MimeMessage message = createMessage(email, ePw); // 비밀번호 변경
 

@@ -20,6 +20,7 @@ public class UserConfirmEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String loginId;
     private String email;
     private String confirmKey;
 
