@@ -10,8 +10,6 @@ import java.util.Optional;
 public interface AuthEntityRepository extends JpaRepository<AuthEntity, Long> {
     Optional<AuthEntity> findById(Long id);
     Optional<AuthEntity> findByLoginId(String loginId);
-    Optional<AuthEntity> existsByLoginId(String loginId);
-
-    Optional<AuthEntity> existsByNickname(String nickname);
-
+    boolean existsByLoginId(String loginId);
+    AuthEntity findByEmail(String email);
 }

@@ -19,6 +19,4 @@ public interface AuthService {
     Boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname;
 
     String putAuth(PutAuthRequest putAuthRequest);
-
-
 }
