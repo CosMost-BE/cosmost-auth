@@ -175,6 +175,8 @@ public class EmailServiceImpl implements EmailService {
         AuthEntity authEntity = authEntityRepository.findByEmail(email);
 //        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(email); // 아이디 조회
         MimeMessage message = idMessage(authEntity.getLoginId(), email);
+        log.info(String.valueOf(authEntity));
+        log.info(String.valueOf(message));
         if (authEntity == null) {
             return "입력하신 이메일은 등록되지 않은 메일입니다.";
         }
