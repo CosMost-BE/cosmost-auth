@@ -23,5 +23,5 @@ spring:
     include: email, redis
 
 jwt:
-  tokenValidTime: 1800000
+  tokenValidTime: 18000000000000
   secret: COS-MOST-TEAM-SECRET-KEY

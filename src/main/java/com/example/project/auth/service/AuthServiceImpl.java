@@ -80,27 +80,42 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public Optional<AuthEntity> putUserAuth(HttpServletRequest request, DeleteAuthRequest deleteAuthRequest) throws WithdrawalCheckNotFound {
+    public AuthEntity putUserAuth(HttpServletRequest request, DeleteAuthRequest deleteAuthRequest) throws WithdrawalCheckNotFound {
         String token = jwtTokenProvider.getToken(request);
         String auth = jwtTokenProvider.getUserPk(token);
-        log.info(String.valueOf(auth)+"!!!!!!!!!!!!!!");
+        log.info((auth)+"!!!!!!!!!!!!!!");
+
+//        Optional<AuthEntity>
 
         Optional<AuthEntity> auth2 = authEntityRepository.findById(Long.valueOf(auth));
 
         String oldPwd = auth2.get().getLoginPwd();
         log.info(oldPwd+"@@@@@");
+
+        // 회원탈퇴 시 비밀번호
         String newPwd = deleteAuthRequest.getLoginPwd();
         log.info(newPwd+"######");
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (encoder.matches(oldPwd, newPwd)) {
-            authEntityRepository.save(AuthEntity.builder()
-                    .status(AuthStatus.WITHDRAWAL)
+        if (encoder.matches(newPwd, oldPwd)) {
+            return authEntityRepository.save(AuthEntity.builder()
+                            .loginId(auth2.get().getLoginId())
+                            .status(AuthStatus.WITHDRAWAL)
+                            .loginPwd(auth2.get().getLoginPwd())
+                            .email(auth2.get().getEmail())
+                            .married(auth2.get().getMarried())
+                            .nickname(auth2.get().getNickname())
+                            .address(auth2.get().getAddress())
+                            .ageGroup(auth2.get().getAgeGroup())
+                            .sns(auth2.get().getSns())
+                            .profileImgOriginName(auth2.get().getProfileImgOriginName())
+                            .profileImgSaveName(auth2.get().getProfileImgSaveName())
+                            .profileImgSaveUrl(auth2.get().getProfileImgSaveUrl())
+                            .role(auth2.get().getRole())
                     .build());
 
         } else {
             throw new WithdrawalCheckNotFound();
         }
-        return null;
     }
 }

@@ -43,7 +43,7 @@ public class WithdrawalController {
     @ApiImplicitParam(name = "a", value = "회원탈퇴", dataType = "WithdrawalVoReq")
     @PutMapping("")
     public ResponseEntity<?> putAuth(@RequestBody @Valid DeleteAuthRequest deleteAuthRequest, HttpServletRequest request) {
-        Optional<AuthEntity> auth = authService.putUserAuth(request, deleteAuthRequest);
+        Optional<AuthEntity> auth = Optional.ofNullable(authService.putUserAuth(request, deleteAuthRequest));
 
         if(auth.isPresent()){
             return ResponseEntity.status(200).body("회원탈퇴 성공");
