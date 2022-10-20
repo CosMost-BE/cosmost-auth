@@ -111,6 +111,7 @@ public class AuthServiceImpl implements AuthService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (encoder.matches(newPwd, oldPwd)) {
             return authEntityRepository.save(AuthEntity.builder()
+                    .id(auth2.get().getId())
                     .loginId(auth2.get().getLoginId())
                     .status(AuthStatus.WITHDRAWL)
                     .loginPwd(auth2.get().getLoginPwd())

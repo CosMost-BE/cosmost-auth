@@ -49,6 +49,8 @@ public class UpdateAuthRequest {
 
     private String profileImgSaveUrl;
 
+    private String type;
+
     public AuthEntity infoDtoEntity(Long id, UpdateAuthRequest updateAuthRequest) {
         return AuthEntity.builder()
                 .id(id)
