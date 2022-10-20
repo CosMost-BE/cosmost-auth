@@ -17,10 +17,12 @@ public class AuthorizationEmailController {
         this.emailServiceImpl = emailServiceImpl;
     }
 
+
     @GetMapping("/check/{email}")
     public String findPw(@PathVariable String email) throws Exception {
         return emailServiceImpl.sendEmail(email);
     }
+
 
     @GetMapping("/email/confirm/{email}")
     public String createConfirmCodeByEmail(@PathVariable String email) throws Exception {
