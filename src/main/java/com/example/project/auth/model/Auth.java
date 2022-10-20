@@ -28,7 +28,7 @@ public class Auth {
 
     private AuthSns sns;
 
-    private String nickName;
+    private String nickname;
 
     private String address;
 

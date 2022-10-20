@@ -1,12 +1,13 @@
 package com.example.project.auth.controller;
 
-import com.example.project.auth.requestbody.UpdateAuthRequest;
+import com.example.project.auth.requestbody.UpdateLoginRequest;
 import com.example.project.auth.service.AuthService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 public class LoginController {
     private final AuthService authService;
 
+    @Autowired
     public LoginController(AuthService authService) {
         this.authService = authService;
     }
@@ -32,8 +34,8 @@ public class LoginController {
     @ApiOperation(value = "로그인 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "login", value = "로그인", dataType = "LoginVoReq")
     @PutMapping("")
-    public ResponseEntity<String> putAuth(@RequestBody @Valid UpdateAuthRequest updateAuthRequest) {
-        String auth = authService.putAuth(updateAuthRequest);
+    public ResponseEntity<String> updateLoginAuth(@RequestBody @Valid UpdateLoginRequest putAuthRequest) {
+        String auth = authService.updateLoginAuth(putAuthRequest);
 
         if(auth != null) {
             return ResponseEntity.status(200).body(auth);

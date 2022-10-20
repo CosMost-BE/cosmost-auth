@@ -12,8 +12,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class AuthControllerAdvice {
 
     // 아이디 존재 여부
-    @ExceptionHandler(DuplicatedId.class)
-    public ResponseEntity<String> DuplicatedIdException(DuplicatedId exception) {
+    @ExceptionHandler(DuplicatedIdException.class)
+    public ResponseEntity<String> DuplicatedIdException(DuplicatedIdException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(DuplicatedNickname.class)
+    public ResponseEntity<String> DuplicatedIdException(DuplicatedNickname exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
