@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthorizationEmailController {
+
     private final EmailServiceImpl emailServiceImpl;
 
     @Autowired
@@ -17,10 +18,15 @@ public class AuthorizationEmailController {
         this.emailServiceImpl = emailServiceImpl;
     }
 
+    @GetMapping("/login-id/confirm/{email}")
+    public String findId(@PathVariable String email) throws Exception {
+        return emailServiceImpl.sendEmailId(email);
 
-    @GetMapping("/check/{email}")
+    }
+
+    @GetMapping("/login-pwd/confirm/{email}")
     public String findPw(@PathVariable String email) throws Exception {
-        return emailServiceImpl.sendEmail(email);
+        return emailServiceImpl.sendEmailPwd(email);
     }
 
 

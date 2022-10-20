@@ -1,7 +1,10 @@
 package com.example.project.auth.service;
 
 public interface EmailService {
-    String sendEmail(String to) throws Exception;
+
+    String sendEmailId(String email) throws Exception;
+
+    String sendEmailPwd(String to) throws Exception;
 
     String sendConfirmCodeByEmail(String email) throws Exception;
 
