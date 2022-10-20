@@ -1,6 +1,5 @@
 package com.example.project.auth.controller;
 
-import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.service.AuthService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -15,7 +14,6 @@ import com.example.project.auth.configuration.util.JwtTokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Slf4j
 @RequestMapping(value = "/v1/auths")
@@ -41,25 +39,12 @@ public class AuthInfoController {
     @ApiImplicitParam(name = "authInfo", value = "회원정보 수정", dataType = "AuthInfoVoReq")
     @PutMapping("")
     public ResponseEntity<?> updateAuthInfo(@RequestBody @Valid UpdateAuthRequest updateAuthRequest, HttpServletRequest request) {
-        Optional<AuthEntity> auth = Optional.ofNullable(authService.updateAuthInfo(updateAuthRequest, request));
-//        if(auth != null) {
-//            return ResponseEntity.status(200).body(auth);
-//        } else {
-//            return ResponseEntity.status(400).body("error page");
-//        }
-        if (updateAuthRequest.getType().equals("회원정보 수정")) {
-            if (auth != null) {
-                return ResponseEntity.status(200).body(auth);
-            } else {
-                return ResponseEntity.status(400).body("error page");
-            }
-        } else if (updateAuthRequest.getType().equals("회원 탈퇴")) {
-            if (auth.isPresent()) {
-                return ResponseEntity.status(200).body("회원탈퇴 성공");
-            } else {
-                return ResponseEntity.status(400).body("회원탈퇴 실패");
-            }
+        String auth = String.valueOf(authService.updateAuthInfo(updateAuthRequest, request));
+
+        if(auth != null) {
+            return ResponseEntity.status(200).body(auth);
+        } else {
+            return ResponseEntity.status(400).body("error page");
         }
-        return null;
     }
 }
