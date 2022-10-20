@@ -79,13 +79,13 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public String updateLoginAuth(UpdateLoginRequest updateAuthRequest) { // 로그인
+    public String updateLoginAuth(UpdateLoginRequest updateLoginRequest) { // 로그인
         // optional
-        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(updateAuthRequest.getLoginId());
+        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(updateLoginRequest.getLoginId());
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(auth != null && encoder.matches(updateAuthRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
+        if(auth != null && encoder.matches(updateLoginRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
                 auth.get().getSns().equals(AuthSns.NO) && auth.get().getStatus().equals(AuthStatus.ACTIVE)) {
             return jwtTokenProvider.createToken((auth.get().getId()), String.valueOf(auth.get().getRole()));
         }

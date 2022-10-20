@@ -171,10 +171,11 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public String sendEmailId(String email) throws Exception {
+    public String sendEmailId(String email) throws Exception { // 아이디 조회
         AuthEntity authEntity = authEntityRepository.findByEmail(email);
-//        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(email); // 아이디 조회
-        MimeMessage message = idMessage(authEntity.getLoginId(), email);
+//        Optional<AuthEntity> auth = authEntityRepository.findByLoginId(email);
+        String ePw = createKey();
+        MimeMessage message = idMessage(email, ePw);
         log.info(String.valueOf(authEntity));
         log.info(String.valueOf(message));
         if (authEntity == null) {
