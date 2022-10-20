@@ -12,16 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class CreateAuthEmailRequest {
 
     private String name;
-    //    private String link;
     private String email;
     private Long validTime;
 
-
-//    private String email;
-//
-//    public AuthEntity emailDtoEntity(CreateAuthEmailRequest createAuthEmailRequest) {
-//        return AuthEntity.builder()
-//                .email(createAuthEmailRequest.getEmail())
-//                .build();
-//    }
 }
