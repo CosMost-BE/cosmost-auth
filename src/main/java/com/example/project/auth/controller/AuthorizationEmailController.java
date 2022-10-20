@@ -29,6 +29,7 @@ public class AuthorizationEmailController {
         return emailServiceImpl.sendEmailPwd(email);
     }
 
+
     @GetMapping("/email/confirm/{email}")
     public String createConfirmCodeByEmail(@PathVariable String email) throws Exception {
         return emailServiceImpl.sendConfirmCodeByEmail(email);
