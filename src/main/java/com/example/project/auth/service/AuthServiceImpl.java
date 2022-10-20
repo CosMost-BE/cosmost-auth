@@ -1,7 +1,6 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
-import com.example.project.auth.exception.AuthIdNotFound;
 import com.example.project.auth.exception.DuplicatedId;
 import com.example.project.auth.exception.WithdrawalCheckNotFound;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
@@ -14,11 +13,11 @@ import com.example.project.auth.requestbody.DeleteAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -28,14 +27,12 @@ public class AuthServiceImpl implements AuthService {
     private final AuthEntityRepository authEntityRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
-    private final AuthStatus authStatus;
 
     @Autowired
-    public AuthServiceImpl(AuthEntityRepository authEntityRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder, AuthStatus authStatus) {
+    public AuthServiceImpl(AuthEntityRepository authEntityRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
         this.authEntityRepository = authEntityRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
-        this.authStatus = authStatus;
     }
 
     @Override
@@ -61,8 +58,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean checkId(String loginId) { // 아이디 중복확인
-//        return authEntityRepository.existsByLoginId(loginId);
-//        checkId()
         boolean s = authEntityRepository.existsByLoginId(loginId);
         if (s == true) {
             throw new DuplicatedId();
@@ -72,48 +67,39 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String putAuth(UpdateAuthRequest updateAuthRequest) { // 로그인
-        // optional
         Optional<AuthEntity> auth = authEntityRepository.findByLoginId(updateAuthRequest.getLoginId());
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(auth != null && encoder.matches(updateAuthRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
+        if (auth != null && encoder.matches(updateAuthRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
                 auth.get().getSns().equals(AuthSns.NO) && auth.get().getStatus().equals(AuthStatus.ACTIVE)) {
             return jwtTokenProvider.createToken((auth.get().getId()), String.valueOf(auth.get().getRole()));
         }
         return null;
     }
 
-
     @Override
     @Transactional
-    // 회원 탈퇴
-    public ResponseEntity<String> putUserAuth(Long id, DeleteAuthRequest deleteAuthRequest) {
-//        Optional<AuthEntity> check = Optional.ofNullable(
-//                authEntityRepository.findById(id).orElseThrow(
-//                        WithdrawalCheckNotFound::new));
-//
-//        if (check.isPresent()) {
-//            if (deleteAuthRequest.getWithdrawlCheck().equals(true)) {
-//                authEntityRepository.deleteById(id);
-//            } else {
-//                throw new WithdrawalCheckNotFound();
-//            }
-//        } else {
-//            throw new AuthIdNotFound();
-//        }
-//        return null;
-        Optional<AuthEntity> check = Optional.ofNullable(
-                authEntityRepository.findById(id).orElseThrow(
-                        WithdrawalCheckNotFound::new));
+    public Optional<AuthEntity> putUserAuth(HttpServletRequest request, DeleteAuthRequest deleteAuthRequest) throws WithdrawalCheckNotFound {
+        String token = jwtTokenProvider.getToken(request);
+        String auth = jwtTokenProvider.getUserPk(token);
+        log.info(String.valueOf(auth)+"!!!!!!!!!!!!!!");
 
-        if (check.isPresent()) {
-            if (deleteAuthRequest.getWithdrawlCheck().equals(true)) {
-                authStatus.equals(AuthStatus.WITHDRAWAL);
-                AuthStatus withdrawal = AuthStatus.WITHDRAWAL;
-            }
+        Optional<AuthEntity> auth2 = authEntityRepository.findById(Long.valueOf(auth));
+
+        String oldPwd = auth2.get().getLoginPwd();
+        log.info(oldPwd+"@@@@@");
+        String newPwd = deleteAuthRequest.getLoginPwd();
+        log.info(newPwd+"######");
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (encoder.matches(oldPwd, newPwd)) {
+            authEntityRepository.save(AuthEntity.builder()
+                    .status(AuthStatus.WITHDRAWAL)
+                    .build());
+
         } else {
-            throw new AuthIdNotFound();
+            throw new WithdrawalCheckNotFound();
         }
         return null;
     }

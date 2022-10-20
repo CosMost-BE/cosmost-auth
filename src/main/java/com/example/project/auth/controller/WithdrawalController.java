@@ -1,6 +1,7 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
+import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.requestbody.DeleteAuthRequest;
 import com.example.project.auth.service.AuthService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -13,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Slf4j
 @RequestMapping("/v1/auths")
@@ -37,11 +40,15 @@ public class WithdrawalController {
     })
 
     @ApiOperation(value = "회원탈퇴를 할 때 쓰는 메소드")
-    @ApiImplicitParam(name = "a", value = "회원탈퇴", dataType = "WithdrawlVoReq")
+    @ApiImplicitParam(name = "a", value = "회원탈퇴", dataType = "WithdrawalVoReq")
     @PutMapping("")
-    public ResponseEntity<String> putAuth(@RequestBody @Valid DeleteAuthRequest deleteAuthRequest, HttpServletRequest request) {
-        String token = jwtTokenProvider.getToken(request);
-        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
-        return authService.putUserAuth(id, deleteAuthRequest);
+    public ResponseEntity<?> putAuth(@RequestBody @Valid DeleteAuthRequest deleteAuthRequest, HttpServletRequest request) {
+        Optional<AuthEntity> auth = authService.putUserAuth(request, deleteAuthRequest);
+
+        if(auth.isPresent()){
+            return ResponseEntity.status(200).body("회원탈퇴 성공");
+        } else {
+            return ResponseEntity.status(400).body("회원탈퇴 실패");
+        }
     }
 }
