@@ -36,11 +36,6 @@ public class JwtTokenProvider {
         this.userDetailsService = userDetailsService;
     }
 
-    @PostConstruct
-    protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-    }
-
     public String createToken(Long userId, String role) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
 

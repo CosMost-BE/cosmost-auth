@@ -3,9 +3,6 @@ package com.example.project.auth.requestbody;
 import com.example.project.auth.infrastructure.entity.*;
 import lombok.*;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
 @Getter

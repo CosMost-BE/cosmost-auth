@@ -10,7 +10,6 @@ import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 /**
  * Create
@@ -25,11 +24,9 @@ public interface AuthService {
     String updateLoginAuth(UpdateLoginRequest updateLoginRequest);
 
     // 회원 탈퇴
-    Optional<AuthEntity> deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound;
+    AuthEntity deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound;
 
     // 회원정보 수정
     AuthEntity updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail;
-
-
 
 }
