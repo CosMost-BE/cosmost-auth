@@ -5,11 +5,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
-@Builder
 @Table(name = "auth")
 public class AuthEntity extends BaseTimeEntity {
 
@@ -50,4 +47,22 @@ public class AuthEntity extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private AuthStatus status;
 
+    @Builder
+    public AuthEntity(Long id, String loginId, String loginPwd, String email, String nickname, String address,
+                      String ageGroup, AuthMarried married, AuthSns sns, String profileImgOriginName, String profileImgSaveName, String profileImgSaveUrl, AuthRole role, AuthStatus status) {
+        this.id = id;
+        this.loginId = loginId;
+        this.loginPwd = loginPwd;
+        this.email = email;
+        this.nickname = nickname;
+        this.address = address;
+        this.ageGroup = ageGroup;
+        this.married = married;
+        this.sns = sns;
+        this.profileImgOriginName = profileImgOriginName;
+        this.profileImgSaveName = profileImgOriginName;
+        this.profileImgSaveUrl = profileImgSaveUrl;
+        this.role = role;
+        this.status = status;
+    }
 }

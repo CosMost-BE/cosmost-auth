@@ -98,7 +98,6 @@ public class AuthServiceImpl implements AuthService {
         String authId = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
         Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(authId));
 
-
         // 회원가입시 비밀번호
         String oldPwd = auth.get().getLoginPwd();
         // 회원탈퇴 시 비밀번호
@@ -107,25 +106,8 @@ public class AuthServiceImpl implements AuthService {
 
         if (auth.isPresent() && encoder.matches(newPwd, oldPwd)) {
             return authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.get().getId(), updateAuthRequest));
-
         }
         return null;
-
-
-
-
-
-//        // 회원가입시 비밀번호
-//        String oldPwd = auth.get().getLoginPwd();
-//        // 회원탈퇴 시 비밀번호
-//        String newPwd = auth.get().getLoginPwd();
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//
-//        if (auth.isPresent() && encoder.matches(newPwd, oldPwd)) {
-//            auth.get().setStatus(AuthStatus.WITHDRAWL);
-//            return auth.get();
-//        }
-//        return null;
     }
 
     @Override // 회원정보 수정

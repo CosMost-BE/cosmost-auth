@@ -33,7 +33,7 @@ public class AuthInfoController {
     }
 
     @PutMapping("")
-    public ResponseEntity<?> updateAuthInfo(@RequestBody UpdateAuthRequest updateAuthRequest, HttpServletRequest request) {
+    public ResponseEntity<?> updateAuthInfo(@RequestBody @Valid UpdateAuthRequest updateAuthRequest, HttpServletRequest request) {
         if (updateAuthRequest.getType().equals("회원정보 수정")) {
 
             Optional<AuthEntity> authUpdate = Optional.ofNullable(authService.updateAuthInfo(updateAuthRequest, request));
