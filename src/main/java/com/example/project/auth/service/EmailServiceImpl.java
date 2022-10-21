@@ -200,9 +200,6 @@ public class EmailServiceImpl implements EmailService {
             throw new IllegalArgumentException();
         }
     }
-
-
-
     @Override
     public String sendEmailPwd(String email) throws Exception {
         String ePw = createKey();

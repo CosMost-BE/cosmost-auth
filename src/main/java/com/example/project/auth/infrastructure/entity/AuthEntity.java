@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Builder
 @Table(name = "auth")
 public class AuthEntity extends BaseTimeEntity {

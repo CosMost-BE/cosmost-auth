@@ -1,10 +1,7 @@
 package com.example.project.auth.requestbody;
 
 import com.example.project.auth.infrastructure.entity.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,11 +12,8 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
+@Setter
 public class UpdateAuthRequest {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
     private String loginId;

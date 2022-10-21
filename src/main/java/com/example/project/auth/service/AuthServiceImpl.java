@@ -11,7 +11,6 @@ import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.requestbody.CreateAuthRequest;
-import com.example.project.auth.requestbody.DeleteAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Slf4j
@@ -88,55 +86,41 @@ public class AuthServiceImpl implements AuthService {
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if(auth != null && encoder.matches(updateLoginRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
+        if (auth != null && encoder.matches(updateLoginRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
                 auth.get().getSns().equals(AuthSns.NO) && auth.get().getStatus().equals(AuthStatus.ACTIVE)) {
             return jwtTokenProvider.createToken((auth.get().getId()), String.valueOf(auth.get().getRole()));
         }
         return null;
     }
 
-    @Override
-    @Transactional
-    public AuthEntity putUserAuth(HttpServletRequest request, DeleteAuthRequest deleteAuthRequest) throws WithdrawalCheckNotFound {
-        String token = jwtTokenProvider.getToken(request);
-        String auth = jwtTokenProvider.getUserPk(token);
+    @Override // 회원 탈퇴
+    public Optional<AuthEntity> deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound {
+        String authId = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
+        Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(authId));
 
-        Optional<AuthEntity> auth2 = authEntityRepository.findById(Long.valueOf(auth));
-
-        String oldPwd = auth2.get().getLoginPwd();
-
+        // 회원가입시 비밀번호
+        String oldPwd = auth.get().getLoginPwd();
         // 회원탈퇴 시 비밀번호
-        String newPwd = deleteAuthRequest.getLoginPwd();
-
+        String newPwd = updateAuthRequest.getLoginPwd();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (encoder.matches(newPwd, oldPwd)) {
-            return authEntityRepository.save(AuthEntity.builder()
-                    .id(auth2.get().getId())
-                    .loginId(auth2.get().getLoginId())
-                    .status(AuthStatus.WITHDRAWL)
-                    .loginPwd(auth2.get().getLoginPwd())
-                    .email(auth2.get().getEmail())
-                    .married(auth2.get().getMarried())
-                    .nickname(auth2.get().getNickname())
-                    .address(auth2.get().getAddress())
-                    .ageGroup(auth2.get().getAgeGroup())
-                    .sns(auth2.get().getSns())
-                    .profileImgOriginName(auth2.get().getProfileImgOriginName())
-                    .profileImgSaveName(auth2.get().getProfileImgSaveName())
-                    .profileImgSaveUrl(auth2.get().getProfileImgSaveUrl())
-                    .role(auth2.get().getRole())
-                    .build());
 
-        } else {
-            throw new WithdrawalCheckNotFound();
+        if (auth.isPresent() && encoder.matches(newPwd, oldPwd)) {
+            auth.get().setStatus(AuthStatus.WITHDRAWL);
+            return auth;
         }
+        return null;
     }
 
     @Override // 회원정보 수정
     public AuthEntity updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
-        log.info(String.valueOf(id));
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        // 비밀번호 암호화하여 다시 user 객체에 저장
+        String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
+        updateAuthRequest.setLoginPwd(securePwd);
+
         try {
             AuthEntity auth = authEntityRepository.findById(id).orElseThrow(() ->
                     new UpdateAuthFail()
