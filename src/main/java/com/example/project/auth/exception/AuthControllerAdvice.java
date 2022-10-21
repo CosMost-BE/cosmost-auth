@@ -20,7 +20,7 @@ public class AuthControllerAdvice {
     }
 
     @ExceptionHandler(DuplicatedNickname.class)
-    public ResponseEntity<String> DuplicatedIdException(DuplicatedNickname exception) {
+    public ResponseEntity<String> DuplicatedNameException(DuplicatedNickname exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());

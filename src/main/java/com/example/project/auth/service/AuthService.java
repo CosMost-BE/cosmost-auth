@@ -23,8 +23,8 @@ public interface AuthService {
     String updateLoginAuth(UpdateLoginRequest updateLoginRequest);
 
     // 회원 탈퇴
-    AuthEntity deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound;
+    void deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound;
     // 회원정보 수정
-    AuthEntity updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail;
+    void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail;
 
 }

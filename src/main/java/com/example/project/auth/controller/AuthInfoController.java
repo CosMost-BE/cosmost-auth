@@ -35,25 +35,12 @@ public class AuthInfoController {
     @PutMapping("")
     public ResponseEntity<?> updateAuthInfo(@RequestBody @Valid UpdateAuthRequest updateAuthRequest, HttpServletRequest request) {
         if (updateAuthRequest.getType().equals("회원정보 수정")) {
-
-            Optional<AuthEntity> authUpdate = Optional.ofNullable(authService.updateAuthInfo(updateAuthRequest, request));
-
-            if (authUpdate.isPresent()) {
-                return ResponseEntity.status(200).body(authUpdate);
-            } else {
-                return ResponseEntity.status(400).body("회원정보 수정 실패");
-            }
+            authService.updateAuthInfo(updateAuthRequest, request);
+            return ResponseEntity.ok("회원정보가 수정되었습니다.");
 
         } else if (updateAuthRequest.getType().equals("회원 탈퇴")) {
-
-            Optional<AuthEntity> authDelete = Optional.ofNullable(authService.deleteAuthInfo(request, updateAuthRequest));
-
-            if (authDelete.isPresent()) {
-                return ResponseEntity.status(200).body("회원탈퇴 성공");
-            } else {
-                return ResponseEntity.status(400).body("회원탈퇴 실패");
-            }
-
+            authService.deleteAuthInfo(request, updateAuthRequest);
+            return ResponseEntity.ok("회원탈퇴가 되었습니다.");
         }
         return null;
     }

@@ -20,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Slf4j
@@ -94,40 +96,40 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override // 회원 탈퇴
-    public AuthEntity deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound {
+    @Transactional
+    public void deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound {
         String authId = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
         Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(authId));
 
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
         // 회원가입시 비밀번호
         String oldPwd = auth.get().getLoginPwd();
         // 회원탈퇴 시 비밀번호
         String newPwd = updateAuthRequest.getLoginPwd();
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         if (auth.isPresent() && encoder.matches(newPwd, oldPwd)) {
-            return authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.get().getId(), updateAuthRequest));
+            authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.get().getId(), updateAuthRequest, securePwd));
         }
-        return null;
     }
 
     @Override // 회원정보 수정
-    public AuthEntity updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail {
+    @Transactional
+    public void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         // 비밀번호 암호화하여 다시 user 객체에 저장
         String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
-        updateAuthRequest.setLoginPwd(securePwd);
 
-        try {
-            AuthEntity auth = authEntityRepository.findById(id).orElseThrow(() ->
-                    new UpdateAuthFail()
-            );
-            authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.getId(), updateAuthRequest));
-        } catch (Exception exception) {
-            throw new UpdateAuthFail();
+        Optional<AuthEntity> authInfo = Optional.ofNullable(
+                authEntityRepository.findById(id).orElseThrow(
+                        UpdateAuthFail::new));
+
+        if (authInfo.isPresent()) {
+            AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(), updateAuthRequest, securePwd);
+            authEntityRepository.save(authEntity);
         }
-        return null;
     }
 }

@@ -41,9 +41,10 @@ public class UpdateAuthRequest {
 
     private String type;
 
-    public AuthEntity infoDtoEntity(Long id, UpdateAuthRequest updateAuthRequest) {
+    public AuthEntity infoDtoEntity(Long id, UpdateAuthRequest updateAuthRequest, String securePwd) {
         return AuthEntity.builder()
                 .id(id)
+                .loginPwd(securePwd)
                 .loginId(updateAuthRequest.getLoginId())
                 .loginPwd(updateAuthRequest.getLoginPwd())
                 .nickname(updateAuthRequest.getNickname())
