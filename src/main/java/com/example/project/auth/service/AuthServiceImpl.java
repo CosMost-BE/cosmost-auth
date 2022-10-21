@@ -11,7 +11,6 @@ import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.requestbody.CreateAuthRequest;
-import com.example.project.auth.requestbody.DeleteAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -95,56 +94,41 @@ public class AuthServiceImpl implements AuthService {
         return null;
     }
 
-    @Override
+    @Override // 회원 탈퇴
     @Transactional
-    public AuthEntity putUserAuth(HttpServletRequest request, DeleteAuthRequest deleteAuthRequest) throws WithdrawalCheckNotFound {
-        String token = jwtTokenProvider.getToken(request);
-        String auth = jwtTokenProvider.getUserPk(token);
-
-        Optional<AuthEntity> auth2 = authEntityRepository.findById(Long.valueOf(auth));
-
-        String oldPwd = auth2.get().getLoginPwd();
-
-        // 회원탈퇴 시 비밀번호
-        String newPwd = deleteAuthRequest.getLoginPwd();
+    public void deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound {
+        String authId = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
+        Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(authId));
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (encoder.matches(newPwd, oldPwd)) {
-            return authEntityRepository.save(AuthEntity.builder()
-                    .id(auth2.get().getId())
-                    .loginId(auth2.get().getLoginId())
-                    .status(AuthStatus.WITHDRAWL)
-                    .loginPwd(auth2.get().getLoginPwd())
-                    .email(auth2.get().getEmail())
-                    .married(auth2.get().getMarried())
-                    .nickname(auth2.get().getNickname())
-                    .address(auth2.get().getAddress())
-                    .ageGroup(auth2.get().getAgeGroup())
-                    .sns(auth2.get().getSns())
-                    .profileImgOriginName(auth2.get().getProfileImgOriginName())
-                    .profileImgSaveName(auth2.get().getProfileImgSaveName())
-                    .profileImgSaveUrl(auth2.get().getProfileImgSaveUrl())
-                    .role(auth2.get().getRole())
-                    .build());
+        String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
+        // 회원가입시 비밀번호
+        String oldPwd = auth.get().getLoginPwd();
+        // 회원탈퇴 시 비밀번호
+        String newPwd = updateAuthRequest.getLoginPwd();
 
-        } else {
-            throw new WithdrawalCheckNotFound();
+        if (auth.isPresent() && encoder.matches(newPwd, oldPwd)) {
+            authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.get().getId(), updateAuthRequest, securePwd));
         }
     }
 
     @Override // 회원정보 수정
-    public AuthEntity updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail {
+    @Transactional
+    public void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
-        log.info(String.valueOf(id));
-        try {
-            AuthEntity auth = authEntityRepository.findById(id).orElseThrow(() ->
-                    new UpdateAuthFail()
-            );
-            authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.getId(), updateAuthRequest));
-        } catch (Exception exception) {
-            throw new UpdateAuthFail();
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        // 비밀번호 암호화하여 다시 user 객체에 저장
+        String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
+
+        Optional<AuthEntity> authInfo = Optional.ofNullable(
+                authEntityRepository.findById(id).orElseThrow(
+                        UpdateAuthFail::new));
+
+        if (authInfo.isPresent()) {
+            AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(), updateAuthRequest, securePwd);
+            authEntityRepository.save(authEntity);
         }
-        return null;
     }
 }
