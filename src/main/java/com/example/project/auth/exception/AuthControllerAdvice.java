@@ -26,6 +26,8 @@ public class AuthControllerAdvice {
                 .body(exception.getMessage());
     }
 
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String processValidationError(MethodArgumentNotValidException exception) {
         BindingResult bindingResult = exception.getBindingResult();

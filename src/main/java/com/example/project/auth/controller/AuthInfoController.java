@@ -1,12 +1,8 @@
 package com.example.project.auth.controller;
 
-import com.example.project.auth.infrastructure.entity.AuthEntity;
+import com.example.project.auth.exception.TypeNotFound;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.service.AuthService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.project.auth.configuration.util.JwtTokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Slf4j
 @RequestMapping(value = "/v1/auths")
@@ -42,6 +36,6 @@ public class AuthInfoController {
             authService.deleteAuthInfo(request, updateAuthRequest);
             return ResponseEntity.ok("회원탈퇴가 되었습니다.");
         }
-        return null;
+        throw new TypeNotFound();
     }
 }

@@ -20,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -88,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (auth != null && encoder.matches(updateLoginRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
+        if(auth != null && encoder.matches(updateLoginRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
                 auth.get().getSns().equals(AuthSns.NO) && auth.get().getStatus().equals(AuthStatus.ACTIVE)) {
             return jwtTokenProvider.createToken((auth.get().getId()), String.valueOf(auth.get().getRole()));
         }
