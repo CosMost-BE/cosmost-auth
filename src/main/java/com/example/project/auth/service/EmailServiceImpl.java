@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.Optional;
 import java.util.Random;
 
 @PropertySource(value = "classpath:/application-email.yml")

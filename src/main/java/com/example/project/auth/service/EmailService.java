@@ -9,4 +9,7 @@ public interface EmailService {
     String sendConfirmCodeByEmail(String email) throws Exception;
 
     String sendReissuePassword(String email) throws Exception;
+
+
+
 }

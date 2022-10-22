@@ -1,7 +1,12 @@
 package com.example.project.auth.controller;
 
+import com.example.project.auth.exception.TypeNotFound;
+import com.example.project.auth.infrastructure.entity.AuthEntity;
+import com.example.project.auth.model.Auth;
 import com.example.project.auth.requestbody.CreateAuthRequest;
+import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.service.AuthService;
+import com.example.project.auth.view.AuthView;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -10,17 +15,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.project.auth.configuration.util.JwtTokenProvider;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Slf4j
-@RequestMapping("/v1/auths")
+@RequestMapping(value = "/v1/auths")
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthController {
     private final AuthService authService;
+    private final JwtTokenProvider jwtTokenProvider;
+
     @Autowired
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, JwtTokenProvider jwtTokenProvider) {
         this.authService = authService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @ApiResponses({
@@ -36,5 +47,23 @@ public class AuthController {
     public ResponseEntity<String> createAuth(@RequestBody @Valid CreateAuthRequest createAuthRequest) {
         authService.createAuth(createAuthRequest);
         return ResponseEntity.ok().body("회원가입이 되었습니다.");
+    }
+
+    @PutMapping("")
+    public ResponseEntity<?> updateAuthInfo(@RequestBody @Valid UpdateAuthRequest updateAuthRequest, HttpServletRequest request) {
+        if (updateAuthRequest.getType().equals("회원정보 수정")) {
+            authService.updateAuthInfo(updateAuthRequest, request);
+            return ResponseEntity.ok("회원정보가 수정되었습니다.");
+
+        } else if (updateAuthRequest.getType().equals("회원 탈퇴")) {
+            authService.deleteAuthInfo(request, updateAuthRequest);
+            return ResponseEntity.ok("회원탈퇴가 되었습니다.");
+        }
+        throw new TypeNotFound();
+    }
+
+    @GetMapping("")
+    public AuthView readAuth(HttpServletRequest request) {
+        return new AuthView(authService.readAuth(request));
     }
 }

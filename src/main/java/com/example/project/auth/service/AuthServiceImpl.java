@@ -1,15 +1,13 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
-import com.example.project.auth.exception.UpdateAuthFail;
-import com.example.project.auth.exception.DuplicatedIdException;
-import com.example.project.auth.exception.DuplicatedNickname;
-import com.example.project.auth.exception.WithdrawalCheckNotFound;
+import com.example.project.auth.exception.*;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
+import com.example.project.auth.model.Auth;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
@@ -37,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
+    @Override // 회원가입
     public AuthEntity createAuth(CreateAuthRequest createAuthRequest) {
 
         return authEntityRepository.save(
@@ -58,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
                         .build());
     }
 
-    @Override // 아이디 중복확인
+    @Override // 중복 아이디 확인
     public Boolean checkId(HttpServletRequest request) throws DuplicatedIdException {
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
@@ -69,8 +67,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    @Override
-    public Boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname { // 닉네임 중복확인
+    @Override // 중복 닉네임 확인
+    public Boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname {
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
         if (header.equals(authEntityRepository.existsByNickname(header))) {
@@ -80,8 +78,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    @Override
-    public String updateLoginAuth(UpdateLoginRequest updateLoginRequest) { // 로그인
+    @Override // 로그인
+    public String updateLoginAuth(UpdateLoginRequest updateLoginRequest) {
         // optional
         Optional<AuthEntity> auth = authEntityRepository.findByLoginId(updateLoginRequest.getLoginId());
 
@@ -102,6 +100,7 @@ public class AuthServiceImpl implements AuthService {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
+
         // 회원가입시 비밀번호
         String oldPwd = auth.get().getLoginPwd();
         // 회원탈퇴 시 비밀번호
@@ -130,5 +129,32 @@ public class AuthServiceImpl implements AuthService {
             AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(), updateAuthRequest, securePwd);
             authEntityRepository.save(authEntity);
         }
+    }
+
+    // 회원정보 조회
+    @Override
+    public Auth readAuth(HttpServletRequest request) throws ReadAuthFail{
+        String token = jwtTokenProvider.getToken(request);
+        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
+
+        Optional<AuthEntity> authEntityList = authEntityRepository.findById(id);
+        authEntityList.get().getLoginId();
+
+        return Auth.builder()
+                .id(authEntityList.get().getId())
+                .loginId(authEntityList.get().getLoginId())
+                .loginPwd(authEntityList.get().getLoginPwd())
+                .email(authEntityList.get().getEmail())
+                .sns(authEntityList.get().getSns())
+                .nickname(authEntityList.get().getNickname())
+                .address(authEntityList.get().getAddress())
+                .ageGroup(authEntityList.get().getAgeGroup())
+                .married(authEntityList.get().getMarried())
+                .profileImgOriginName(authEntityList.get().getProfileImgOriginName())
+                .profileImgSaveName(authEntityList.get().getProfileImgSaveName())
+                .profileImgSaveUrl(authEntityList.get().getProfileImgSaveUrl())
+                .role(authEntityList.get().getRole())
+                .status(authEntityList.get().getStatus())
+                .build();
     }
 }
