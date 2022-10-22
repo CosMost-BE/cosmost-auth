@@ -1,6 +1,7 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.exception.DuplicatedIdException;
+import com.example.project.auth.exception.DuplicatedNickname;
 import com.example.project.auth.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -37,6 +38,8 @@ public class ValidationController {
         } else if (id.equals("nickname")) {
             if (authService.checkNickname(request).equals(true)) {
                 return ResponseEntity.status(200).body("사용할 수 있는 닉네임입니다.");
+            } else {
+                throw new DuplicatedNickname();
             }
         }
         return null;

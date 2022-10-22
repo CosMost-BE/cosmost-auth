@@ -1,10 +1,7 @@
 package com.example.project.auth.service;
 
 import com.example.project.auth.configuration.util.JwtTokenProvider;
-import com.example.project.auth.exception.UpdateAuthFail;
-import com.example.project.auth.exception.DuplicatedIdException;
-import com.example.project.auth.exception.DuplicatedNickname;
-import com.example.project.auth.exception.WithdrawalCheckNotFound;
+import com.example.project.auth.exception.*;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
@@ -13,11 +10,14 @@ import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
+import com.example.project.auth.view.AuthView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Override
+    @Override // 회원가입
     public AuthEntity createAuth(CreateAuthRequest createAuthRequest) {
 
         return authEntityRepository.save(
@@ -69,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    @Override
+    @Override // 중복 닉네임 확인
     public Boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname { // 닉네임 중복확인
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
@@ -80,8 +80,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    @Override
-    public String updateLoginAuth(UpdateLoginRequest updateLoginRequest) { // 로그인
+    @Override // 로그인
+    public String updateLoginAuth(UpdateLoginRequest updateLoginRequest) {
         // optional
         Optional<AuthEntity> auth = authEntityRepository.findByLoginId(updateLoginRequest.getLoginId());
 
@@ -102,6 +102,7 @@ public class AuthServiceImpl implements AuthService {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
+
         // 회원가입시 비밀번호
         String oldPwd = auth.get().getLoginPwd();
         // 회원탈퇴 시 비밀번호
@@ -130,5 +131,24 @@ public class AuthServiceImpl implements AuthService {
             AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(), updateAuthRequest, securePwd);
             authEntityRepository.save(authEntity);
         }
+    }
+
+    // 회원정보 조회
+    @Override
+    @Transactional
+    public AuthView readAuth() {
+        HttpServletRequest request = ((ServletRequestAttributes)
+                RequestContextHolder.currentRequestAttributes()).getRequest();
+        Long id = Long.parseLong(request.getHeader("Authorization"));
+
+        Optional<AuthEntity> authEntityList = authEntityRepository.findById(id);
+
+        return AuthView.builder()
+                .id(readAuth().getId())
+                .profileImgOriginName(readAuth().getProfileImgOriginName())
+                .profileImgSaveName(readAuth().getProfileImgSaveName())
+                .profileImgSaveUrl(readAuth().getProfileImgSaveUrl())
+                .build();
+
     }
 }
