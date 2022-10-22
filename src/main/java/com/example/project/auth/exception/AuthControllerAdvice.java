@@ -26,7 +26,41 @@ public class AuthControllerAdvice {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler(EmailSendException.class)
+    public ResponseEntity<String> EmailSendException(EmailSendException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
 
+    @ExceptionHandler(ReadAuthFail.class)
+    public ResponseEntity<String> ReadAuthFailException(ReadAuthFail exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(TypeNotFound.class)
+    public ResponseEntity<String> TypeNotFoundException(TypeNotFound exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(UpdateAuthFail.class)
+    public ResponseEntity<String> UpdateAuthFailException(UpdateAuthFail exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+
+    @ExceptionHandler(WithdrawalCheckNotFound.class)
+    public ResponseEntity<String> WithdrawalCheckNotFoundException(WithdrawalCheckNotFound exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String processValidationError(MethodArgumentNotValidException exception) {
