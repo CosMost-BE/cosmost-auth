@@ -6,7 +6,6 @@ import com.example.project.auth.model.Auth;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
-import com.example.project.auth.view.AuthView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
