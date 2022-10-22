@@ -63,9 +63,9 @@ public class AuthController {
     }
 
     @GetMapping("")
-    public AuthView readAuth(@RequestBody @Valid AuthView authView) {
+    public AuthView readAuth(HttpServletRequest request) {
 //        AuthEntity authEntity = (AuthEntity) authService.readAuth(authView);
 //        return ResponseEntity.status(200).body(authEntity);
-        return new AuthView(authService.readAuth());
+        return new AuthView(authService.readAuth(request));
     }
 }

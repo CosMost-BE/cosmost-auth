@@ -2,12 +2,14 @@ package com.example.project.auth.service;
 
 import com.example.project.auth.exception.*;
 import com.example.project.auth.infrastructure.entity.*;
+import com.example.project.auth.model.Auth;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
 import com.example.project.auth.view.AuthView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 
 /**
  * Create
@@ -16,9 +18,6 @@ public interface AuthService {
 
     // 회원가입
     AuthEntity createAuth(CreateAuthRequest createAuthRequest);
-
-    // 사용자 정보 조회
-    AuthView readAuth();
 
     // 중복 아이디 확인
     Boolean checkId(HttpServletRequest request) throws DuplicatedIdException;
@@ -34,4 +33,8 @@ public interface AuthService {
 
     // 회원정보 수정
     void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail;
+
+    // 회원정보 조회
+    @Transactional
+    Auth readAuth(HttpServletRequest request) throws ReadAuthFail;
 }

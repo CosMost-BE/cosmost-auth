@@ -12,9 +12,7 @@ import java.sql.Timestamp;
 public class Auth {
 
     private Long id;
-
     private String loginId;
-
     private String loginPwd;
     private String email;
     private AuthSns sns;

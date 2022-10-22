@@ -7,10 +7,10 @@ import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
+import com.example.project.auth.model.Auth;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
-import com.example.project.auth.view.AuthView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -136,19 +136,28 @@ public class AuthServiceImpl implements AuthService {
     // 회원정보 조회
     @Override
     @Transactional
-    public AuthView readAuth() {
-        HttpServletRequest request = ((ServletRequestAttributes)
-                RequestContextHolder.currentRequestAttributes()).getRequest();
-        Long id = Long.parseLong(request.getHeader("Authorization"));
+    public Auth readAuth(HttpServletRequest request) throws ReadAuthFail{
+        String token = jwtTokenProvider.getToken(request);
+        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
 
         Optional<AuthEntity> authEntityList = authEntityRepository.findById(id);
+        authEntityList.get().getLoginId();
 
-        return AuthView.builder()
-                .id(readAuth().getId())
-                .profileImgOriginName(readAuth().getProfileImgOriginName())
-                .profileImgSaveName(readAuth().getProfileImgSaveName())
-                .profileImgSaveUrl(readAuth().getProfileImgSaveUrl())
+        return Auth.builder()
+                .id(authEntityList.get().getId())
+                .loginId(authEntityList.get().getLoginId())
+                .loginPwd(authEntityList.get().getLoginPwd())
+                .email(authEntityList.get().getEmail())
+                .sns(authEntityList.get().getSns())
+                .nickname(authEntityList.get().getNickname())
+                .address(authEntityList.get().getAddress())
+                .ageGroup(authEntityList.get().getAgeGroup())
+                .married(authEntityList.get().getMarried())
+                .profileImgOriginName(authEntityList.get().getProfileImgOriginName())
+                .profileImgSaveName(authEntityList.get().getProfileImgSaveName())
+                .profileImgSaveUrl(authEntityList.get().getProfileImgSaveUrl())
+                .role(authEntityList.get().getRole())
+                .status(authEntityList.get().getStatus())
                 .build();
-
     }
 }
