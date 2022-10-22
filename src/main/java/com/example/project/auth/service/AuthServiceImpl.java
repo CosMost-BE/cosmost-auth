@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
                         .build());
     }
 
-    @Override // 아이디 중복확인
+    @Override // 중복 아이디 확인
     public Boolean checkId(HttpServletRequest request) throws DuplicatedIdException {
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
@@ -68,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override // 중복 닉네임 확인
-    public Boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname { // 닉네임 중복확인
+    public Boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname {
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
         if (header.equals(authEntityRepository.existsByNickname(header))) {
@@ -133,7 +133,6 @@ public class AuthServiceImpl implements AuthService {
 
     // 회원정보 조회
     @Override
-    @Transactional
     public Auth readAuth(HttpServletRequest request) throws ReadAuthFail{
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));

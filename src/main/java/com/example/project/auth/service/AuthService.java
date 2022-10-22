@@ -34,6 +34,5 @@ public interface AuthService {
     void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail;
 
     // 회원정보 조회
-    @Transactional
     Auth readAuth(HttpServletRequest request) throws ReadAuthFail;
 }
