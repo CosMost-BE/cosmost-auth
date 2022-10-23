@@ -35,4 +35,6 @@ public interface AuthService {
 
     // 회원정보 조회
     Auth readAuth(HttpServletRequest request) throws ReadAuthFail;
+
+    Auth readAuthor(HttpServletRequest request) throws  ReadAuthorFail;
 }

@@ -1,8 +1,6 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.exception.TypeNotFound;
-import com.example.project.auth.infrastructure.entity.AuthEntity;
-import com.example.project.auth.model.Auth;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.service.AuthService;
@@ -26,12 +24,10 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthController {
     private final AuthService authService;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public AuthController(AuthService authService, JwtTokenProvider jwtTokenProvider) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @ApiResponses({

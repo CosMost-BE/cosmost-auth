@@ -157,4 +157,30 @@ public class AuthServiceImpl implements AuthService {
                 .status(authEntityList.get().getStatus())
                 .build();
     }
+
+    // 다른 작성자 정보 조회
+    public Auth readAuthor(HttpServletRequest request) throws ReadAuthorFail {
+        String token = jwtTokenProvider.getToken(request);
+        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
+
+        Optional<AuthEntity> authEntityList = authEntityRepository.findById(id);
+        authEntityList.get().getLoginId();
+
+        return Auth.builder()
+                .id(authEntityList.get().getId())
+                .loginId(authEntityList.get().getLoginId())
+                .loginPwd(authEntityList.get().getLoginPwd())
+                .email(authEntityList.get().getEmail())
+                .sns(authEntityList.get().getSns())
+                .nickname(authEntityList.get().getNickname())
+                .address(authEntityList.get().getAddress())
+                .ageGroup(authEntityList.get().getAgeGroup())
+                .married(authEntityList.get().getMarried())
+                .profileImgOriginName(authEntityList.get().getProfileImgOriginName())
+                .profileImgSaveName(authEntityList.get().getProfileImgSaveName())
+                .profileImgSaveUrl(authEntityList.get().getProfileImgSaveUrl())
+                .role(authEntityList.get().getRole())
+                .status(authEntityList.get().getStatus())
+                .build();
+    }
 }

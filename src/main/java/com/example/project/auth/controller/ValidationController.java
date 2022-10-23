@@ -28,7 +28,7 @@ public class ValidationController {
     @GetMapping("/duplicate")
     public ResponseEntity<?> checkId(@RequestParam(value = "id") String id,
                                      HttpServletRequest request) {
-        Boolean auth = authService.checkId(request);
+//        Boolean auth = authService.checkId(request);
         if (id.equals("login-id")) {
             if (authService.checkId(request).equals(true)) {
                 return ResponseEntity.status(200).body("사용할 수 있는 아이디입니다.");
