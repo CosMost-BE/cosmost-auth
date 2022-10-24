@@ -43,10 +43,8 @@ public class AuthorReadController {
             log.info(id);
             if (authService.readAuthor(request).equals(null)) {
                 throw new ReadAuthorFail();
-
             } else {
                 return new AuthView((Auth) authService.readAuthor(request));
-
             }
         }
         return null;

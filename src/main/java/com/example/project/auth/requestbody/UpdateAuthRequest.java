@@ -46,7 +46,6 @@ public class UpdateAuthRequest {
                 .id(id)
                 .loginPwd(securePwd)
                 .loginId(updateAuthRequest.getLoginId())
-                .loginPwd(updateAuthRequest.getLoginPwd())
                 .nickname(updateAuthRequest.getNickname())
                 .email(updateAuthRequest.getEmail())
                 .address(updateAuthRequest.getAddress())

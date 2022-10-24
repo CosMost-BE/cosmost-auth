@@ -1,5 +1,7 @@
 package com.example.project.auth.controller;
 
+import com.example.project.auth.service.AuthService;
+import com.example.project.auth.service.EmailService;
 import com.example.project.auth.service.EmailServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthorizationEmailController {
 
     private final EmailServiceImpl emailServiceImpl;
+    private final EmailService emailService;
 
     @Autowired
-    public AuthorizationEmailController(EmailServiceImpl emailServiceImpl) {
+    public AuthorizationEmailController(EmailServiceImpl emailServiceImpl, AuthService authService, EmailService emailService) {
         this.emailServiceImpl = emailServiceImpl;
+        this.emailService = emailService;
     }
 
     @GetMapping("/login-id/confirm/{email}")
