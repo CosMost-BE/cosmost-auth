@@ -270,33 +270,5 @@ public class EmailServiceImpl implements EmailService {
             throw new IllegalArgumentException();
         }
     }
-
-//    @Override
-//    public boolean userPasswordReissue(String code, String email) throws Exception {
-//        UserConfirmEntity userConfirmEntity = authEntityRepository.findByEmail(email);
-//        if(userConfirmEntity == null) throw new UsernameNotFoundException(email);
-//        if(userConfirmEntity.getConfirmKey().equals(code)){
-//            String ePw = EmailService.sendReissuePassword(email);
-//            AuthEntity userEntity = authEntityRepository.findByEmail(email);
-//            userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(ePw));
-//            authEntityRepository.save(userEntity);
-//            return true;
-//        }
-//        return false;
-//    }
-
-//    @Override
-//    public boolean userEmailConfirm(String code, String email) {
-//        UserConfirmEntity userConfirmEntity = authEntityRepository.findByEmail(email);
-//        try {
-//            if (userConfirmEntity.getConfirmKey().equals(code)) {
-//                return true;
-//            }
-//        } catch (NullPointerException e) {
-//            return false;
-//        }
-//        return false;
-//    }
-
 }
 

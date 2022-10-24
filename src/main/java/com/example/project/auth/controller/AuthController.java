@@ -47,18 +47,6 @@ public class AuthController {
 
     @PutMapping("")
     public ResponseEntity<?> updateAuthInfo(@RequestBody @Valid UpdateAuthRequest updateAuthRequest, HttpServletRequest request) {
-
-//        if (updateAuthRequest.getType().equals("회원정보 수정")) {
-//            authService.updateAuthInfo(updateAuthRequest, request);
-//            return ResponseEntity.ok("회원정보가 수정되었습니다.");
-//
-//        } if (authService.deleteAuthInfo(updateAuthRequest, request)) {
-//            if (updateAuthRequest.getType().equals("회원 탈퇴")) {
-//                authService.deleteAuthInfo(request, updateAuthRequest);
-//                return ResponseEntity.ok("회원탈퇴가 되었습니다.");
-//            }
-//        }
-
         Boolean auth = authService.deleteAuthInfo(request, updateAuthRequest);
 
         if (updateAuthRequest.getType().equals("회원정보 수정")) {
