@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -57,26 +58,31 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override // 중복 아이디 확인
-    public Boolean checkId(HttpServletRequest request) throws DuplicatedIdException {
+    public boolean checkId(HttpServletRequest request) throws DuplicatedIdException {
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
-        if (header.equals(authEntityRepository.existsByLoginId(header))) {
-            throw new DuplicatedIdException();
-        }
-        return true;
-    }
+//        Optional<AuthEntity> authEntity = authEntityRepository.existsByLoginId(header);
+        Optional<AuthEntity> authEntity = authEntityRepository.findByLoginId(header);
 
+        if (authEntity.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 
     @Override // 중복 닉네임 확인
-    public Boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname {
+    public boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname {
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
-        if (header.equals(authEntityRepository.existsByNickname(header))) {
-            throw new DuplicatedNickname();
-        }
-        return true;
-    }
+//        Optional<AuthEntity> authEntity = authEntityRepository.existsByNickname(header);
+        Optional<AuthEntity> authEntity = authEntityRepository.findByNickname(header);
 
+
+        if (authEntity.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 
     @Override // 로그인
     public String updateLoginAuth(UpdateLoginRequest updateLoginRequest) {
@@ -160,27 +166,31 @@ public class AuthServiceImpl implements AuthService {
 
     // 다른 작성자 정보 조회
     public Auth readAuthor(HttpServletRequest request) throws ReadAuthorFail {
-        String token = jwtTokenProvider.getToken(request);
-        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
+        String header = jwtTokenProvider.getToken(request);
+//        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
+        log.info(header);
 
-        Optional<AuthEntity> authEntityList = authEntityRepository.findById(id);
-        authEntityList.get().getLoginId();
+        Optional<AuthEntity> authEntityList = authEntityRepository.findById(Long.valueOf(header));
+        Optional<AuthEntity> LoginId = authEntityRepository.findByLoginId(authEntityList.get().getLoginId());
 
-        return Auth.builder()
-                .id(authEntityList.get().getId())
-                .loginId(authEntityList.get().getLoginId())
-                .loginPwd(authEntityList.get().getLoginPwd())
-                .email(authEntityList.get().getEmail())
-                .sns(authEntityList.get().getSns())
-                .nickname(authEntityList.get().getNickname())
-                .address(authEntityList.get().getAddress())
-                .ageGroup(authEntityList.get().getAgeGroup())
-                .married(authEntityList.get().getMarried())
-                .profileImgOriginName(authEntityList.get().getProfileImgOriginName())
-                .profileImgSaveName(authEntityList.get().getProfileImgSaveName())
-                .profileImgSaveUrl(authEntityList.get().getProfileImgSaveUrl())
-                .role(authEntityList.get().getRole())
-                .status(authEntityList.get().getStatus())
-                .build();
+        if(LoginId.isPresent()) {
+            return Auth.builder()
+                    .id(authEntityList.get().getId())
+                    .loginId(authEntityList.get().getLoginId())
+                    .loginPwd(authEntityList.get().getLoginPwd())
+                    .email(authEntityList.get().getEmail())
+                    .sns(authEntityList.get().getSns())
+                    .nickname(authEntityList.get().getNickname())
+                    .address(authEntityList.get().getAddress())
+                    .ageGroup(authEntityList.get().getAgeGroup())
+                    .married(authEntityList.get().getMarried())
+                    .profileImgOriginName(authEntityList.get().getProfileImgOriginName())
+                    .profileImgSaveName(authEntityList.get().getProfileImgSaveName())
+                    .profileImgSaveUrl(authEntityList.get().getProfileImgSaveUrl())
+                    .role(authEntityList.get().getRole())
+                    .status(authEntityList.get().getStatus())
+                    .build();
+        }
+        return null;
     }
 }

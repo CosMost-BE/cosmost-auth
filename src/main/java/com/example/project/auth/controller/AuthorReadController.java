@@ -9,14 +9,14 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RequestMapping(value = "/v1/view")
+@RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthorReadController {
 
     private final AuthService authService;
@@ -36,7 +36,10 @@ public class AuthorReadController {
     @ApiImplicitParam(name = "readAuthor", value = "작성자 정보 조회", dataType = "AuthVoReq")
     @GetMapping("/info")
     public AuthView readAuthor(@RequestParam(value = "id") String id, HttpServletRequest request) {
+       log.info(id+"@@@@@@@@@@@@@@@@");
+       log.info(String.valueOf(authService.readAuthor(request))+"#########3####");
         if (id.equals("author-id")) {
+            log.info(id);
             if (authService.readAuthor(request).equals(true)) {
                 return new AuthView(authService.readAuthor(request));
             } else {

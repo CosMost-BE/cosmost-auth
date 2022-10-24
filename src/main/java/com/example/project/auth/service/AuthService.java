@@ -8,7 +8,6 @@ import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 
 /**
  * Create
@@ -19,10 +18,10 @@ public interface AuthService {
     AuthEntity createAuth(CreateAuthRequest createAuthRequest);
 
     // 중복 아이디 확인
-    Boolean checkId(HttpServletRequest request) throws DuplicatedIdException;
+    boolean checkId(HttpServletRequest request) throws DuplicatedIdException;
 
     // 중복 닉네임 확인
-    Boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname;
+    boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname;
 
     // 로그인
     String updateLoginAuth(UpdateLoginRequest updateLoginRequest);
