@@ -3,7 +3,6 @@ package com.example.project.auth.controller;
 import com.example.project.auth.exception.TypeNotFound;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
-import com.example.project.auth.requestbody.UpdateLoginRequest;
 import com.example.project.auth.service.AuthService;
 import com.example.project.auth.view.AuthView;
 import io.swagger.annotations.ApiImplicitParam;

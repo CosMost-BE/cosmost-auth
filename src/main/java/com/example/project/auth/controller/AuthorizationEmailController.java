@@ -38,16 +38,4 @@ public class AuthorizationEmailController {
     public String createConfirmCodeByEmail(@PathVariable String email) throws Exception {
         return emailServiceImpl.sendConfirmCodeByEmail(email);
     }
-
-//    @GetMapping("/pw/reissue/{code}/{email}")
-//    public ResponseEntity<Boolean> userPasswordReissue(@PathVariable String code, @PathVariable String email) throws Exception {
-//        log.info("userPasswordReissue, {}, {}", code, email);
-//      (  return ResponseEntity.status(HttpStatus.OK).body(emailService.userPasswordReissue(code, email));
-//    }
-
-//    @GetMapping("/code/confirm/{code}/{email}")
-//    public ResponseEntity<Boolean> userEmailConfirm(@PathVariable String code, @PathVariable String email) {
-//        log.info("userEmailConfirm, {}, {}", code, email);
-//        return ResponseEntity.status(HttpStatus.OK).body(emailService.userEmailConfirm(code, email));
-//    }
 }
