@@ -75,6 +75,7 @@ public class AuthController {
         return null;
     }
 
+
     @GetMapping("")
     public AuthView readAuth(HttpServletRequest request) {
         return new AuthView(authService.readAuth(request));
