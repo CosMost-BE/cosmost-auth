@@ -3,8 +3,6 @@ package com.example.project.auth.model;
 import com.example.project.auth.infrastructure.entity.*;
 import lombok.*;
 
-import java.sql.Timestamp;
-
 @Builder
 @Getter
 @ToString

@@ -28,15 +28,15 @@ public class ValidationController {
     @GetMapping("/duplicate")
     public ResponseEntity<?> checkId(@RequestParam(value = "id") String id,
                                      HttpServletRequest request) {
-        Boolean auth = authService.checkId(request);
+//        Boolean auth = authService.checkId(request);
         if (id.equals("login-id")) {
-            if (authService.checkId(request).equals(true)) {
+            if (authService.checkId(request) == true) {
                 return ResponseEntity.status(200).body("사용할 수 있는 아이디입니다.");
             } else {
                 throw new DuplicatedIdException();
             }
         } else if (id.equals("nickname")) {
-            if (authService.checkNickname(request).equals(true)) {
+            if (authService.checkNickname(request) == true) {
                 return ResponseEntity.status(200).body("사용할 수 있는 닉네임입니다.");
             } else {
                 throw new DuplicatedNickname();
