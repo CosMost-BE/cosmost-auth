@@ -8,4 +8,8 @@ public interface EmailService {
     String sendConfirmCodeByEmail(String email) throws Exception;
 
     String sendReissuePassword(String email) throws Exception;
+
+//    boolean userEmailConfirm(String code, String email);
+//
+//    boolean userPasswordReissue(String code, String email) throws Exception;
 }
