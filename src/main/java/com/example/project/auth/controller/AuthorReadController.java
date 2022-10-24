@@ -1,6 +1,7 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.exception.ReadAuthorFail;
+import com.example.project.auth.model.Auth;
 import com.example.project.auth.service.AuthService;
 import com.example.project.auth.view.AuthView;
 import io.swagger.annotations.ApiImplicitParam;
@@ -37,13 +38,15 @@ public class AuthorReadController {
     @GetMapping("/info")
     public AuthView readAuthor(@RequestParam(value = "id") String id, HttpServletRequest request) {
        log.info(id+"@@@@@@@@@@@@@@@@");
-       log.info(String.valueOf(authService.readAuthor(request))+"#########3####");
+       log.info(authService.readAuthor(request)+"#########3####");
         if (id.equals("author-id")) {
             log.info(id);
-            if (authService.readAuthor(request).equals(true)) {
-                return new AuthView(authService.readAuthor(request));
-            } else {
+            if (authService.readAuthor(request).equals(null)) {
                 throw new ReadAuthorFail();
+
+            } else {
+                return new AuthView((Auth) authService.readAuthor(request));
+
             }
         }
         return null;
