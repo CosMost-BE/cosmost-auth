@@ -1,5 +1,7 @@
 package com.example.project.auth.controller;
 
+import com.example.project.auth.service.AuthService;
+import com.example.project.auth.service.EmailService;
 import com.example.project.auth.service.EmailServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthorizationEmailController {
 
     private final EmailServiceImpl emailServiceImpl;
+    private final EmailService emailService;
 
     @Autowired
-    public AuthorizationEmailController(EmailServiceImpl emailServiceImpl) {
+    public AuthorizationEmailController(EmailServiceImpl emailServiceImpl, AuthService authService, EmailService emailService) {
         this.emailServiceImpl = emailServiceImpl;
+        this.emailService = emailService;
     }
 
     @GetMapping("/login-id/confirm/{email}")
@@ -34,4 +38,16 @@ public class AuthorizationEmailController {
     public String createConfirmCodeByEmail(@PathVariable String email) throws Exception {
         return emailServiceImpl.sendConfirmCodeByEmail(email);
     }
+
+//    @GetMapping("/pw/reissue/{code}/{email}")
+//    public ResponseEntity<Boolean> userPasswordReissue(@PathVariable String code, @PathVariable String email) throws Exception {
+//        log.info("userPasswordReissue, {}, {}", code, email);
+//      (  return ResponseEntity.status(HttpStatus.OK).body(emailService.userPasswordReissue(code, email));
+//    }
+
+//    @GetMapping("/code/confirm/{code}/{email}")
+//    public ResponseEntity<Boolean> userEmailConfirm(@PathVariable String code, @PathVariable String email) {
+//        log.info("userEmailConfirm, {}, {}", code, email);
+//        return ResponseEntity.status(HttpStatus.OK).body(emailService.userEmailConfirm(code, email));
+//    }
 }

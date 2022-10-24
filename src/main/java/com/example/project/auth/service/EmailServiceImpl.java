@@ -11,6 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +28,10 @@ import java.util.Random;
 public class EmailServiceImpl implements EmailService {
     @Autowired
     JavaMailSender emailSender;
-
     private final Environment env;
     private final UserConfirmRepository userConfirmRepository;
     private final AuthEntityRepository authEntityRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private MimeMessage reissuePassword(String to, String ePw)throws Exception{
         System.out.println("보내는 대상 : "+ to);
@@ -176,6 +177,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessage message = idMessage(email, ePw);
         log.info(String.valueOf(authEntity));
         log.info(String.valueOf(message));
+
         if (authEntity == null) {
             return "입력하신 이메일은 등록되지 않은 메일입니다.";
         }
@@ -189,6 +191,7 @@ public class EmailServiceImpl implements EmailService {
                         .build());
             } else {
                 userConfirmEntity.setConfirmKey(String.valueOf(authEntity));
+
                 userConfirmRepository.save(userConfirmEntity);
             }
             log.info("이메일 전송, {}, pw", email, authEntity);
@@ -267,5 +270,33 @@ public class EmailServiceImpl implements EmailService {
             throw new IllegalArgumentException();
         }
     }
+
+//    @Override
+//    public boolean userPasswordReissue(String code, String email) throws Exception {
+//        UserConfirmEntity userConfirmEntity = authEntityRepository.findByEmail(email);
+//        if(userConfirmEntity == null) throw new UsernameNotFoundException(email);
+//        if(userConfirmEntity.getConfirmKey().equals(code)){
+//            String ePw = EmailService.sendReissuePassword(email);
+//            AuthEntity userEntity = authEntityRepository.findByEmail(email);
+//            userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(ePw));
+//            authEntityRepository.save(userEntity);
+//            return true;
+//        }
+//        return false;
+//    }
+
+//    @Override
+//    public boolean userEmailConfirm(String code, String email) {
+//        UserConfirmEntity userConfirmEntity = authEntityRepository.findByEmail(email);
+//        try {
+//            if (userConfirmEntity.getConfirmKey().equals(code)) {
+//                return true;
+//            }
+//        } catch (NullPointerException e) {
+//            return false;
+//        }
+//        return false;
+//    }
+
 }
 

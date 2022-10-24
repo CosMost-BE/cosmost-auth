@@ -99,22 +99,33 @@ public class AuthServiceImpl implements AuthService {
 
     @Override // 회원 탈퇴
     @Transactional
-    public void deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound {
-        String authId = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
-        Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(authId));
+    public boolean deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound {
+            String authId = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
+//            Long id = Long.valueOf(jwtTokenProvider.getUserPk(authId));
+            Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(authId));
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
 
-        // 회원가입시 비밀번호
-        String oldPwd = auth.get().getLoginPwd();
-        // 회원탈퇴 시 비밀번호
-        String newPwd = updateAuthRequest.getLoginPwd();
+            String securePwd = passwordEncoder.encode(updateAuthRequest.getLoginPwd());
+            System.out.println("rthrtjrdjdyjdyj"+securePwd);
 
-        if (auth.isPresent() && encoder.matches(newPwd, oldPwd)) {
-            authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.get().getId(), updateAuthRequest, securePwd));
-        }
+            // 회원가입시 비밀번호
+            String oldPwd = auth.get().getLoginPwd();
+            // 회원탈퇴 시 비밀번호
+            String newPwd = updateAuthRequest.getLoginPwd();
+
+            Optional<AuthEntity> authInfo = Optional.ofNullable(
+                    authEntityRepository.findById(Long.valueOf(authId)).orElseThrow(
+                            UpdateAuthFail::new));
+
+            if (authInfo.isPresent()) {
+                if (auth.isPresent() && passwordEncoder.matches(newPwd, oldPwd)) {
+                    authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.get().getId(), updateAuthRequest, securePwd));
+                }
+            }
+        return false;
     }
+
+
 
     @Override // 회원정보 수정
     @Transactional
