@@ -1,4 +1,4 @@
-package com.example.project.auth.service;
+package com.example.project.auth.service.email;
 
 public interface EmailConfirmService {
 

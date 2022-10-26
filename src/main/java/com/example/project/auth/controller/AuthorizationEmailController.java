@@ -1,9 +1,9 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.service.AuthService;
-import com.example.project.auth.service.EmailConfirmService;
-import com.example.project.auth.service.EmailSenderService;
-import com.example.project.auth.service.EmailConfirmServiceImpl;
+import com.example.project.auth.service.email.EmailConfirmService;
+import com.example.project.auth.service.email.EmailSenderService;
+import com.example.project.auth.service.email.EmailConfirmServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

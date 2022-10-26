@@ -2,7 +2,6 @@ package com.example.project.auth.requestbody;
 
 import com.example.project.auth.infrastructure.entity.*;
 import lombok.*;
-
 import javax.validation.constraints.NotBlank;
 
 @Getter
