@@ -5,6 +5,8 @@ import com.example.project.auth.service.EmailService;
 import com.example.project.auth.service.EmailServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -33,9 +35,32 @@ public class AuthorizationEmailController {
         return emailServiceImpl.sendEmailPwd(email);
     }
 
-
     @GetMapping("/email/confirm/{email}")
     public String createConfirmCodeByEmail(@PathVariable String email) throws Exception {
         return emailServiceImpl.sendConfirmCodeByEmail(email);
+    }
+
+    @GetMapping("/duplicate/email/{email}")
+    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String email) {
+        log.info("checkEmailDuplicate, {}", email);
+        return ResponseEntity.status(HttpStatus.OK).body(emailServiceImpl.checkEmailDuplicate(email));
+    }
+
+    @GetMapping("/code/confirm/{code}/{email}")
+    public ResponseEntity<Boolean> userEmailConfirm(@PathVariable String code, @PathVariable String email) {
+        log.info("userEmailConfirm, {}, {}", code, email);
+        return ResponseEntity.status(HttpStatus.OK).body(emailServiceImpl.userEmailConfirm(code, email));
+    }
+
+    @GetMapping("/id/reissue/{code}/{email}")
+    public ResponseEntity<Boolean> userIdReissue(@PathVariable String code, @PathVariable String email) throws Exception {
+        log.info("userPasswordReissue, {}, {}", code, email);
+        return ResponseEntity.status(HttpStatus.OK).body(emailServiceImpl.userIdReissue(code, email));
+    }
+
+    @GetMapping("/pw/reissue/{code}/{email}")
+    public ResponseEntity<Boolean> userPasswordReissue(@PathVariable String code, @PathVariable String email) throws Exception {
+        log.info("userPasswordReissue, {}, {}", code, email);
+        return ResponseEntity.status(HttpStatus.OK).body(emailServiceImpl.userPasswordReissue(code, email));
     }
 }

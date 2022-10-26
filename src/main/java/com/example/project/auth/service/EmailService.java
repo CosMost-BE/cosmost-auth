@@ -1,5 +1,7 @@
 package com.example.project.auth.service;
 
+import com.example.project.auth.infrastructure.entity.AuthEntity;
+
 public interface EmailService {
     String sendEmailId(String email) throws Exception;
 
@@ -9,7 +11,12 @@ public interface EmailService {
 
     String sendReissuePassword(String email) throws Exception;
 
-//    boolean userEmailConfirm(String code, String email);
-//
-//    boolean userPasswordReissue(String code, String email) throws Exception;
+    boolean userEmailConfirm(String code, String email);
+
+    boolean userIdReissue(String code, String email) throws Exception;
+
+    boolean userPasswordReissue(String code, String email) throws Exception;
+
+    AuthEntity checkEmailDuplicate(String code, String email) throws Exception;
+
 }
