@@ -32,8 +32,9 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
 
     @Override
     public boolean userEmailConfirm(String code, String email) {
-        UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
+
         if (redisService.hasKey(email) && redisService.getSmsCertification(email).equals(code)) {
+            UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
             redisService.removeSmsCertification(email);
         } else {
             return false;

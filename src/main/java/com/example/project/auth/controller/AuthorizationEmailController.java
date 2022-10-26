@@ -18,7 +18,6 @@ public class AuthorizationEmailController {
 
     private final EmailConfirmServiceImpl emailServiceImpl;
     private final EmailSenderService emailSenderService;
-
     private final EmailConfirmService emailConfirmService;
 
     @Autowired

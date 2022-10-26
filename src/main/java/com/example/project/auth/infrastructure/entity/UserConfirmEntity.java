@@ -8,14 +8,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-
-
 @Entity
-//@Builder
-//@AllArgsConstructor
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
-//@Data
-@Getter
+@Data
 public class UserConfirmEntity implements Serializable {
 
     @Id
