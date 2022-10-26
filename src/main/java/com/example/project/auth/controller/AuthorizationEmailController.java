@@ -1,8 +1,9 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.service.AuthService;
-import com.example.project.auth.service.EmailService;
-import com.example.project.auth.service.EmailServiceImpl;
+import com.example.project.auth.service.EmailConfirmService;
+import com.example.project.auth.service.EmailSenderService;
+import com.example.project.auth.service.EmailConfirmServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,37 +16,49 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthorizationEmailController {
 
-    private final EmailServiceImpl emailServiceImpl;
-    private final EmailService emailService;
+    private final EmailConfirmServiceImpl emailServiceImpl;
+    private final EmailSenderService emailSenderService;
+
+    private final EmailConfirmService emailConfirmService;
 
     @Autowired
-    public AuthorizationEmailController(EmailServiceImpl emailServiceImpl, AuthService authService, EmailService emailService) {
+    public AuthorizationEmailController(EmailConfirmServiceImpl emailServiceImpl, AuthService authService, EmailSenderService emailSenderService, EmailConfirmService emailConfirmService) {
         this.emailServiceImpl = emailServiceImpl;
-        this.emailService = emailService;
+        this.emailSenderService = emailSenderService;
+        this.emailConfirmService = emailConfirmService;
     }
 
+    // 이메일 인증코드 발송
     @GetMapping("/login-id/confirm/{email}")
     public String findId(@PathVariable String email) throws Exception {
-        return emailServiceImpl.sendEmailId(email);
+        return emailSenderService.sendEmailId(email);
 
     }
 
     @GetMapping("/login-pwd/confirm/{email}")
     public String findPw(@PathVariable String email) throws Exception {
-        return emailServiceImpl.sendEmailPwd(email);
+        return emailSenderService.sendEmailPwd(email);
     }
 
     @GetMapping("/email/confirm/{email}")
     public String createConfirmCodeByEmail(@PathVariable String email) throws Exception {
-        return emailServiceImpl.sendConfirmCodeByEmail(email);
+        return emailSenderService.sendConfirmCodeByEmail(email);
     }
 
-    @GetMapping("/duplicate/email/{email}")
-    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String email) {
-        log.info("checkEmailDuplicate, {}", email);
-        return ResponseEntity.status(HttpStatus.OK).body(emailServiceImpl.checkEmailDuplicate(email));
-    }
 
+
+//    // 중복이메일 체크
+//    @GetMapping("/duplicate/email/{email}")
+//    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String code, String email) {
+//        log.info("checkEmailDuplicate, {}", email);
+//        return ResponseEntity.status(HttpStatus.OK).body(emailServiceImpl.checkEmailDuplicate(code, email));
+//    }
+
+
+
+
+
+    // 이메일인증 코드 확인
     @GetMapping("/code/confirm/{code}/{email}")
     public ResponseEntity<Boolean> userEmailConfirm(@PathVariable String code, @PathVariable String email) {
         log.info("userEmailConfirm, {}, {}", code, email);
