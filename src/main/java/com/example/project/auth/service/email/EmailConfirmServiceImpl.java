@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Component
 public class EmailConfirmServiceImpl implements EmailConfirmService {
+
     @Autowired
     JavaMailSender emailSender;
     private final Environment env;
@@ -27,15 +28,12 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
     private final AuthEntityRepository authEntityRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RedisService redisService;
-    private final EmailConfirmServiceImpl emailServiceImpl;
-
 
     @Override
     public boolean userEmailConfirm(String code, String email) {
-
-        if (redisService.hasKey(email) && redisService.getSmsCertification(email).equals(code)) {
+        if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
             UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
-            redisService.removeSmsCertification(email);
+            redisService.removeEmailCertification(email);
         } else {
             return false;
         }
@@ -44,19 +42,9 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
 
     @Override
     public boolean userIdReissue(String code, String email) {
-//        UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
-//        if (userConfirmEntity == null) throw new UsernameNotFoundException(email);
-//        if (userConfirmEntity.getConfirmKey().equals(code)) {
-//            String ePw = emailServiceImpl.sendReissuePassword(email);
-//            UserConfirmEntity userEntity = userConfirmRepository.findByEmail(email);
-////            userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(ePw));
-////            authEntityRepository.save(userEntity);
-//            return true;
-//        }
-//        return false;
-        UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
-        if (redisService.hasKey(email) && redisService.getSmsCertification(email).equals(code)) {
-            redisService.removeSmsCertification(email);
+        if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
+            UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
+            redisService.removeEmailCertification(email);
         } else {
             return false;
         }
@@ -65,18 +53,9 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
 
     @Override
     public boolean userPasswordReissue(String code, String email) throws Exception {
-//        UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
-//        if (userConfirmEntity == null) throw new UsernameNotFoundException(email);
-//        if (userConfirmEntity.getConfirmKey().equals(code)) {
-//            String ePw = emailServiceImpl.sendReissuePassirmEntity;
-//            UserConfirmEntity userEntity = userConfirmRepository.findByEmail(email);
-////            userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(ePw));word(email);
-////            authEntityRepository.save(userEntity);
-//            return true;
-//        }
-//        return false;
-        if (redisService.hasKey(email) && redisService.getSmsCertification(email).equals(code)) {
-            redisService.removeSmsCertification(email);
+        if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
+            UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
+            redisService.removeEmailCertification(email);
         } else {
             return false;
         }

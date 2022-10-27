@@ -34,7 +34,6 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     private final AuthEntityRepository authEntityRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RedisService redisService;
-    private final EmailSenderServiceImpl emailServiceImpl;
 
     private MimeMessage reissuePassword(String to, String ePw)throws Exception{
         System.out.println("보내는 대상 : "+ to);
@@ -187,7 +186,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
         try {
             emailSender.send(message);
-            redisService.createSmsCertification(email, ePw);
+            redisService.createEmailCertification(email, ePw);
             UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
             if (userConfirmEntity == null) {
                 userConfirmRepository.save(UserConfirmEntity.builder()
@@ -198,7 +197,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
                 userConfirmRepository.save(userConfirmEntity);
             }
-            log.info("이메일 전송, {}, pw", email, authEntity);
+            log.info("이메일 전송, {}, id", email, authEntity);
             return "success";
         } catch (MailException es) {
             es.printStackTrace();
@@ -216,7 +215,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         }
         try {
             emailSender.send(message);
-            redisService.createSmsCertification(email, ePw);
+            redisService.createEmailCertification(email, ePw);
             UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
             if(userConfirmEntity == null){
                 userConfirmRepository.save(UserConfirmEntity.builder()
@@ -242,7 +241,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
         try {
             emailSender.send(message);
-            redisService.createSmsCertification(email, ePw);
+            redisService.createEmailCertification(email, ePw);
             UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
             if(userConfirmEntity == null){
                 userConfirmRepository.save(UserConfirmEntity.builder()
@@ -282,4 +281,3 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 //        return authEntityRepository.existByEmail(email);
 //    }
 }
-

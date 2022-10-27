@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import java.time.Duration;
 
-
 @Repository
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -22,16 +21,16 @@ public class RedisService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    public void createSmsCertification(String email, String certificationNumber) {
+    public void createEmailCertification(String email, String certificationNumber) {
         ValueOperations<String, String> vop = redisTemplate.opsForValue();
         vop.set(PREFIX + email, certificationNumber, Duration.ofSeconds(LIMIT_TIME));
     }
 
-    public String getSmsCertification(String email) { // (4)
+    public String getEmailCertification(String email) { // (4)
         return redisTemplate.opsForValue().get(PREFIX + email);
     }
 
-    public void removeSmsCertification(String email) { // (5)
+    public void removeEmailCertification(String email) { // (5)
         redisTemplate.delete(PREFIX + email);
     }
 

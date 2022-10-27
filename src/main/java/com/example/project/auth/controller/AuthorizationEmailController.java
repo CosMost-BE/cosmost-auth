@@ -1,9 +1,7 @@
 package com.example.project.auth.controller;
 
-import com.example.project.auth.service.AuthService;
-import com.example.project.auth.service.email.EmailConfirmService;
-import com.example.project.auth.service.email.EmailSenderService;
 import com.example.project.auth.service.email.EmailConfirmServiceImpl;
+import com.example.project.auth.service.email.EmailSenderServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,15 +14,13 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthorizationEmailController {
 
-    private final EmailConfirmServiceImpl emailServiceImpl;
-    private final EmailSenderService emailSenderService;
-    private final EmailConfirmService emailConfirmService;
+    private final EmailConfirmServiceImpl emailConfirmService;
+    private final EmailSenderServiceImpl emailSenderService;
 
     @Autowired
-    public AuthorizationEmailController(EmailConfirmServiceImpl emailServiceImpl, AuthService authService, EmailSenderService emailSenderService, EmailConfirmService emailConfirmService) {
-        this.emailServiceImpl = emailServiceImpl;
-        this.emailSenderService = emailSenderService;
+    public AuthorizationEmailController(EmailConfirmServiceImpl emailConfirmService, EmailSenderServiceImpl emailSenderService) {
         this.emailConfirmService = emailConfirmService;
+        this.emailSenderService = emailSenderService;
     }
 
     // 이메일 인증코드 발송
@@ -44,8 +40,6 @@ public class AuthorizationEmailController {
         return emailSenderService.sendConfirmCodeByEmail(email);
     }
 
-
-
 //    // 중복이메일 체크
 //    @GetMapping("/duplicate/email/{email}")
 //    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String code, String email) {
@@ -53,26 +47,22 @@ public class AuthorizationEmailController {
 //        return ResponseEntity.status(HttpStatus.OK).body(emailServiceImpl.checkEmailDuplicate(code, email));
 //    }
 
-
-
-
-
-    // 이메일인증 코드 확인
+    // 이메일 인증코드 확인
     @GetMapping("/code/confirm/{code}/{email}")
     public ResponseEntity<Boolean> userEmailConfirm(@PathVariable String code, @PathVariable String email) {
         log.info("userEmailConfirm, {}, {}", code, email);
-        return ResponseEntity.status(HttpStatus.OK).body(emailServiceImpl.userEmailConfirm(code, email));
+        return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userEmailConfirm(code, email));
     }
 
     @GetMapping("/id/reissue/{code}/{email}")
     public ResponseEntity<Boolean> userIdReissue(@PathVariable String code, @PathVariable String email) throws Exception {
-        log.info("userPasswordReissue, {}, {}", code, email);
-        return ResponseEntity.status(HttpStatus.OK).body(emailServiceImpl.userIdReissue(code, email));
+        log.info("userIdReissue, {}, {}", code, email);
+        return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userIdReissue(code, email));
     }
 
     @GetMapping("/pw/reissue/{code}/{email}")
     public ResponseEntity<Boolean> userPasswordReissue(@PathVariable String code, @PathVariable String email) throws Exception {
         log.info("userPasswordReissue, {}, {}", code, email);
-        return ResponseEntity.status(HttpStatus.OK).body(emailServiceImpl.userPasswordReissue(code, email));
+        return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userPasswordReissue(code, email));
     }
 }

@@ -5,8 +5,16 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
+#    ec2 cosmost-auth ip
+#    url: jdbc:mysql://3.38.146.80:3306/cosmost
     url: jdbc:mysql://localhost:3306/cosmost_db
     password: '1234'
+  redis:
+    host: 127.0.0.1
+    password: 1234
+    port: 6379
+    session:
+      store-type: redis
 
   jpa:
     properties:
@@ -25,9 +33,8 @@ spring:
         enabled: 'true'
 
   profiles:
-    include: email, redis
+    include: email
 
 jwt:
   tokenValidTime: 18000000000000
-  60 30 00 1800000
   secret: COS-MOST-TEAM-SECRET-KEY
