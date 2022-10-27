@@ -29,4 +29,5 @@ spring:
 
 jwt:
   tokenValidTime: 18000000000000
+  60 30 00 1800000
   secret: COS-MOST-TEAM-SECRET-KEY
