@@ -27,6 +27,13 @@ spring:
   profiles:
     include: email, localredis
 
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+
 jwt:
   tokenValidTime: 18000000000000
   secret: COS-MOST-TEAM-SECRET-KEY
