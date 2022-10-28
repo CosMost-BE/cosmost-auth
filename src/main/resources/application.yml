@@ -39,9 +39,6 @@ logging:
       amazonaws:
         util:
           EC2MetadataUtils: error
-=======
-    include: email
->>>>>>> parent of 6a78a2a ([update] application-localdb.yml, application.yml)
 
 jwt:
   tokenValidTime: 18000000000000
