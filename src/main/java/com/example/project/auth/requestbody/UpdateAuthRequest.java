@@ -2,6 +2,7 @@ package com.example.project.auth.requestbody;
 
 import com.example.project.auth.infrastructure.entity.*;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotBlank;
 
 @Getter
@@ -40,7 +41,28 @@ public class UpdateAuthRequest {
 
     private String type;
 
-    public AuthEntity infoDtoEntity(Long id, UpdateAuthRequest updateAuthRequest, String securePwd) {
+    public AuthEntity infoAllDtoEntity(Long id, UpdateAuthRequest updateAuthRequest,
+                                    String securePwd, FileInfoRequest fileInfoRequest) {
+        return AuthEntity.builder()
+                .id(id)
+                .loginPwd(securePwd)
+                .loginId(updateAuthRequest.getLoginId())
+                .nickname(updateAuthRequest.getNickname())
+                .email(updateAuthRequest.getEmail())
+                .address(updateAuthRequest.getAddress())
+                .role(updateAuthRequest.getRole())
+                .sns(updateAuthRequest.getSns())
+                .status(updateAuthRequest.getStatus())
+                .ageGroup(updateAuthRequest.getAgeGroup())
+                .married(updateAuthRequest.getMarried())
+                .profileImgOriginName(fileInfoRequest.getName())
+                .profileImgSaveName(fileInfoRequest.getRemotePath())
+                .profileImgSaveUrl(fileInfoRequest.getUrl())
+                .build();
+    }
+
+    public AuthEntity infoDtoEntity(Long id, UpdateAuthRequest updateAuthRequest,
+                                       String securePwd) {
         return AuthEntity.builder()
                 .id(id)
                 .loginPwd(securePwd)

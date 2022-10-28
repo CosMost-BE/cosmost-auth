@@ -1,5 +1,7 @@
 package com.example.project.auth.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.example.project.auth.configuration.util.AmazonS3ResourceStorage;
 import com.example.project.auth.configuration.util.JwtTokenProvider;
 import com.example.project.auth.exception.*;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
@@ -9,34 +11,54 @@ import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.model.Auth;
 import com.example.project.auth.requestbody.CreateAuthRequest;
+import com.example.project.auth.requestbody.FileInfoRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
+
     private final AuthEntityRepository authEntityRepository;
+
     private final JwtTokenProvider jwtTokenProvider;
+
     private final PasswordEncoder passwordEncoder;
+    private final AmazonS3ResourceStorage amazonS3ResourceStorage;
+
+    private final AmazonS3 amazonS3;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     @Autowired
-    public AuthServiceImpl(AuthEntityRepository authEntityRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(AuthEntityRepository authEntityRepository, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder,
+                           AmazonS3ResourceStorage amazonS3ResourceStorage, AmazonS3 amazonS3) {
         this.authEntityRepository = authEntityRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
+        this.amazonS3ResourceStorage = amazonS3ResourceStorage;
+        this.amazonS3 = amazonS3;
     }
 
     @Override // 회원가입
-    public AuthEntity createAuth(CreateAuthRequest createAuthRequest) {
+    public AuthEntity createAuth(CreateAuthRequest createAuthRequest, MultipartFile file) {
+
+        FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img"); // 폴더이름
+        amazonS3ResourceStorage.store(fileInfoRequest, file);
 
         return authEntityRepository.save(
                 AuthEntity.builder()
@@ -50,9 +72,9 @@ public class AuthServiceImpl implements AuthService {
                         .sns(createAuthRequest.getSns())
                         .married(createAuthRequest.getMarried())
                         .ageGroup(createAuthRequest.getAgeGroup())
-                        .profileImgOriginName(createAuthRequest.getProfileImgOriginName())
-                        .profileImgSaveName(createAuthRequest.getProfileImgSaveName())
-                        .profileImgSaveUrl(createAuthRequest.getProfileImgSaveUrl())
+                        .profileImgOriginName(fileInfoRequest.getName())
+                        .profileImgSaveName(fileInfoRequest.getRemotePath())
+                        .profileImgSaveUrl(fileInfoRequest.getUrl())
                         .build());
     }
 
@@ -99,7 +121,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override // 회원 탈퇴
     @Transactional
-    public boolean deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound {
+    public boolean deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest,
+                                  MultipartFile file) throws WithdrawalCheckNotFound {
             String authId = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
 //            Long id = Long.valueOf(jwtTokenProvider.getUserPk(authId));
             Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(authId));
@@ -129,7 +152,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override // 회원정보 수정
     @Transactional
-    public void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail {
+    public void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request,
+                               MultipartFile file) throws UpdateAuthFail {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
 
@@ -142,8 +166,24 @@ public class AuthServiceImpl implements AuthService {
                         UpdateAuthFail::new));
 
         if (authInfo.isPresent()) {
-            AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(), updateAuthRequest, securePwd);
-            authEntityRepository.save(authEntity);
+
+            if (!file.isEmpty()) {
+
+                FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img"); // 폴더이름
+                amazonS3ResourceStorage.store(fileInfoRequest, file);
+
+                AuthEntity authEntity = updateAuthRequest.infoAllDtoEntity(authInfo.get().getId(),
+                        updateAuthRequest, securePwd, fileInfoRequest);
+
+                authEntityRepository.save(authEntity);
+
+            } else {
+                AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(),
+                        updateAuthRequest, securePwd);
+
+                authEntityRepository.save(authEntity);
+            }
+
         }
     }
 
