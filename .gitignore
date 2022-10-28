@@ -35,6 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+application-aws.yml
+application-ec2db.yml
+application-elasticache.yml
 application-email.yml
-application-redis.yml
-application-localdb.yml
+application-localredis.yml
