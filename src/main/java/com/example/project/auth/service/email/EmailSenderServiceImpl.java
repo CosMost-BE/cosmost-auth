@@ -1,9 +1,10 @@
-package com.example.project.auth.service;
+package com.example.project.auth.service.email;
 
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.UserConfirmEntity;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.infrastructure.repository.UserConfirmRepository;
+import com.example.project.auth.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,14 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Service
 @Component
-public class EmailServiceImpl implements EmailService {
+public class EmailSenderServiceImpl implements EmailSenderService {
     @Autowired
     JavaMailSender emailSender;
     private final Environment env;
     private final UserConfirmRepository userConfirmRepository;
     private final AuthEntityRepository authEntityRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final RedisService redisService;
 
     private MimeMessage reissuePassword(String to, String ePw)throws Exception{
         System.out.println("보내는 대상 : "+ to);
@@ -184,6 +186,7 @@ public class EmailServiceImpl implements EmailService {
 
         try {
             emailSender.send(message);
+            redisService.createEmailCertification(email, ePw);
             UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
             if (userConfirmEntity == null) {
                 userConfirmRepository.save(UserConfirmEntity.builder()
@@ -194,7 +197,7 @@ public class EmailServiceImpl implements EmailService {
 
                 userConfirmRepository.save(userConfirmEntity);
             }
-            log.info("이메일 전송, {}, pw", email, authEntity);
+            log.info("이메일 전송, {}, id", email, authEntity);
             return "success";
         } catch (MailException es) {
             es.printStackTrace();
@@ -212,6 +215,7 @@ public class EmailServiceImpl implements EmailService {
         }
         try {
             emailSender.send(message);
+            redisService.createEmailCertification(email, ePw);
             UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
             if(userConfirmEntity == null){
                 userConfirmRepository.save(UserConfirmEntity.builder()
@@ -237,6 +241,7 @@ public class EmailServiceImpl implements EmailService {
 
         try {
             emailSender.send(message);
+            redisService.createEmailCertification(email, ePw);
             UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
             if(userConfirmEntity == null){
                 userConfirmRepository.save(UserConfirmEntity.builder()
@@ -270,5 +275,9 @@ public class EmailServiceImpl implements EmailService {
             throw new IllegalArgumentException();
         }
     }
-}
 
+//    @Override
+//    public AuthEntity checkEmailDuplicate(String code, String email) throws Exception {
+//        return authEntityRepository.existByEmail(email);
+//    }
+}

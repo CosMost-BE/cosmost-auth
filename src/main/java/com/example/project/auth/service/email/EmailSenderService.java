@@ -1,6 +1,6 @@
-package com.example.project.auth.service;
+package com.example.project.auth.service.email;
 
-public interface EmailService {
+public interface EmailSenderService {
     String sendEmailId(String email) throws Exception;
 
     String sendEmailPwd(String to) throws Exception;
@@ -9,7 +9,6 @@ public interface EmailService {
 
     String sendReissuePassword(String email) throws Exception;
 
-//    boolean userEmailConfirm(String code, String email);
-//
-//    boolean userPasswordReissue(String code, String email) throws Exception;
+//    AuthEntity checkEmailDuplicate(String code, String email) throws Exception;
+
 }

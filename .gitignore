@@ -33,8 +33,11 @@ out/
 /nbdist/
 /.nb-gradle/
 
+
 ### VS Code ###
 .vscode/
-application-email.yml
-application-redis.yml
 application-aws.yml
+application-ec2db.yml
+application-elasticache.yml
+application-email.yml
+application-localredis.yml

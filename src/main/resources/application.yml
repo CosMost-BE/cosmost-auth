@@ -8,7 +8,7 @@ spring:
 #    ec2 cosmost-auth ip
 #    url: jdbc:mysql://3.38.146.80:3306/cosmost
     url: jdbc:mysql://localhost:3306/cosmost_db
-    password: '1234'
+    password: 1234
 
   jpa:
     properties:
@@ -27,7 +27,7 @@ spring:
         enabled: 'true'
 
   profiles:
-    include: email, redis, aws
+    include: aws, ec2db, elasticache, email
 
 logging:
   level:
@@ -37,5 +37,5 @@ logging:
           EC2MetadataUtils: error
 
 jwt:
-  tokenValidTime: 1800000
+  tokenValidTime: 18000000000000
   secret: COS-MOST-TEAM-SECRET-KEY

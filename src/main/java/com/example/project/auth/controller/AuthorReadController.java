@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthorReadController {
 
     private final AuthService authService;
-
     @Autowired
     public AuthorReadController(AuthService authService) {
         this.authService = authService;
@@ -37,8 +36,6 @@ public class AuthorReadController {
     @ApiImplicitParam(name = "readAuthor", value = "작성자 정보 조회", dataType = "AuthVoReq")
     @GetMapping("/info")
     public AuthView readAuthor(@RequestParam(value = "id") String id, HttpServletRequest request) {
-       log.info(id+"@@@@@@@@@@@@@@@@");
-       log.info(authService.readAuthor(request)+"#########3####");
         if (id.equals("author-id")) {
             log.info(id);
             if (authService.readAuthor(request).equals(null)) {

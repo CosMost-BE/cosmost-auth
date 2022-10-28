@@ -3,7 +3,6 @@ package com.example.project.auth.requestbody;
 import com.example.project.auth.infrastructure.entity.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.constraints.NotBlank;
 
 @Getter
