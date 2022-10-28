@@ -27,7 +27,14 @@ spring:
         enabled: 'true'
 
   profiles:
-    include: email, redis
+    include: email, redis, aws
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
 
 jwt:
   tokenValidTime: 1800000
