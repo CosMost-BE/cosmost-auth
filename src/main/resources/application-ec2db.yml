@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    username: ksh
+    url: jdbc:mysql://3.38.146.80:3306/cosmost
+    password: '1234'

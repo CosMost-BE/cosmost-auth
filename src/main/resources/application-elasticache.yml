@@ -1,0 +1,5 @@
+spring:
+  redis:
+    # AWS ElastiCache End-Point Host url
+    host: cosmost-auth.wzgk6w.ng.0001.apn2.cache.amazonaws.com
+    port: 6379

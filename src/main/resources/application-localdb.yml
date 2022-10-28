@@ -1,5 +1,0 @@
-spring:
-  datasource:
-    username: kjh
-    url: jdbc:mysql://3.38.146.80:3306/auth
-    password: '1234'
