@@ -2,13 +2,13 @@ server:
   port: 9001
 
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-#    ec2 cosmost-auth ip
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: root
+#    ec2 cosmost-db ip
 #    url: jdbc:mysql://3.38.146.80:3306/cosmost
-    url: jdbc:mysql://localhost:3306/cosmost_db
-    password: 1234
+#    url: jdbc:mysql://localhost:3306/cosmost_db
+#    password: 1234
 
   jpa:
     properties:
