@@ -31,7 +31,9 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
+
     private final AuthEntityRepository authEntityRepository;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     private final PasswordEncoder passwordEncoder;
