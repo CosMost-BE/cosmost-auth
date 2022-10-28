@@ -6,6 +6,7 @@ import com.example.project.auth.model.Auth;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface AuthService {
 
     // 회원가입
-    AuthEntity createAuth(CreateAuthRequest createAuthRequest);
+    AuthEntity createAuth(CreateAuthRequest createAuthRequest, MultipartFile file);
 
     // 중복 아이디 확인
     boolean checkId(HttpServletRequest request) throws DuplicatedIdException;
@@ -27,10 +28,12 @@ public interface AuthService {
     String updateLoginAuth(UpdateLoginRequest updateLoginRequest);
 
     // 회원 탈퇴
-    boolean deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest) throws WithdrawalCheckNotFound;
+    boolean deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest,
+                           MultipartFile file) throws WithdrawalCheckNotFound;
 
     // 회원정보 수정
-    void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request) throws UpdateAuthFail;
+    void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request,
+                        MultipartFile file) throws UpdateAuthFail;
 
     // 회원정보 조회
     Auth readAuth(HttpServletRequest request) throws ReadAuthFail;

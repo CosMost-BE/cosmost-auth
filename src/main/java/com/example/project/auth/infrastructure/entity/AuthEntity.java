@@ -59,7 +59,7 @@ public class AuthEntity extends BaseTimeEntity {
         this.married = married;
         this.sns = sns;
         this.profileImgOriginName = profileImgOriginName;
-        this.profileImgSaveName = profileImgOriginName;
+        this.profileImgSaveName = profileImgSaveName;
         this.profileImgSaveUrl = profileImgSaveUrl;
         this.role = role;
         this.status = status;
