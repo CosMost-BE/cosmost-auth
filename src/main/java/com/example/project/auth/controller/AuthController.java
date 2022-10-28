@@ -13,9 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RequestMapping(value = "/v1/auths")
@@ -39,21 +41,23 @@ public class AuthController {
     @ApiOperation(value = "회원가입을 할 때 쓰는 메소드")
     @ApiImplicitParam(name = "auth", value = "회원가입", dataType = "AuthVoReq")
     @PostMapping("")
-    public ResponseEntity<String> createAuth(@RequestBody @Valid CreateAuthRequest createAuthRequest) {
-        authService.createAuth(createAuthRequest);
+    public ResponseEntity<String> createAuth(@RequestPart @Valid CreateAuthRequest createAuthRequest,
+                                             @RequestPart(value="file", required = false) MultipartFile file) {
+        authService.createAuth(createAuthRequest, file);
         return ResponseEntity.ok().body("회원가입이 되었습니다.");
     }
 
     @PutMapping("")
-    public ResponseEntity<?> updateAuthInfo(@RequestBody @Valid UpdateAuthRequest updateAuthRequest, HttpServletRequest request) {
+    public ResponseEntity<?> updateAuthInfo(@RequestPart @Valid UpdateAuthRequest updateAuthRequest, HttpServletRequest request,
+                                            @RequestPart(value="file", required = false) MultipartFile file) {
         if (updateAuthRequest.getType().equals("회원정보 수정")) {
-            authService.updateAuthInfo(updateAuthRequest, request);
+            authService.updateAuthInfo(updateAuthRequest, request, file);
             return ResponseEntity.ok("회원정보가 수정되었습니다.");
         }
         if (updateAuthRequest.getType().equals("회원 탈퇴")) {
-            Boolean auth = authService.deleteAuthInfo(request, updateAuthRequest);
+            Boolean auth = authService.deleteAuthInfo(request, updateAuthRequest, file);
             if (auth != null) {
-                authService.deleteAuthInfo(request, updateAuthRequest);
+                authService.deleteAuthInfo(request, updateAuthRequest, file);
                 return ResponseEntity.ok("회원탈퇴가 되었습니다.");
             }
             throw new TypeNotFound();

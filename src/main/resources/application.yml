@@ -27,7 +27,7 @@ spring:
         enabled: 'true'
 
   profiles:
-    include: email, redis
+    include: email, redis, aws
 
 jwt:
   tokenValidTime: 1800000

@@ -37,3 +37,4 @@ out/
 .vscode/
 application-email.yml
 application-redis.yml
+application-aws.yml
