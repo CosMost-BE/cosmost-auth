@@ -24,6 +24,8 @@ public class Auth {
     private AuthRole role;
     private AuthStatus status;
 
+
+
     public Auth(AuthEntity entity) {
         this.id = entity.getId();
         this.loginId = entity.getLoginId();

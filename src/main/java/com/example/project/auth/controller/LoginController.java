@@ -43,4 +43,14 @@ public class LoginController {
             return ResponseEntity.status(400).body("로그인 실패");
         }
     }
+
+//    @GetMapping("/naver/{token}")
+//    public ResponseEntity<String> updateLoginAuth(@PathVariable String token) {
+//        return new
+//    }
+
+//    @GetMapping
+//    public String authNaver(@RequestParam String code) {
+//        return "code : " + code;
+//    }
 }

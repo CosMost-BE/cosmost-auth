@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AuthorizationEmailController {
-
     private final EmailConfirmServiceImpl emailConfirmService;
     private final EmailSenderServiceImpl emailSenderService;
 

@@ -108,7 +108,7 @@ public class AuthServiceImpl implements AuthService {
         // optional
         Optional<AuthEntity> auth = authEntityRepository.findByLoginId(updateLoginRequest.getLoginId());
 
-        // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
+        // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 로그인 여부 비교, 회원탈퇴 비교
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if(auth != null && encoder.matches(updateLoginRequest.getLoginPwd(), auth.get().getLoginPwd()) &&
                 auth.get().getSns().equals(AuthSns.NO) && auth.get().getStatus().equals(AuthStatus.ACTIVE)) {
@@ -127,7 +127,7 @@ public class AuthServiceImpl implements AuthService {
 
 
             String securePwd = passwordEncoder.encode(updateAuthRequest.getLoginPwd());
-            System.out.println("rthrtjrdjdyjdyj"+securePwd);
+            System.out.println("@@@@@@@@@@@"+securePwd);
 
             // 회원가입시 비밀번호
             String oldPwd = auth.get().getLoginPwd();

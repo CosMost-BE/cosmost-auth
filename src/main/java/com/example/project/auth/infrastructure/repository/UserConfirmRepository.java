@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserConfirmRepository extends JpaRepository<UserConfirmEntity, Long> {
     UserConfirmEntity findByEmail(String email);
+    Boolean existsByEmail(String email);
+
 //    Optional<AuthEntity> findByLoginId(String loginId);
 }
