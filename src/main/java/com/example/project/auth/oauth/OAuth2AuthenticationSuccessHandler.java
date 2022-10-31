@@ -1,20 +1,23 @@
 package com.example.project.auth.oauth;
 
 import com.example.project.auth.configuration.utils.JwtTokenProvider;
+import com.example.project.auth.infrastructure.entity.AuthEntity;
+import com.example.project.auth.infrastructure.entity.AuthRole;
+import com.example.project.auth.infrastructure.entity.UserConfirmEntity;
 import com.example.project.auth.infrastructure.repository.UserConfirmRepository;
-import com.example.project.auth.model.Auth;
+import com.nimbusds.oauth2.sdk.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -23,10 +26,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtTokenProvider jwtTokenProvider;
     private final UserConfirmRepository userConfirmRepository;
 
+    private final AuthEntity authEntity;
+
     @Autowired
-    public OAuth2AuthenticationSuccessHandler(JwtTokenProvider jwtTokenProvider, UserConfirmRepository userConfirmRepository) {
+    public OAuth2AuthenticationSuccessHandler(JwtTokenProvider jwtTokenProvider, UserConfirmRepository userConfirmRepository, AuthEntity authEntity) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.userConfirmRepository = userConfirmRepository;
+        this.authEntity = authEntity;
     }
 
     @Override
@@ -42,9 +48,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             email = String.valueOf(oAuth2User.getAttributes().get("email"));
         }
 
-        Optional<Auth> user = userConfirmRepository.findByEmail(email);
+        UserConfirmEntity user = userConfirmRepository.findByEmail(email);
 
-        String jwt = jwtTokenProvider.createToken(user.get().getUserId(), String.valueOf(Role.USER));
+        String jwt = jwtTokenProvider.createToken(authEntity.getId(), String.valueOf(AuthRole.USER));
 
         String url = makeRedirectUrl(jwt);
 
