@@ -1,7 +1,6 @@
-package com.example.project.auth.configuration.utils.oauth;
+package com.example.project.auth.oauth;
 
 import com.example.project.auth.configuration.utils.JwtTokenProvider;
-import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.infrastructure.repository.UserConfirmRepository;
 import com.example.project.auth.model.Auth;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +23,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtTokenProvider jwtTokenProvider;
     private final UserConfirmRepository userConfirmRepository;
 
-    private final AuthEntityRepository authEntityRepository;
-
     @Autowired
     public OAuth2AuthenticationSuccessHandler(JwtTokenProvider jwtTokenProvider, UserConfirmRepository userConfirmRepository) {
         this.jwtTokenProvider = jwtTokenProvider;
@@ -45,7 +42,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             email = String.valueOf(oAuth2User.getAttributes().get("email"));
         }
 
-        Optional<Auth> auth = userConfirmRepository.findByEmail(email);
+        Optional<Auth> user = userConfirmRepository.findByEmail(email);
 
         String jwt = jwtTokenProvider.createToken(user.get().getUserId(), String.valueOf(Role.USER));
 
