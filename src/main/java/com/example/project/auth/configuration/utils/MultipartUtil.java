@@ -1,4 +1,4 @@
-package com.example.project.auth.configuration.util;
+package com.example.project.auth.configuration.utils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

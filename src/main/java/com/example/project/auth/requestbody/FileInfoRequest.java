@@ -1,6 +1,6 @@
 package com.example.project.auth.requestbody;
 
-import com.example.project.auth.configuration.util.MultipartUtil;
+import com.example.project.auth.configuration.utils.MultipartUtil;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 

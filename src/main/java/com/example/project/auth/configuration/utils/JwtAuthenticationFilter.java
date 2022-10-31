@@ -1,4 +1,4 @@
-package com.example.project.auth.configuration.util;
+package com.example.project.auth.configuration.utils;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;

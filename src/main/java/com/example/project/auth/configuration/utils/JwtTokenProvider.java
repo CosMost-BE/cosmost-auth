@@ -1,4 +1,4 @@
-package com.example.project.auth.configuration.util;
+package com.example.project.auth.configuration.utils;
 
 import com.example.project.auth.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;

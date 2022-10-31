@@ -1,7 +1,7 @@
 package com.example.project.auth.configuration;
 
-import com.example.project.auth.configuration.util.JwtAuthenticationFilter;
-import com.example.project.auth.configuration.util.JwtTokenProvider;
+import com.example.project.auth.configuration.utils.JwtAuthenticationFilter;
+import com.example.project.auth.configuration.utils.JwtTokenProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,8 +1,8 @@
 package com.example.project.auth.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.example.project.auth.configuration.util.AmazonS3ResourceStorage;
-import com.example.project.auth.configuration.util.JwtTokenProvider;
+import com.example.project.auth.configuration.utils.AmazonS3ResourceStorage;
+import com.example.project.auth.configuration.utils.JwtTokenProvider;
 import com.example.project.auth.exception.*;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.AuthRole;
@@ -24,8 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
