@@ -22,6 +22,7 @@ public class OAuthAttributes {
     private String nameAttributeKey;
     private String nickname;
     private String email;
+    private String profileImgOriginName;
     private String mobile;
     private String socialType;
 
@@ -84,6 +85,7 @@ public class OAuthAttributes {
         return Auth.builder()
                 .email(email)
                 .nickname(nickname)
+                .profileImgOriginName(profileImgOriginName)
                 .role(AuthRole.USER)
                 .build();
     }
