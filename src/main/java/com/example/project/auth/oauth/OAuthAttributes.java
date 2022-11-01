@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.util.Map;

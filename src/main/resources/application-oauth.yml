@@ -6,6 +6,7 @@ spring:
           naver:
             client-id: olOWHLuaPPHW2uZwF5H4
             client-secret: t0bSyvPelC
+#            redirect-uri: http://localhost:9001/v1/signin/naver
 #            redirect-uri: http://localhost:9001/login/v1/signin/naver
             redirect-uri: http://localhost:9001/login/oauth2/code/social
             authorization-grant-type: authorization_code
