@@ -35,9 +35,7 @@ public class AuthEntity extends BaseTimeEntity {
     private AuthSns sns;
 
     private String profileImgOriginName;
-
     private String profileImgSaveName;
-
     private String profileImgSaveUrl;
 
     @Enumerated(EnumType.STRING)

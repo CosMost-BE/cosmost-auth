@@ -10,10 +10,7 @@ import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.model.Auth;
-import com.example.project.auth.requestbody.CreateAuthRequest;
-import com.example.project.auth.requestbody.FileInfoRequest;
-import com.example.project.auth.requestbody.UpdateAuthRequest;
-import com.example.project.auth.requestbody.UpdateLoginRequest;
+import com.example.project.auth.requestbody.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Optional;
@@ -149,6 +145,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override // 회원정보 수정
+
     @Transactional
     public void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request,
                                MultipartFile file) throws UpdateAuthFail {
@@ -238,5 +235,17 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
         return null;
+    }
+    // 소셜 회원가입 로그인 - 네이버
+    @Override
+    public AuthEntity updateLoginOAuth(UpdateOAuthRequest updateOAuthRequest) {
+
+        return authEntityRepository.save(
+                AuthEntity.builder()
+                        .email(updateOAuthRequest.getEmail())
+                        .address(updateOAuthRequest.getAddress())
+                        .married(updateOAuthRequest.getMarried())
+                        .sns(updateOAuthRequest.getSns())
+                        .build());
     }
 }

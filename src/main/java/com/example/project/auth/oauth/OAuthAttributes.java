@@ -1,6 +1,8 @@
 package com.example.project.auth.oauth;
 
+import com.example.project.auth.infrastructure.entity.AuthMarried;
 import com.example.project.auth.infrastructure.entity.AuthRole;
+import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.model.Auth;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,11 +22,17 @@ public class OAuthAttributes {
 
     private Map<String, Object> attributes;
     private String nameAttributeKey;
-    private String nickname;
+
     private String email;
-    private String profileImgOriginName;
-    private String mobile;
+    private String nickname;
+    private String profileImg;
+    private String ageGroup;
+
+
     private String socialType;
+    private String address;
+    private AuthMarried married;
+    private AuthSns sns;
 
     @Enumerated(EnumType.STRING)
     private AuthRole role;
@@ -45,10 +53,10 @@ public class OAuthAttributes {
 
     private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
         return OAuthAttributes.builder()
-                .nickname(String.valueOf(attributes.get("nickname")))
                 .email(String.valueOf(attributes.get("email")))
-                .mobile(String.valueOf(attributes.get("mobile")))
-                .socialType(String.valueOf(attributes.get("socialType")))
+                .nickname(String.valueOf(attributes.get("nickname")))
+                .profileImg(String.valueOf(attributes.get("profileImg")))
+                .ageGroup(String.valueOf(attributes.get("age")))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
@@ -58,10 +66,10 @@ public class OAuthAttributes {
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
         log.info("@@@@@@@@@@@@" + String.valueOf(response));
         return OAuthAttributes.builder()
-                .nickname(String.valueOf(response.get("nickname")))
                 .email(String.valueOf(response.get("email")))
-                .mobile(String.valueOf(response.get("mobile")))
-                .socialType(String.valueOf(response.get("socialType")))
+                .nickname(String.valueOf(response.get("nickname")))
+                .profileImg(String.valueOf(response.get("profile_image")))
+                .ageGroup(String.valueOf(response.get("age")))
                 .attributes(response)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
@@ -72,10 +80,10 @@ public class OAuthAttributes {
         Map<String, Object> kakao_profile = (Map<String, Object>) kakao_account.get("profile");
 
         return OAuthAttributes.builder()
-                .nickname(String.valueOf(kakao_profile.get("nickname")))
                 .email(String.valueOf(kakao_account.get("email")))
-                .mobile(String.valueOf(kakao_account.get("mobile")))
+                .nickname(String.valueOf(kakao_profile.get("nickname")))
                 .socialType(String.valueOf(kakao_account.get("socialType")))
+                .address(String.valueOf(attributes.get("address")))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
                 .build();
@@ -85,7 +93,7 @@ public class OAuthAttributes {
         return Auth.builder()
                 .email(email)
                 .nickname(nickname)
-                .profileImgOriginName(profileImgOriginName)
+                .ageGroup(ageGroup)
                 .role(AuthRole.USER)
                 .build();
     }

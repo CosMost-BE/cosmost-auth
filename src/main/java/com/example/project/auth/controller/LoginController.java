@@ -1,6 +1,7 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.requestbody.UpdateLoginRequest;
+import com.example.project.auth.requestbody.UpdateOAuthRequest;
 import com.example.project.auth.service.AuthService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -42,5 +43,11 @@ public class LoginController {
         } else {
             return ResponseEntity.status(400).body("로그인 실패");
         }
+    }
+
+    @PostMapping("/naver")
+    public ResponseEntity<String> updateLoginOAuth(@RequestBody @Valid UpdateOAuthRequest updateOAuthRequest) {
+        authService.updateLoginOAuth(updateOAuthRequest);
+        return ResponseEntity.ok().body("네이버로 로그인이 되었습니다.");
     }
 }
