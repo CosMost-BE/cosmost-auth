@@ -69,8 +69,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String url;
         if (authEntityRepository.existsByEmail(email)) {
             String socialToken = jwtTokenProvider.createSocialToken(authEntity.getId());
-            url = sendExistInfoToRedirectUrI(socialToken, authEntity.getId());
             response.addHeader("Authorization", socialToken);
+            url = sendExistInfoToRedirectUrI(socialToken, authEntity.getId());
         } else {
             if (socialType.equals("naver")) {
                 response.setCharacterEncoding("UTF-8");
@@ -89,7 +89,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private String sendExistInfoToRedirectUrI(String token, Long userId) {
         return UriComponentsBuilder.fromUriString("http://localhost:9001/login/oauth2/code/social"
-                        + "/userId=" + userId + "/role=" + AuthRole.USER + "/token=" + token)
+                        + "/userId=" + userId + "/role=" + AuthRole.USER)
                 .build().toUriString();
     }
 
