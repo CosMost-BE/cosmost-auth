@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class AuthControllerAdvice {
 
-    // 아이디 존재 여부
+    // 중복 아이디 예외처리
     @ExceptionHandler(DuplicatedIdException.class)
     public ResponseEntity<String> DuplicatedIdException(DuplicatedIdException exception) {
         return ResponseEntity
@@ -47,8 +47,17 @@ public class AuthControllerAdvice {
                 .body(exception.getMessage());
     }
 
+
+    // 회원정보 수정 예외처리
     @ExceptionHandler(UpdateAuthFail.class)
     public ResponseEntity<String> UpdateAuthFailException(UpdateAuthFail exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(UpdatePasswordFail.class)
+    public ResponseEntity<String> UpdatePasswordFailException(UpdateAuthFail exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());

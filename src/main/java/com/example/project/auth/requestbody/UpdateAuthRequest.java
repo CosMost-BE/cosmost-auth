@@ -48,11 +48,11 @@ public class UpdateAuthRequest {
     private String type;
 
     public AuthEntity infoAllDtoEntity(Long id, UpdateAuthRequest updateAuthRequest,
-                                    String securePwd, FileInfoRequest fileInfoRequest) {
+                                    String pwd, FileInfoRequest fileInfoRequest) {
         return AuthEntity.builder()
                 .id(id)
-                .loginPwd(securePwd)
                 .loginId(updateAuthRequest.getLoginId())
+                .loginPwd(pwd)
                 .nickname(updateAuthRequest.getNickname())
                 .email(updateAuthRequest.getEmail())
                 .address(updateAuthRequest.getAddress())
@@ -68,10 +68,10 @@ public class UpdateAuthRequest {
     }
 
     public AuthEntity infoDtoEntity(Long id, UpdateAuthRequest updateAuthRequest,
-                                       String securePwd) {
+                                       String pwd) {
         return AuthEntity.builder()
                 .id(id)
-                .loginPwd(securePwd)
+                .loginPwd(pwd)
                 .loginId(updateAuthRequest.getLoginId())
                 .nickname(updateAuthRequest.getNickname())
                 .email(updateAuthRequest.getEmail())
