@@ -159,11 +159,13 @@ public class AuthServiceImpl implements AuthService {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         // 비밀번호 암호화하여 다시 user 객체에 저장
-        String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
+//        String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
 
         Optional<AuthEntity> authInfo = Optional.ofNullable(
                 authEntityRepository.findById(id).orElseThrow(
                         UpdateAuthFail::new));
+
+        String securePwd = authInfo.get().getLoginPwd();
 
         if (authInfo.isPresent()) {
 
@@ -217,26 +219,15 @@ public class AuthServiceImpl implements AuthService {
     // 다른 작성자 정보 조회
     public Auth readAuthor(HttpServletRequest request) throws ReadAuthorFail {
         String header = jwtTokenProvider.getToken(request);
-        log.info(header);
-
         Optional<AuthEntity> authEntityList = authEntityRepository.findById(Long.valueOf(header));
 
         if(authEntityList.isPresent()) {
             return Auth.builder()
                     .id(authEntityList.get().getId())
-                    .loginId(authEntityList.get().getLoginId())
-                    .loginPwd(authEntityList.get().getLoginPwd())
-                    .email(authEntityList.get().getEmail())
-                    .sns(authEntityList.get().getSns())
                     .nickname(authEntityList.get().getNickname())
-                    .address(authEntityList.get().getAddress())
-                    .ageGroup(authEntityList.get().getAgeGroup())
-                    .married(authEntityList.get().getMarried())
                     .profileImgOriginName(authEntityList.get().getProfileImgOriginName())
                     .profileImgSaveName(authEntityList.get().getProfileImgSaveName())
                     .profileImgSaveUrl(authEntityList.get().getProfileImgSaveUrl())
-                    .role(authEntityList.get().getRole())
-                    .status(authEntityList.get().getStatus())
                     .build();
         }
         return null;
