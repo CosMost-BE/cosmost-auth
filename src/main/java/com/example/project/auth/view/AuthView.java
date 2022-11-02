@@ -1,5 +1,6 @@
 package com.example.project.auth.view;
 
+import com.example.project.auth.infrastructure.entity.AuthMarried;
 import com.example.project.auth.model.Auth;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -19,11 +20,18 @@ public class AuthView {
     private String profileImgSaveUrl;
     private String nickname;
 
+    private String loginPwd;
+    private String ageGroup;
+    private AuthMarried married;
+
     public AuthView(Auth auth) {
         this.id = auth.getId();
         this.profileImgOriginName = auth.getProfileImgOriginName();
         this.profileImgSaveName = auth.getProfileImgSaveName();
         this.profileImgSaveUrl = auth.getProfileImgSaveUrl();
         this.nickname = auth.getNickname();
+        this.loginPwd = auth.getLoginPwd();
+        this.ageGroup = auth.getAgeGroup();
+        this.married = auth.getMarried();
     }
 }

@@ -2,7 +2,6 @@ package com.example.project.auth.oauth;
 
 import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
-import com.example.project.auth.infrastructure.repository.UserConfirmRepository;
 import com.example.project.auth.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +19,6 @@ import java.util.Collections;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-
-    private final UserConfirmRepository userConfirmRepository;
     private final RedisService redisService;
     private final AuthEntityRepository authEntityRepository;
 
@@ -40,7 +37,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        //kakao or naver
+        // naver
         String socialType = registrationId;
         AuthEntity authEntity = createSocialUser(attributes, socialType);
 

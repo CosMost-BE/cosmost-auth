@@ -25,7 +25,6 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
-
     private final AuthEntityRepository authEntityRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -154,11 +153,16 @@ public class AuthServiceImpl implements AuthService {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         // 비밀번호 암호화하여 다시 user 객체에 저장
-        String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
+//        String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
+
 
         Optional<AuthEntity> authInfo = Optional.ofNullable(
                 authEntityRepository.findById(id).orElseThrow(
                         UpdateAuthFail::new));
+
+        String securePwd= authInfo.get().getLoginPwd();
+
+
 
         if (authInfo.isPresent()) {
 
@@ -240,9 +244,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthEntity updateLoginOAuth(UpdateOAuthRequest updateOAuthRequest) {
 
+
         return authEntityRepository.save(
                 AuthEntity.builder()
+                        .nickname(updateOAuthRequest.getNickname())
                         .email(updateOAuthRequest.getEmail())
+                        .ageGroup(updateOAuthRequest.getAgeGroup())
                         .address(updateOAuthRequest.getAddress())
                         .married(updateOAuthRequest.getMarried())
                         .sns(updateOAuthRequest.getSns())

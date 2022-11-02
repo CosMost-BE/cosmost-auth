@@ -6,9 +6,11 @@ import com.example.project.auth.infrastructure.entity.AuthSns;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class UpdateOAuthRequest {
 
@@ -24,15 +26,15 @@ public class UpdateOAuthRequest {
 
     private AuthSns sns;
 
-    public AuthEntity oauthDtoEntity(UpdateOAuthRequest updateOAuthRequest) {
-
-        return AuthEntity.builder()
-                .nickname(updateOAuthRequest.getNickname())
-                .email(updateOAuthRequest.getEmail())
-                .ageGroup(updateOAuthRequest.getAgeGroup())
-                .address(updateOAuthRequest.getAddress())
-                .married(updateOAuthRequest.getMarried())
-                .sns(updateOAuthRequest.getSns())
-                .build();
-    }
+//    public AuthEntity oauthDtoEntity(UpdateOAuthRequest updateOAuthRequest) {
+//
+//        return AuthEntity.builder()
+//                .nickname(updateOAuthRequest.getNickname())
+//                .email(updateOAuthRequest.getEmail())
+//                .ageGroup(updateOAuthRequest.getAgeGroup())
+//                .address(updateOAuthRequest.getAddress())
+//                .married(updateOAuthRequest.getMarried())
+//                .sns(updateOAuthRequest.getSns())
+//                .build();
+//    }
 }

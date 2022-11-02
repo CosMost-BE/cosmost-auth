@@ -24,8 +24,6 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
-    private final UserConfirmRepository userConfirmRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
     private final AuthEntityRepository authEntityRepository;
@@ -38,20 +36,34 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> kakao_account;
         Map<String, Object> kakao_profile;
-        String email;
-        String nickname;
+        String email = null;
+        String nickname = null;
         String profileImg = null;
         String ageGroup = null;
-        String socialType;
+        String socialType = null;
 
         System.out.println("oAuth2User.getAttributes() = " + oAuth2User.getAttributes());
-        if (oAuth2User.getAttributes().containsKey("kakao_account")) {
-            socialType = "kakao";
-            kakao_account = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
-            kakao_profile = (Map<String, Object>) kakao_account.get("profile");
-            email = String.valueOf(kakao_account.get("email"));
-            nickname = String.valueOf(kakao_profile.get("nickname"));
-        } else if (oAuth2User.getAttributes().containsKey("email")) {
+//        if (oAuth2User.getAttributes().containsKey("kakao_account")) {
+//            socialType = "kakao";
+//            kakao_account = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
+//            kakao_profile = (Map<String, Object>) kakao_account.get("profile");
+//            email = String.valueOf(kakao_account.get("email"));
+//            nickname = String.valueOf(kakao_profile.get("nickname"));
+//        } else if (oAuth2User.getAttributes().containsKey("email")) {
+//            email = String.valueOf(oAuth2User.getAttributes().get("email"));
+//            nickname = String.valueOf(oAuth2User.getAttributes().get("nickname"));
+//            profileImg = String.valueOf(oAuth2User.getAttributes().get("profile_image"));
+//            ageGroup = String.valueOf(oAuth2User.getAttributes().get("age"));
+//            socialType = "naver";
+//            log.info("@@@@@@@@@@@@@" + email);
+//            log.info("#############" +nickname);
+//        } else {
+//            email = String.valueOf(oAuth2User.getAttributes().get("email"));
+//            nickname = String.valueOf(oAuth2User.getAttributes().get("name"));
+//            socialType = "google";
+//        }
+
+        if (oAuth2User.getAttributes().containsKey("email")) {
             email = String.valueOf(oAuth2User.getAttributes().get("email"));
             nickname = String.valueOf(oAuth2User.getAttributes().get("nickname"));
             profileImg = String.valueOf(oAuth2User.getAttributes().get("profile_image"));
@@ -59,10 +71,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             socialType = "naver";
             log.info("@@@@@@@@@@@@@" + email);
             log.info("#############" +nickname);
-        } else {
-            email = String.valueOf(oAuth2User.getAttributes().get("email"));
-            nickname = String.valueOf(oAuth2User.getAttributes().get("name"));
-            socialType = "google";
         }
 
         AuthEntity authEntity = authEntityRepository.findByEmail(email);
@@ -98,8 +106,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private String sendInfoToRedirectUrl(String email, String nickName, String profileImg, String ageGroup, String socialType) {
         String e = "/email=";
         String n = "/nickname=";
-        String p = "/profileImg";
-        String a = "/ageGroup";
+        String p = "/profileImg=";
+        String a = "/ageGroup=";
         String s = "/socialType=";
 
         String encode = URLEncoder.encode(nickName, StandardCharsets.UTF_8);
@@ -108,16 +116,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .build().toUriString();
     }
 
-    private String sendInfoToNaverRedirectUrl(String email, String nickName, String socialType, String profileImg, String ageGroup) {
+    private String sendInfoToNaverRedirectUrl(String email, String nickName, String profileImg, String ageGroup, String socialType) {
         String e = "/email=";
         String n = "/nickname=";
-        String p = "/profileImg";
-        String a = "/ageGroup";
+        String p = "/profileImg=";
+        String a = "/ageGroup=";
         String s = "/socialType=";
 
         String encode = URLEncoder.encode(nickName, StandardCharsets.UTF_8);
         return UriComponentsBuilder.fromUriString("http://localhost:9001/login/oauth2/code/social" + e + email
-                        + n + encode + p + profileImg + s + socialType + a + ageGroup)
+                        + n + encode + p + profileImg + a + ageGroup + s + socialType)
                 .build().toUriString();
     }
 }
