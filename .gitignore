@@ -41,3 +41,4 @@ application-ec2db.yml
 application-elasticache.yml
 application-email.yml
 application-localredis.yml
+application-oauth.yml
