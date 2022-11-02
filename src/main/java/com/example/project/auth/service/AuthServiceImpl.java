@@ -28,7 +28,6 @@ public class AuthServiceImpl implements AuthService {
     private final AuthEntityRepository authEntityRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
-
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3ResourceStorage amazonS3ResourceStorage;
 
@@ -74,8 +73,6 @@ public class AuthServiceImpl implements AuthService {
     @Override // 중복 아이디 확인
     public boolean checkId(HttpServletRequest request) throws DuplicatedIdException {
         String header = jwtTokenProvider.getHeader(request);
-        log.info(String.valueOf(header));
-//        Optional<AuthEntity> authEntity = authEntityRepository.existsByLoginId(header);
         Optional<AuthEntity> authEntity = authEntityRepository.findByLoginId(header);
 
         if (authEntity.isEmpty()) {
@@ -87,8 +84,6 @@ public class AuthServiceImpl implements AuthService {
     @Override // 중복 닉네임 확인
     public boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname {
         String header = jwtTokenProvider.getHeader(request);
-        log.info(String.valueOf(header));
-//        Optional<AuthEntity> authEntity = authEntityRepository.existsByNickname(header);
         Optional<AuthEntity> authEntity = authEntityRepository.findByNickname(header);
 
 
@@ -155,14 +150,11 @@ public class AuthServiceImpl implements AuthService {
         // 비밀번호 암호화하여 다시 user 객체에 저장
 //        String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
 
-
         Optional<AuthEntity> authInfo = Optional.ofNullable(
                 authEntityRepository.findById(id).orElseThrow(
                         UpdateAuthFail::new));
 
         String securePwd= authInfo.get().getLoginPwd();
-
-
 
         if (authInfo.isPresent()) {
 
@@ -240,19 +232,57 @@ public class AuthServiceImpl implements AuthService {
         }
         return null;
     }
+
+
     // 소셜 회원가입 로그인 - 네이버
     @Override
-    public AuthEntity updateLoginOAuth(UpdateOAuthRequest updateOAuthRequest) {
+    public AuthEntity createOAuth(CreateOAuthRequest createOAuthRequest, MultipartFile file) {
 
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        AuthEntity authEntity = null;
+        if (file != null && !file.isEmpty()) {
+            try {
+                FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img"); // 폴더이름
+                amazonS3ResourceStorage.store(fileInfoRequest, file);
+                log.info(fileInfoRequest.getName());
+                log.info(fileInfoRequest.getUrl());
 
-        return authEntityRepository.save(
-                AuthEntity.builder()
-                        .nickname(updateOAuthRequest.getNickname())
-                        .email(updateOAuthRequest.getEmail())
-                        .ageGroup(updateOAuthRequest.getAgeGroup())
-                        .address(updateOAuthRequest.getAddress())
-                        .married(updateOAuthRequest.getMarried())
-                        .sns(updateOAuthRequest.getSns())
-                        .build());
+                authEntity = AuthEntity.builder()
+                        .loginId(createOAuthRequest.getEmail())
+                        .nickname(createOAuthRequest.getNickname())
+                        .email(createOAuthRequest.getEmail())
+                        .ageGroup(createOAuthRequest.getAgeGroup())
+                        .address(createOAuthRequest.getAddress())
+                        .married(createOAuthRequest.getMarried())
+                        .sns(AuthSns.YES)
+                        .role(AuthRole.USER)
+                        .status(AuthStatus.ACTIVE)
+                        .profileImgOriginName(fileInfoRequest.getName())
+                        .profileImgSaveName(fileInfoRequest.getRemotePath())
+                        .profileImgSaveUrl(fileInfoRequest.getUrl())
+                        .build();
+                authEntityRepository.save(authEntity);
+
+            } catch (Exception e){
+                throw new ProfileImgNotFoundException();
+            }
+
+        } else {
+
+            log.info("########");
+            authEntity = authEntityRepository.save(AuthEntity.builder()
+                    .loginId(createOAuthRequest.getEmail())
+                    .nickname(createOAuthRequest.getNickname())
+                    .email(createOAuthRequest.getEmail())
+                    .ageGroup(createOAuthRequest.getAgeGroup())
+                    .address(createOAuthRequest.getAddress())
+                    .married(createOAuthRequest.getMarried())
+                    .sns(AuthSns.YES)
+                    .role(AuthRole.USER)
+                    .status(AuthStatus.ACTIVE)
+                    .build());
+            authEntityRepository.save(authEntity);
+        }
+        return authEntity;
     }
 }

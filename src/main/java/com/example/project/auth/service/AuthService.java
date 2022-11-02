@@ -6,7 +6,7 @@ import com.example.project.auth.model.Auth;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
-import com.example.project.auth.requestbody.UpdateOAuthRequest;
+import com.example.project.auth.requestbody.CreateOAuthRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,5 +42,5 @@ public interface AuthService {
     Object readAuthor(HttpServletRequest request) throws  ReadAuthorFail;
 
     // 소셜 회원가입 로그인 - 네이버
-    AuthEntity updateLoginOAuth(UpdateOAuthRequest updateOAuthRequest);
+    AuthEntity createOAuth(CreateOAuthRequest createOAuthRequest, MultipartFile file);
 }

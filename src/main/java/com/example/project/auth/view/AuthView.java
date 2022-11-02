@@ -19,8 +19,7 @@ public class AuthView {
     private String profileImgSaveName;
     private String profileImgSaveUrl;
     private String nickname;
-
-    private String loginPwd;
+//    private String loginPwd;
     private String ageGroup;
     private AuthMarried married;
 
@@ -30,7 +29,7 @@ public class AuthView {
         this.profileImgSaveName = auth.getProfileImgSaveName();
         this.profileImgSaveUrl = auth.getProfileImgSaveUrl();
         this.nickname = auth.getNickname();
-        this.loginPwd = auth.getLoginPwd();
+//        this.loginPwd = auth.getLoginPwd();
         this.ageGroup = auth.getAgeGroup();
         this.married = auth.getMarried();
     }

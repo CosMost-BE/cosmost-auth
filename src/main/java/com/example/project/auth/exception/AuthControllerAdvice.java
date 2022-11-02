@@ -62,6 +62,13 @@ public class AuthControllerAdvice {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler(ProfileImgNotFoundException.class)
+    public ResponseEntity<String> ProfileImgNotFoundExceptionException(ProfileImgNotFoundException exception) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exception.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public String processValidationError(MethodArgumentNotValidException exception) {
         BindingResult bindingResult = exception.getBindingResult();
