@@ -2,7 +2,6 @@ package com.example.project.auth.requestbody;
 
 import com.example.project.auth.infrastructure.entity.*;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotBlank;
 
 @Getter
@@ -64,7 +63,6 @@ public class UpdateAuthRequest {
                                        String securePwd) {
         return AuthEntity.builder()
                 .id(id)
-                .loginPwd(securePwd)
                 .loginId(updateAuthRequest.getLoginId())
                 .nickname(updateAuthRequest.getNickname())
                 .email(updateAuthRequest.getEmail())

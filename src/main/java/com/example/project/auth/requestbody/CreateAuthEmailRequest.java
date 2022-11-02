@@ -11,7 +11,9 @@ import org.springframework.context.annotation.Configuration;
 public class CreateAuthEmailRequest {
 
     private String name;
+
     private String email;
+
     private Long validTime;
 
 }

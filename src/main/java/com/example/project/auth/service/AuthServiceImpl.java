@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.io.File;
 import java.util.Optional;
 
 @Slf4j
@@ -119,6 +120,9 @@ public class AuthServiceImpl implements AuthService {
             String authId = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
             Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(authId));
 
+            String securePwd = passwordEncoder.encode(updateAuthRequest.getLoginPwd());
+            System.out.println("@@@@@@@@@@@@@" + securePwd);
+
             // 회원가입시 비밀번호
             String oldPwd = auth.get().getLoginPwd();
             // 회원탈퇴 시 비밀번호
@@ -155,29 +159,24 @@ public class AuthServiceImpl implements AuthService {
 
         if (authInfo.isPresent()) {
             if (!file.isEmpty()) {
-
                 FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img"); // 폴더이름
                 amazonS3ResourceStorage.store(fileInfoRequest, file);
 
                 AuthEntity authEntity = updateAuthRequest.infoAllDtoEntity(authInfo.get().getId(),
                         updateAuthRequest, securePwd, fileInfoRequest);
-
                 authEntityRepository.save(authEntity);
 
             } else {
                 AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(),
                         updateAuthRequest, securePwd);
-
                 authEntityRepository.save(authEntity);
             }
-
         }
     }
 
-
     // 비밀번호 수정
     @Override
-    public void updatePassword(UpdatePasswordRequest updatePasswordRequest, HttpServletRequest request) throws UpdatePasswordFail {
+    public void updatePassword(UpdatePasswordRequest updatePasswordRequest, HttpServletRequest request, MultipartFile file) throws UpdatePasswordFail {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
 
@@ -187,16 +186,26 @@ public class AuthServiceImpl implements AuthService {
                 authEntityRepository.findById(id).orElseThrow(
                         UpdateAuthFail::new));
 
+        // 회원가입 시 비밀번호
         String securePwd = authInfo.get().getLoginPwd();
 
-//        try {
-//            AuthEntity authEntity = updatePasswordRequest.toEntity(authInfo.get().getId(),
-//                    updatePasswordRequest, securePwd);
-//            updatePasswordRequest.setNewPwd(encoder.encode(updatePasswordRequest.getNewPwd()));
-//            authEntityRepository.save(updatePasswordRequest.toEntity(securePwd));
-//        } catch (Exception exception) {
-//                throw new UpdatePasswordFail();
-//        }
+        // 비밀번호 수정 폼에서 기존 비밀번호 입력
+        String oldPwd = updatePasswordRequest.getOldPwd();
+
+        // 새로운 비밀번호 입력
+        String newPwd = updatePasswordRequest.getNewPwd();
+
+        if (authInfo.isPresent()) {
+            if (encoder.matches(oldPwd, securePwd)) {
+                AuthEntity authEntity = updatePasswordRequest.toEntity(authInfo.get().getId(),
+                        updatePasswordRequest, newPwd);
+                authEntityRepository.save(authEntity);
+            } else {
+                AuthEntity authEntity = updatePasswordRequest.toEntity(authInfo.get().getId(),
+                        updatePasswordRequest, newPwd);
+                authEntityRepository.save(authEntity);
+            }
+        }
     }
 
     // 회원정보 조회

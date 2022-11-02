@@ -3,10 +3,7 @@ package com.example.project.auth.service;
 import com.example.project.auth.exception.*;
 import com.example.project.auth.infrastructure.entity.*;
 import com.example.project.auth.model.Auth;
-import com.example.project.auth.requestbody.CreateAuthRequest;
-import com.example.project.auth.requestbody.UpdateAuthRequest;
-import com.example.project.auth.requestbody.UpdateLoginRequest;
-import com.example.project.auth.requestbody.UpdatePasswordRequest;
+import com.example.project.auth.requestbody.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,10 +33,11 @@ public interface AuthService {
     void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request,
                         MultipartFile file) throws UpdateAuthFail;
 
+    // 비밀번호 수정
+    void updatePassword(UpdatePasswordRequest updatePasswordRequest, HttpServletRequest request, MultipartFile file) throws UpdatePasswordFail;
+
     // 회원정보 조회
     Auth readAuth(HttpServletRequest request) throws ReadAuthFail;
 
     Object readAuthor(HttpServletRequest request) throws  ReadAuthorFail;
-
-    void updatePassword(UpdatePasswordRequest updatePasswordRequest, HttpServletRequest request) throws UpdatePasswordFail;
 }

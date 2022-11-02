@@ -62,8 +62,9 @@ public class AuthController {
             }
             throw new TypeNotFound();
         }
-        else if (updateAuthRequest.getType().equals("비밀번호 수정")) {
-            authService.updatePassword(updatePasswordRequest, request);
+
+        else if (updatePasswordRequest.getType().equals("비밀번호 수정")) {
+            authService.updatePassword(updatePasswordRequest, request, file);
             return ResponseEntity.ok("비밀번호가 수정되었습니다.");
         }
         return null;
