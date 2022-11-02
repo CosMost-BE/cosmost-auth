@@ -10,10 +10,7 @@ import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.model.Auth;
-import com.example.project.auth.requestbody.CreateAuthRequest;
-import com.example.project.auth.requestbody.FileInfoRequest;
-import com.example.project.auth.requestbody.UpdateAuthRequest;
-import com.example.project.auth.requestbody.UpdateLoginRequest;
+import com.example.project.auth.requestbody.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
 import java.util.Optional;
 
 @Slf4j
@@ -82,7 +78,6 @@ public class AuthServiceImpl implements AuthService {
     public boolean checkId(HttpServletRequest request) throws DuplicatedIdException {
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
-//        Optional<AuthEntity> authEntity = authEntityRepository.existsByLoginId(header);
         Optional<AuthEntity> authEntity = authEntityRepository.findByLoginId(header);
 
         if (authEntity.isEmpty()) {
@@ -95,7 +90,6 @@ public class AuthServiceImpl implements AuthService {
     public boolean checkNickname(HttpServletRequest request) throws DuplicatedNickname {
         String header = jwtTokenProvider.getHeader(request);
         log.info(String.valueOf(header));
-//        Optional<AuthEntity> authEntity = authEntityRepository.existsByNickname(header);
         Optional<AuthEntity> authEntity = authEntityRepository.findByNickname(header);
 
 
@@ -124,31 +118,27 @@ public class AuthServiceImpl implements AuthService {
     public boolean deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest,
                                   MultipartFile file) throws WithdrawalCheckNotFound {
             String authId = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
-//            Long id = Long.valueOf(jwtTokenProvider.getUserPk(authId));
             Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(authId));
 
-
             String securePwd = passwordEncoder.encode(updateAuthRequest.getLoginPwd());
-            System.out.println("rthrtjrdjdyjdyj"+securePwd);
+            System.out.println("@@@@@@@@@@@@@" + securePwd);
 
             // 회원가입시 비밀번호
             String oldPwd = auth.get().getLoginPwd();
             // 회원탈퇴 시 비밀번호
-            String newPwd = updateAuthRequest.getLoginPwd();
+            String pwd = updateAuthRequest.getLoginPwd();
 
             Optional<AuthEntity> authInfo = Optional.ofNullable(
                     authEntityRepository.findById(Long.valueOf(authId)).orElseThrow(
                             UpdateAuthFail::new));
 
             if (authInfo.isPresent()) {
-                if (auth.isPresent() && passwordEncoder.matches(newPwd, oldPwd)) {
+                if (auth.isPresent() && passwordEncoder.matches(pwd, oldPwd)) {
                     authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.get().getId(), updateAuthRequest, securePwd));
                 }
             }
         return false;
     }
-
-
 
     @Override // 회원정보 수정
     @Transactional
@@ -168,24 +158,53 @@ public class AuthServiceImpl implements AuthService {
         String securePwd = authInfo.get().getLoginPwd();
 
         if (authInfo.isPresent()) {
-
             if (!file.isEmpty()) {
-
                 FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img"); // 폴더이름
                 amazonS3ResourceStorage.store(fileInfoRequest, file);
 
                 AuthEntity authEntity = updateAuthRequest.infoAllDtoEntity(authInfo.get().getId(),
                         updateAuthRequest, securePwd, fileInfoRequest);
-
                 authEntityRepository.save(authEntity);
 
             } else {
                 AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(),
                         updateAuthRequest, securePwd);
-
                 authEntityRepository.save(authEntity);
             }
+        }
+    }
 
+    // 비밀번호 수정
+    @Override
+    public void updatePassword(UpdateAuthRequest updateAuthRequest, HttpServletRequest request, MultipartFile file) throws UpdatePasswordFail {
+        String token = jwtTokenProvider.getToken(request);
+        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        Optional<AuthEntity> authInfo = Optional.ofNullable(
+                authEntityRepository.findById(id).orElseThrow(
+                        UpdateAuthFail::new));
+
+        // 회원가입 시 비밀번호
+        String securePwd = authInfo.get().getLoginPwd();
+
+        // 비밀번호 수정 폼에서 기존 비밀번호 입력
+        String oldPwd = updateAuthRequest.getOldPwd();
+
+        // 새로운 비밀번호 입력
+        String newPwd = encoder.encode(updateAuthRequest.getNewPwd());
+
+        if (authInfo.isPresent()) {
+            if (encoder.matches(oldPwd, securePwd)) {
+                AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(),
+                        updateAuthRequest, newPwd);
+                authEntityRepository.save(authEntity);
+            } else {
+                AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(),
+                        updateAuthRequest, newPwd);
+                authEntityRepository.save(authEntity);
+            }
         }
     }
 
@@ -201,7 +220,6 @@ public class AuthServiceImpl implements AuthService {
         return Auth.builder()
                 .id(authEntityList.get().getId())
                 .loginId(authEntityList.get().getLoginId())
-                .loginPwd(authEntityList.get().getLoginPwd())
                 .email(authEntityList.get().getEmail())
                 .sns(authEntityList.get().getSns())
                 .nickname(authEntityList.get().getNickname())
