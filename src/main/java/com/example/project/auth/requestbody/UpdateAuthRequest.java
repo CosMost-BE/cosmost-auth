@@ -2,7 +2,6 @@ package com.example.project.auth.requestbody;
 
 import com.example.project.auth.infrastructure.entity.*;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotBlank;
 
 @Getter
@@ -14,7 +13,14 @@ public class UpdateAuthRequest {
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
     private String loginId;
 
+    @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
     private String loginPwd;
+
+//    @NotBlank(message = "기본 비밀번호는 필수 입력 값입니다.")
+    private String oldPwd;
+
+//    @NotBlank(message = "변경할 비밀번호는 필수 입력 값입니다.")
+    private String newPwd;
 
     @NotBlank(message = "닉네임은 필수 입력 값입니다.")
     private String nickname;
