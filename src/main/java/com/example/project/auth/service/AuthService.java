@@ -34,7 +34,7 @@ public interface AuthService {
                         MultipartFile file) throws UpdateAuthFail;
 
     // 비밀번호 수정
-    void updatePassword(UpdatePasswordRequest updatePasswordRequest, HttpServletRequest request, MultipartFile file) throws UpdatePasswordFail;
+    void updatePassword(UpdateAuthRequest updateAuthRequest, HttpServletRequest request, MultipartFile file) throws UpdatePasswordFail;
 
     // 회원정보 조회
     Auth readAuth(HttpServletRequest request) throws ReadAuthFail;

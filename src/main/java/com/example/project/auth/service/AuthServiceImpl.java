@@ -126,14 +126,14 @@ public class AuthServiceImpl implements AuthService {
             // 회원가입시 비밀번호
             String oldPwd = auth.get().getLoginPwd();
             // 회원탈퇴 시 비밀번호
-            String newPwd = updateAuthRequest.getLoginPwd();
+            String pwd = updateAuthRequest.getLoginPwd();
 
             Optional<AuthEntity> authInfo = Optional.ofNullable(
                     authEntityRepository.findById(Long.valueOf(authId)).orElseThrow(
                             UpdateAuthFail::new));
 
             if (authInfo.isPresent()) {
-                if (auth.isPresent() && passwordEncoder.matches(newPwd, oldPwd)) {
+                if (auth.isPresent() && passwordEncoder.matches(pwd, oldPwd)) {
                     authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.get().getId(), updateAuthRequest, securePwd));
                 }
             }
@@ -176,7 +176,7 @@ public class AuthServiceImpl implements AuthService {
 
     // 비밀번호 수정
     @Override
-    public void updatePassword(UpdatePasswordRequest updatePasswordRequest, HttpServletRequest request, MultipartFile file) throws UpdatePasswordFail {
+    public void updatePassword(UpdateAuthRequest updateAuthRequest, HttpServletRequest request, MultipartFile file) throws UpdatePasswordFail {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
 
@@ -190,19 +190,19 @@ public class AuthServiceImpl implements AuthService {
         String securePwd = authInfo.get().getLoginPwd();
 
         // 비밀번호 수정 폼에서 기존 비밀번호 입력
-        String oldPwd = updatePasswordRequest.getOldPwd();
+        String oldPwd = updateAuthRequest.getOldPwd();
 
         // 새로운 비밀번호 입력
-        String newPwd = updatePasswordRequest.getNewPwd();
+        String newPwd = encoder.encode(updateAuthRequest.getNewPwd());
 
         if (authInfo.isPresent()) {
             if (encoder.matches(oldPwd, securePwd)) {
-                AuthEntity authEntity = updatePasswordRequest.toEntity(authInfo.get().getId(),
-                        updatePasswordRequest, newPwd);
+                AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(),
+                        updateAuthRequest, newPwd);
                 authEntityRepository.save(authEntity);
             } else {
-                AuthEntity authEntity = updatePasswordRequest.toEntity(authInfo.get().getId(),
-                        updatePasswordRequest, newPwd);
+                AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(),
+                        updateAuthRequest, newPwd);
                 authEntityRepository.save(authEntity);
             }
         }
