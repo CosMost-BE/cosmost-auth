@@ -250,4 +250,57 @@ public class AuthServiceImpl implements AuthService {
         }
         return null;
     }
+
+
+    // 소셜 회원가입 로그인 - 네이버
+    @Override
+    public AuthEntity createOAuth(CreateOAuthRequest createOAuthRequest, MultipartFile file) {
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        AuthEntity authEntity = null;
+        if (file != null && !file.isEmpty()) {
+            try {
+                FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img"); // 폴더이름
+                amazonS3ResourceStorage.store(fileInfoRequest, file);
+                log.info(fileInfoRequest.getName());
+                log.info(fileInfoRequest.getUrl());
+
+                authEntity = AuthEntity.builder()
+                        .loginId(createOAuthRequest.getEmail())
+                        .nickname(createOAuthRequest.getNickname())
+                        .email(createOAuthRequest.getEmail())
+                        .ageGroup(createOAuthRequest.getAgeGroup())
+                        .address(createOAuthRequest.getAddress())
+                        .married(createOAuthRequest.getMarried())
+                        .sns(AuthSns.YES)
+                        .role(AuthRole.USER)
+                        .status(AuthStatus.ACTIVE)
+                        .profileImgOriginName(fileInfoRequest.getName())
+                        .profileImgSaveName(fileInfoRequest.getRemotePath())
+                        .profileImgSaveUrl(fileInfoRequest.getUrl())
+                        .build();
+                authEntityRepository.save(authEntity);
+
+            } catch (Exception e){
+                throw new ProfileImgNotFoundException();
+            }
+
+        } else {
+
+            log.info("########");
+            authEntity = authEntityRepository.save(AuthEntity.builder()
+                    .loginId(createOAuthRequest.getEmail())
+                    .nickname(createOAuthRequest.getNickname())
+                    .email(createOAuthRequest.getEmail())
+                    .ageGroup(createOAuthRequest.getAgeGroup())
+                    .address(createOAuthRequest.getAddress())
+                    .married(createOAuthRequest.getMarried())
+                    .sns(AuthSns.YES)
+                    .role(AuthRole.USER)
+                    .status(AuthStatus.ACTIVE)
+                    .build());
+            authEntityRepository.save(authEntity);
+        }
+        return authEntity;
+    }
 }

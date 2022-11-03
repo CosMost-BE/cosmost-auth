@@ -1,5 +1,7 @@
 package com.example.project.auth.configuration.util;
 
+import com.example.project.auth.infrastructure.entity.AuthEntity;
+import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -23,20 +25,41 @@ import java.util.Date;
 @AllArgsConstructor
 public class JwtTokenProvider {
     private final UserDetailsServiceImpl userDetailsService;
+
+    private final AuthEntityRepository authEntityRepository;
     @Value("${jwt.tokenValidTime}")
     private Long tokenValidTime;
     @Value("${jwt.secret}")
     private String secretKey;
 
     @Autowired
-    public JwtTokenProvider(UserDetailsServiceImpl userDetailsService) {
+    public JwtTokenProvider(UserDetailsServiceImpl userDetailsService, AuthEntityRepository authEntityRepository) {
         this.userDetailsService = userDetailsService;
+        this.authEntityRepository = authEntityRepository;
     }
 
     public String createToken(Long userId, String role) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(userId));
 
         claims.put("role", role);
+
+        Date now = new Date();
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + tokenValidTime * 2))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+    public String createSocialToken(Long id) {
+
+        AuthEntity authEntity = authEntityRepository.findById(id).get();
+
+        Claims claims = Jwts.claims().setSubject(String.valueOf(id));
+        claims.put("userId", id);
+        claims.put("role", authEntity.getRole());
 
         Date now = new Date();
 
