@@ -9,6 +9,6 @@ public interface EmailSenderService {
 
     String sendReissuePassword(String email) throws Exception;
 
-//    AuthEntity checkEmailDuplicate(String code, String email) throws Exception;
+    Boolean checkEmailDuplicate(String code, String email) throws Exception;
 
 }

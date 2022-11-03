@@ -276,8 +276,8 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         }
     }
 
-//    @Override
-//    public AuthEntity checkEmailDuplicate(String code, String email) throws Exception {
-//        return authEntityRepository.existByEmail(email);
-//    }
+    @Override
+    public Boolean checkEmailDuplicate(String code, String email) throws Exception {
+        return authEntityRepository.existsByEmail(email);
+    }
 }

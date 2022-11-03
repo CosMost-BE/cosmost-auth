@@ -24,13 +24,13 @@ public class AuthorizationEmailController {
     }
 
     // 이메일 인증코드 발송
-    @GetMapping("/login-id/confirm/{email}")
+    @GetMapping("/id/confirm/{email}")
     public String findId(@PathVariable String email) throws Exception {
         return emailSenderService.sendEmailId(email);
 
     }
 
-    @GetMapping("/login-pwd/confirm/{email}")
+    @GetMapping("/pwd/confirm/{email}")
     public String findPw(@PathVariable String email) throws Exception {
         return emailSenderService.sendEmailPwd(email);
     }
@@ -40,12 +40,12 @@ public class AuthorizationEmailController {
         return emailSenderService.sendConfirmCodeByEmail(email);
     }
 
-//    // 중복이메일 체크
-//    @GetMapping("/duplicate/email/{email}")
-//    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String code, String email) {
-//        log.info("checkEmailDuplicate, {}", email);
-//        return ResponseEntity.status(HttpStatus.OK).body(emailServiceImpl.checkEmailDuplicate(code, email));
-//    }
+    // 중복이메일 체크Z
+    @GetMapping("/duplicate/email/{email}")
+    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String code, String email) throws Exception {
+        log.info("checkEmailDuplicate, {}", email);
+        return ResponseEntity.status(HttpStatus.OK).body(emailSenderService.checkEmailDuplicate(code, email));
+    }
 
     // 이메일 인증코드 확인
     @GetMapping("/code/confirm/{code}/{email}")
@@ -60,7 +60,7 @@ public class AuthorizationEmailController {
         return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userIdReissue(code, email));
     }
 
-    @GetMapping("/pw/reissue/{code}/{email}")
+    @GetMapping("/pwd/reissue/{code}/{email}")
     public ResponseEntity<Boolean> userPasswordReissue(@PathVariable String code, @PathVariable String email) throws Exception {
         log.info("userPasswordReissue, {}, {}", code, email);
         return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userPasswordReissue(code, email));
