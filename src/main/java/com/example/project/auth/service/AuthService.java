@@ -7,6 +7,7 @@ import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
 import com.example.project.auth.requestbody.CreateOAuthRequest;
+import com.example.project.auth.requestbody.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,9 @@ public interface AuthService {
     // 회원정보 수정
     void updateAuthInfo(UpdateAuthRequest updateAuthRequest, HttpServletRequest request,
                         MultipartFile file) throws UpdateAuthFail;
+
+    // 비밀번호 수정
+    void updatePassword(UpdateAuthRequest updateAuthRequest, HttpServletRequest request, MultipartFile file) throws UpdatePasswordFail;
 
     // 회원정보 조회
     Auth readAuth(HttpServletRequest request) throws ReadAuthFail;

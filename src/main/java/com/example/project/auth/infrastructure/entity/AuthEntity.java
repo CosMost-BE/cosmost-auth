@@ -16,7 +16,7 @@ public class AuthEntity extends BaseTimeEntity {
 
     @NotNull
     private String loginId;
-
+    
     private String loginPwd;
 
     private String email;

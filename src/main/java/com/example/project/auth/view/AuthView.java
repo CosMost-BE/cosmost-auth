@@ -1,6 +1,9 @@
 package com.example.project.auth.view;
 
 import com.example.project.auth.infrastructure.entity.AuthMarried;
+import com.example.project.auth.infrastructure.entity.AuthRole;
+import com.example.project.auth.infrastructure.entity.AuthSns;
+import com.example.project.auth.infrastructure.entity.AuthStatus;
 import com.example.project.auth.model.Auth;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -23,6 +26,17 @@ public class AuthView {
     private String ageGroup;
     private AuthMarried married;
 
+    // loginId, email, address, role, sns, status
+
+    private String loginId;
+    private String email;
+    private String address;
+
+    private AuthRole role;
+    private AuthSns sns;
+
+    private AuthStatus status;
+
     public AuthView(Auth auth) {
         this.id = auth.getId();
         this.profileImgOriginName = auth.getProfileImgOriginName();
@@ -32,5 +46,11 @@ public class AuthView {
 //        this.loginPwd = auth.getLoginPwd();
         this.ageGroup = auth.getAgeGroup();
         this.married = auth.getMarried();
+        this.loginId = auth.getLoginId();
+        this.email = auth.getEmail();
+        this.address = auth.getAddress();
+        this.role = auth.getRole();
+        this.sns = auth.getSns();
+        this.status = auth.getStatus();
     }
 }
