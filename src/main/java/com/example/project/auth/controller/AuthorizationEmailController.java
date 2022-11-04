@@ -1,5 +1,6 @@
 package com.example.project.auth.controller;
 
+import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.service.email.EmailConfirmServiceImpl;
 import com.example.project.auth.service.email.EmailSenderServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Slf4j
 @RequestMapping("/v1/authorization")
@@ -55,13 +58,13 @@ public class AuthorizationEmailController {
     }
 
     @GetMapping("/id/reissue/{code}/{email}")
-    public ResponseEntity<Boolean> userIdReissue(@PathVariable String code, @PathVariable String email) throws Exception {
+    public ResponseEntity<Optional<AuthEntity>> userIdReissue(@PathVariable String code, @PathVariable String email) throws Exception {
         log.info("userIdReissue, {}, {}", code, email);
         return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userIdReissue(code, email));
     }
 
     @GetMapping("/pwd/reissue/{code}/{email}")
-    public ResponseEntity<Boolean> userPasswordReissue(@PathVariable String code, @PathVariable String email) throws Exception {
+    public ResponseEntity<Optional<AuthEntity>> userPasswordReissue(@PathVariable String code, @PathVariable String email) throws Exception {
         log.info("userPasswordReissue, {}, {}", code, email);
         return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userPasswordReissue(code, email));
     }
