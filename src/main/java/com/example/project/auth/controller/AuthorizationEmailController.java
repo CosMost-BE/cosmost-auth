@@ -40,7 +40,7 @@ public class AuthorizationEmailController {
         return emailSenderService.sendConfirmCodeByEmail(email);
     }
 
-    // 중복이메일 체크Z
+    // 중복이메일 체크
     @GetMapping("/duplicate/email/{email}")
     public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String code, String email) throws Exception {
         log.info("checkEmailDuplicate, {}", email);

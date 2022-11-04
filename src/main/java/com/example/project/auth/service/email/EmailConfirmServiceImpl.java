@@ -1,7 +1,5 @@
 package com.example.project.auth.service.email;
 
-import com.example.project.auth.exception.EmailCodeException;
-import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.infrastructure.entity.UserConfirmEntity;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.infrastructure.repository.UserConfirmRepository;
@@ -15,9 +13,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import javax.swing.text.html.Option;
-import java.util.Optional;
 
 @PropertySource(value = "classpath:/application-email.yml")
 @Slf4j
@@ -45,28 +40,25 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
         return true;
     }
 
-
     @Override
-    public String userIdReissue(String code, String email) throws EmailCodeException {
+    public boolean userIdReissue(String code, String email) {
         if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
             UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
-            AuthEntity authEntity = authEntityRepository.findByEmail(email);
-            authEntity.getLoginId();
             redisService.removeEmailCertification(email);
         } else {
-            return EmailCodeException;
+            return false;
         }
-        return authEntityRepository.findByEmail(email).getLoginId();
+        return true;
     }
 
     @Override
-    public String userPasswordReissue(String code, String email) throws Exception {
+    public boolean userPasswordReissue(String code, String email) throws Exception {
         if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
             UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
             redisService.removeEmailCertification(email);
         } else {
-            return EmailCodeException;
+            return false;
         }
-        return authEntityRepository.findByEmail(email).getLoginPwd();
+        return true;
     }
 }
