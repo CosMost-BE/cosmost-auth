@@ -1,5 +1,6 @@
 package com.example.project.auth.view;
 
+import com.example.project.auth.infrastructure.entity.AuthMarried;
 import com.example.project.auth.infrastructure.entity.AuthRole;
 import com.example.project.auth.infrastructure.entity.AuthSns;
 import com.example.project.auth.infrastructure.entity.AuthStatus;
@@ -33,6 +34,14 @@ public class AuthView {
 
     private AuthStatus status;
 
+
+    // front feedback
+    private String loginPwd;
+
+    private String ageGroup;
+
+    private AuthMarried married;
+
     public AuthView(Auth auth) {
         this.id = auth.getId();
         this.profileImgOriginName = auth.getProfileImgOriginName();
@@ -45,5 +54,9 @@ public class AuthView {
         this.role = auth.getRole();
         this.sns = auth.getSns();
         this.status = auth.getStatus();
+        // front feedback
+        this.loginPwd = auth.getLoginPwd();
+        this.ageGroup = auth.getAgeGroup();
+        this.married = auth.getMarried();
     }
 }
