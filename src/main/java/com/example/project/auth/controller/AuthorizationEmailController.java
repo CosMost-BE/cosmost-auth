@@ -1,6 +1,8 @@
 package com.example.project.auth.controller;
 
+import com.example.project.auth.exception.EmailCodeException;
 import com.example.project.auth.infrastructure.entity.AuthEntity;
+import com.example.project.auth.service.email.EmailConfirmService;
 import com.example.project.auth.service.email.EmailConfirmServiceImpl;
 import com.example.project.auth.service.email.EmailSenderServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -50,22 +52,37 @@ public class AuthorizationEmailController {
         return ResponseEntity.status(HttpStatus.OK).body(emailSenderService.checkEmailDuplicate(code, email));
     }
 
-    // 이메일 인증코드 확인
+    // 회원가입 시 이메일 인증코드 확인
     @GetMapping("/code/confirm/{code}/{email}")
     public ResponseEntity<Boolean> userEmailConfirm(@PathVariable String code, @PathVariable String email) {
         log.info("userEmailConfirm, {}, {}", code, email);
         return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userEmailConfirm(code, email));
     }
 
+
+    // 아이디 찾기 시 이메일 인증 코드 검증
     @GetMapping("/id/reissue/{code}/{email}")
-    public ResponseEntity<Optional<AuthEntity>> userIdReissue(@PathVariable String code, @PathVariable String email) throws Exception {
+    public ResponseEntity<String> userIdReissue(@PathVariable String code, @PathVariable String email) throws EmailCodeException {
         log.info("userIdReissue, {}, {}", code, email);
         return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userIdReissue(code, email));
     }
 
+
+
+    // 비밀번호 찾기 시 이메일 인증 코드 검증
     @GetMapping("/pwd/reissue/{code}/{email}")
-    public ResponseEntity<Optional<AuthEntity>> userPasswordReissue(@PathVariable String code, @PathVariable String email) throws Exception {
+    public ResponseEntity<Long> userPasswordReissue(@PathVariable String code, @PathVariable String email) throws EmailCodeException {
         log.info("userPasswordReissue, {}, {}", code, email);
         return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userPasswordReissue(code, email));
+    }
+
+
+
+    // 비밀번호 찾기 시 새 비밀번호 입력할 때
+    @PutMapping("/pwd/reissue/{id}/{newpwd}")
+    public ResponseEntity<Object> userNewpasswordReissue(@PathVariable Long id, @PathVariable String newpwd) {
+        log.info("userNewpasswordReissue, {}, {}", id, newpwd);
+        emailConfirmService.userNewpasswordReissue(id, newpwd);
+        return ResponseEntity.status(HttpStatus.OK).body("새로운 비밀번호가 저장되었습니다.");
     }
 }

@@ -197,7 +197,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
                 userConfirmRepository.save(userConfirmEntity);
             }
-            log.info("이메일 전송, {}, id", email, authEntity);
+            log.info("이메일 확인 인증 코드 전송, {}, pw", email, authEntity);
             return "success";
         } catch (MailException es) {
             es.printStackTrace();
@@ -226,7 +226,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
                 userConfirmEntity.setConfirmKey(ePw);
                 userConfirmRepository.save(userConfirmEntity);
             }
-            log.info("이메일 전송, {}, pw", email, ePw);
+            log.info("이메일 확인 인증 코드 전송, {}, pw", email, ePw);
             return "success";
         } catch (MailException es) {
             es.printStackTrace();
