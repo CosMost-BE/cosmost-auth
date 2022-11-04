@@ -32,7 +32,7 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
     @Override
     public boolean userEmailConfirm(String code, String email) {
         if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
-            UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
+            UserConfirmEntity userConfirmEntity = (UserConfirmEntity) userConfirmRepository.findByEmail(email);
             redisService.removeEmailCertification(email);
         } else {
             return false;
@@ -43,7 +43,7 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
     @Override
     public boolean userIdReissue(String code, String email) {
         if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
-            UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
+            UserConfirmEntity userConfirmEntity = (UserConfirmEntity) userConfirmRepository.findByEmail(email);
             redisService.removeEmailCertification(email);
         } else {
             return false;
@@ -54,7 +54,7 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
     @Override
     public boolean userPasswordReissue(String code, String email) throws Exception {
         if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
-            UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
+            UserConfirmEntity userConfirmEntity = (UserConfirmEntity) userConfirmRepository.findByEmail(email);
             redisService.removeEmailCertification(email);
         } else {
             return false;

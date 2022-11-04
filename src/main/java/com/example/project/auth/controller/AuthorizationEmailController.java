@@ -24,13 +24,13 @@ public class AuthorizationEmailController {
     }
 
     // 이메일 인증코드 발송
-    @GetMapping("/login-id/confirm/{email}")
+    @GetMapping("/id/confirm/{email}")
     public String findId(@PathVariable String email) throws Exception {
         return emailSenderService.sendEmailId(email);
 
     }
 
-    @GetMapping("/login-pwd/confirm/{email}")
+    @GetMapping("/pwd/confirm/{email}")
     public String findPw(@PathVariable String email) throws Exception {
         return emailSenderService.sendEmailPwd(email);
     }
@@ -60,7 +60,7 @@ public class AuthorizationEmailController {
         return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userIdReissue(code, email));
     }
 
-    @GetMapping("/pw/reissue/{code}/{email}")
+    @GetMapping("/pwd/reissue/{code}/{email}")
     public ResponseEntity<Boolean> userPasswordReissue(@PathVariable String code, @PathVariable String email) throws Exception {
         log.info("userPasswordReissue, {}, {}", code, email);
         return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userPasswordReissue(code, email));
