@@ -1,10 +1,15 @@
 package com.example.project.auth.service.email;
 
+import com.example.project.auth.exception.EmailCodeException;
+import com.example.project.auth.infrastructure.entity.AuthEntity;
+
 public interface EmailConfirmService {
 
     boolean userEmailConfirm(String code, String email);
 
-    boolean userIdReissue(String code, String email) throws Exception;
+    String userIdReissue(String code, String email) throws Exception, EmailCodeException;
 
-    boolean userPasswordReissue(String code, String email) throws Exception;
+    Long userPasswordReissue(String code, String email) throws EmailCodeException;
+
+    AuthEntity userNewpasswordReissue(Long id, String newpwd);
 }

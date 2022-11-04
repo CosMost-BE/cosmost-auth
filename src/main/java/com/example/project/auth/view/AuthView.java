@@ -31,7 +31,6 @@ public class AuthView {
 
     private AuthRole role;
     private AuthSns sns;
-
     private AuthStatus status;
 
 
@@ -54,6 +53,7 @@ public class AuthView {
         this.role = auth.getRole();
         this.sns = auth.getSns();
         this.status = auth.getStatus();
+
         // front feedback
         this.loginPwd = auth.getLoginPwd();
         this.ageGroup = auth.getAgeGroup();

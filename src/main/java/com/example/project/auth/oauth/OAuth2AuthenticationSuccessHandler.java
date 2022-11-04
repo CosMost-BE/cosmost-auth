@@ -42,25 +42,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String socialType = null;
 
         System.out.println("oAuth2User.getAttributes() = " + oAuth2User.getAttributes());
-//        if (oAuth2User.getAttributes().containsKey("kakao_account")) {
-//            socialType = "kakao";
-//            kakao_account = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
-//            kakao_profile = (Map<String, Object>) kakao_account.get("profile");
-//            email = String.valueOf(kakao_account.get("email"));
-//            nickname = String.valueOf(kakao_profile.get("nickname"));
-//        } else if (oAuth2User.getAttributes().containsKey("email")) {
-//            email = String.valueOf(oAuth2User.getAttributes().get("email"));
-//            nickname = String.valueOf(oAuth2User.getAttributes().get("nickname"));
-//            profileImg = String.valueOf(oAuth2User.getAttributes().get("profile_image"));
-//            ageGroup = String.valueOf(oAuth2User.getAttributes().get("age"));
-//            socialType = "naver";
-//            log.info("@@@@@@@@@@@@@" + email);
-//            log.info("#############" +nickname);
-//        } else {
-//            email = String.valueOf(oAuth2User.getAttributes().get("email"));
-//            nickname = String.valueOf(oAuth2User.getAttributes().get("name"));
-//            socialType = "google";
-//        }
 
         if (oAuth2User.getAttributes().containsKey("email")) {
             email = String.valueOf(oAuth2User.getAttributes().get("email"));

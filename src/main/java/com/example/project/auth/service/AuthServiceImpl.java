@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.io.File;
 import java.util.Optional;
 
 @Slf4j

@@ -1,6 +1,7 @@
 package com.example.project.auth.service.email;
 
-import com.example.project.auth.infrastructure.entity.UserConfirmEntity;
+import com.example.project.auth.exception.EmailCodeException;
+import com.example.project.auth.infrastructure.entity.*;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.infrastructure.repository.UserConfirmRepository;
 import com.example.project.auth.service.RedisService;
@@ -13,6 +14,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @PropertySource(value = "classpath:/application-email.yml")
 @Slf4j
@@ -41,24 +44,56 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
     }
 
     @Override
-    public boolean userIdReissue(String code, String email) {
+    public String userIdReissue(String code, String email) throws EmailCodeException {
         if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
-            UserConfirmEntity userConfirmEntity = (UserConfirmEntity) userConfirmRepository.findByEmail(email);
+            AuthEntity authEntity = authEntityRepository.findByEmail(email);
             redisService.removeEmailCertification(email);
+            return authEntity.getLoginId();
         } else {
-            return false;
+            throw new EmailCodeException();
         }
-        return true;
     }
 
+
+    // 비밀번호 찾기 시 이메일 인증코드 검증
     @Override
-    public boolean userPasswordReissue(String code, String email) throws Exception {
+    public Long userPasswordReissue(String code, String email) throws EmailCodeException {
         if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
-            UserConfirmEntity userConfirmEntity = (UserConfirmEntity) userConfirmRepository.findByEmail(email);
+            log.info("????????????????????????????");
+            AuthEntity authEntity = authEntityRepository.findByEmail(email);
             redisService.removeEmailCertification(email);
+            return authEntity.getId();
         } else {
-            return false;
+            log.info("############");
+            throw new EmailCodeException();
         }
-        return true;
+    }
+
+
+    // 비밀번호 찾기 시 새 비밀번호 입력 할 때
+    @Override
+    public AuthEntity userNewpasswordReissue(Long id, String newpwd) {
+        log.info("@@@@@@@@@@@" + String.valueOf(id), newpwd);
+        AuthEntity authEntity = authEntityRepository.findById(id).get();
+        log.info("############" + authEntity.getId());
+        log.info("############" + authEntity.getLoginPwd());
+
+        return authEntityRepository.save(
+                AuthEntity.builder()
+                        .id(id)
+                        .loginId(authEntity.getLoginId())
+                        .loginPwd(bCryptPasswordEncoder.encode(newpwd))
+                        .email(authEntity.getEmail())
+                        .role(AuthRole.USER)
+                        .status(AuthStatus.ACTIVE)
+                        .nickname(authEntity.getNickname())
+                        .address(authEntity.getAddress())
+                        .sns(authEntity.getSns())
+                        .married(authEntity.getMarried())
+                        .ageGroup(authEntity.getAgeGroup())
+                        .profileImgOriginName(authEntity.getProfileImgOriginName())
+                        .profileImgSaveName(authEntity.getProfileImgSaveName())
+                        .profileImgSaveUrl(authEntity.getProfileImgSaveUrl())
+                        .build());
     }
 }

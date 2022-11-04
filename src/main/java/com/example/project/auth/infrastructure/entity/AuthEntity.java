@@ -1,5 +1,6 @@
 package com.example.project.auth.infrastructure.entity;
 import lombok.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -61,5 +62,9 @@ public class AuthEntity extends BaseTimeEntity {
         this.profileImgSaveUrl = profileImgSaveUrl;
         this.role = role;
         this.status = status;
+    }
+
+    public void changePwd(String newpwd) {
+        this.loginPwd = new BCryptPasswordEncoder().encode(newpwd);
     }
 }
