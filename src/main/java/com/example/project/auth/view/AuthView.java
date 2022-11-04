@@ -33,6 +33,8 @@ public class AuthView {
     private AuthSns sns;
     private AuthStatus status;
 
+
+    // front feedback
     private String loginPwd;
 
     private String ageGroup;
@@ -51,6 +53,8 @@ public class AuthView {
         this.role = auth.getRole();
         this.sns = auth.getSns();
         this.status = auth.getStatus();
+
+        // front feedback
         this.loginPwd = auth.getLoginPwd();
         this.ageGroup = auth.getAgeGroup();
         this.married = auth.getMarried();

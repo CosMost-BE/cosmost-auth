@@ -66,12 +66,12 @@ public class AuthorizationEmailController {
         log.info("userIdReissue, {}, {}", code, email);
         return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userIdReissue(code, email));
     }
-
-
+    
 
     // 비밀번호 찾기 시 이메일 인증 코드 검증
     @GetMapping("/pwd/reissue/{code}/{email}")
     public ResponseEntity<Long> userPasswordReissue(@PathVariable String code, @PathVariable String email) throws EmailCodeException {
+
         log.info("userPasswordReissue, {}, {}", code, email);
         return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userPasswordReissue(code, email));
     }

@@ -11,6 +11,7 @@ import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.session.data.redis.config.ConfigureRedisAction;
 
 @Configuration
 @Slf4j
@@ -27,6 +28,11 @@ public class RedisConfiguration {
         LettuceClientConfiguration clientConfig = LettuceClientConfiguration.builder()
                 .useSsl().build();
         return new LettuceConnectionFactory(defaultRedisConfig, clientConfig);
+    }
+
+    @Bean
+    public ConfigureRedisAction configureRedisAction() {
+        return ConfigureRedisAction.NO_OP;
     }
 
     @Bean
