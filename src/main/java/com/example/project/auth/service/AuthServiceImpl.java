@@ -219,6 +219,7 @@ public class AuthServiceImpl implements AuthService {
         return Auth.builder()
                 .id(authEntityList.get().getId())
                 .loginId(authEntityList.get().getLoginId())
+                .loginPwd(authEntityList.get().getLoginPwd())
                 .email(authEntityList.get().getEmail())
                 .sns(authEntityList.get().getSns())
                 .nickname(authEntityList.get().getNickname())

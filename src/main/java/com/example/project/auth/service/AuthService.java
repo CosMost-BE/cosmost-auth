@@ -7,6 +7,7 @@ import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
 import com.example.project.auth.requestbody.CreateOAuthRequest;
+import com.example.project.auth.view.AuthView;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;

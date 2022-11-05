@@ -64,6 +64,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     }
 
 
+    // 비밀번호 찾기 시 이메일 인증 코드 발송
     private MimeMessage createMessage(String to, String ePw)throws Exception{
         System.out.println("보내는 대상 : "+ to);
         System.out.println("인증 번호 : "+ePw);
@@ -93,6 +94,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     }
 
 
+    // 아이디 찾기 시 이메일 인증 코드 발송
     private MimeMessage idMessage(String to, String loginId)throws Exception{
         System.out.println("보내는 대상 : "+ to);
         System.out.println("인증 번호 : "+loginId);
@@ -121,6 +123,39 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         return message;
     }
 
+
+    // 이메일 변경 시 이메일 인증 코드 발송
+    private MimeMessage newPwdMessage(String to, String email)throws Exception{
+        System.out.println("보내는 대상 : "+ to);
+        System.out.println("인증 번호 : "+ email);
+        MimeMessage message = emailSender.createMimeMessage();
+
+        message.addRecipients(Message.RecipientType.TO, to);
+        message.setSubject("이메일 찾기를 위한 인증번호입니다.");
+
+        String msgg = "";
+        msgg+= "<div style='margin:100px;'>";
+        msgg+= "<h1> 반갑습니다! COSMOST에서 보내드립니다. </h1>";
+        msgg+= "<br>";
+        msgg+= "<p>아래 코드를 인증 창으로 돌아가 입력해주세요<p>";
+        msgg+= "<br>";
+        msgg+= "<p>감사합니다!<p>";
+        msgg+= "<br>";
+        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msgg+= "<h3 style='color:blue;'>이메일 찾기 인증 코드입니다.</h3>";
+        msgg+= "<div style='font-size:130%'>";
+        msgg+= "CODE : <strong>";
+        msgg+= email+"</strong><div><br/> ";
+        msgg+= "</div>";
+        message.setText(msgg, "utf-8", "html");//내용
+        message.setFrom(new InternetAddress("kjh950601@naver.com","COSMOST"));//보내는 사람
+
+        return message;
+    }
+
+
+
+    // 회원가입 시 이메일 인증 코드 발송
     private MimeMessage createEmailConfirmMessage(String to, String ePw)throws Exception{
 
         System.out.println("보내는 대상 : "+ to);
@@ -170,6 +205,40 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             }
         }
         return key.toString();
+    }
+
+
+    @Override
+    public String sendEmailNewEmail(String email) throws Exception { // 이메일 업데이트시 새로운 이메일
+        AuthEntity authEntity = authEntityRepository.findByEmail(email);
+        String ePw = createKey();
+        MimeMessage message = idMessage(email, ePw);
+        log.info(String.valueOf(authEntity));
+        log.info(String.valueOf(message));
+
+        if (authEntity == null) {
+            return "입력하신 이메일은 등록되지 않은 메일입니다.";
+        }
+
+        try {
+            emailSender.send(message);
+            redisService.createEmailCertification(email, ePw);
+            UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
+            if (userConfirmEntity == null) {
+                userConfirmRepository.save(UserConfirmEntity.builder()
+                        .email(email)
+                        .build());
+            } else {
+                userConfirmEntity.setConfirmKey(String.valueOf(authEntity));
+
+                userConfirmRepository.save(userConfirmEntity);
+            }
+            log.info("이메일 확인 인증 코드 전송, {}, pw", email, authEntity);
+            return "success";
+        } catch (MailException es) {
+            es.printStackTrace();
+            throw new IllegalArgumentException();
+        }
     }
 
     @Override
@@ -233,6 +302,44 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             throw new IllegalArgumentException();
         }
     }
+
+
+
+//    @Override
+//    public String sendEmailNewEmail(String email) throws Exception {
+//        String ePw = createKey();
+//        MimeMessage message = createMessage(email, ePw); // 새로운 이메일 변경 시
+//
+//        AuthEntity authEntity = authEntityRepository.findByEmail(email);
+//        if (authEntity == null) {
+//            return "입력하신 이메일은 등록되지 않은 메일입니다.";
+//        }
+//        try {
+//            emailSender.send(message);
+//            redisService.createEmailCertification(email, ePw);
+//            UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
+//            if(userConfirmEntity == null){
+//                userConfirmRepository.save(UserConfirmEntity.builder()
+//                        .confirmKey(ePw)
+//                        .email(email)
+//                        .build());
+//            } else {
+//                userConfirmEntity.setConfirmKey(ePw);
+//                userConfirmRepository.save(userConfirmEntity);
+//            }
+//            log.info("이메일 확인 인증 코드 전송, {}, pw", email, ePw);
+//            return "success";
+//        } catch (MailException es) {
+//            es.printStackTrace();
+//            throw new IllegalArgumentException();
+//        }
+//    }
+
+
+
+
+
+
 
     @Override
     public String sendConfirmCodeByEmail(String email) throws Exception {

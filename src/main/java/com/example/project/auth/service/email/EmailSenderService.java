@@ -5,6 +5,8 @@ public interface EmailSenderService {
 
     String sendEmailPwd(String to) throws Exception;
 
+    String sendEmailNewEmail(String email) throws Exception;
+
     String sendConfirmCodeByEmail(String email) throws Exception;
 
     String sendReissuePassword(String email) throws Exception;

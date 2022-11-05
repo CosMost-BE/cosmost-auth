@@ -25,29 +25,32 @@ public class AuthorizationEmailController {
         this.emailSenderService = emailSenderService;
     }
 
-    // 이메일 인증코드 발송
+    // 회원가입 시 이메일 인증코드 발송
+    @GetMapping("/email/confirm/{email}")
+    public String createConfirmCodeByEmail(@PathVariable String email) throws Exception {
+        return emailSenderService.sendConfirmCodeByEmail(email);
+    }
+
+    // 아이디 찾기 시 이메일 인증코드 발송
     @GetMapping("/id/confirm/{email}")
     public String findId(@PathVariable String email) throws Exception {
         return emailSenderService.sendEmailId(email);
 
     }
 
+    // 비밀번호 찾기 시 이메일 인증코드 발송
     @GetMapping("/pwd/confirm/{email}")
     public String findPw(@PathVariable String email) throws Exception {
         return emailSenderService.sendEmailPwd(email);
     }
 
-    @GetMapping("/email/confirm/{email}")
-    public String createConfirmCodeByEmail(@PathVariable String email) throws Exception {
-        return emailSenderService.sendConfirmCodeByEmail(email);
+    // 이메일 변경 시 이메일 인증 코드 발송
+    @GetMapping("/newemail/confirm/{email}")
+    public String update(@PathVariable String email) throws Exception {
+        return emailSenderService.sendEmailNewEmail(email);
     }
 
-    // 중복이메일 체크
-    @GetMapping("/duplicate/email/{email}")
-    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String code, String email) throws Exception {
-        log.info("checkEmailDuplicate, {}", email);
-        return ResponseEntity.status(HttpStatus.OK).body(emailSenderService.checkEmailDuplicate(code, email));
-    }
+
 
     // 회원가입 시 이메일 인증코드 확인
     @GetMapping("/code/confirm/{code}/{email}")
