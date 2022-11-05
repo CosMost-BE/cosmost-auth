@@ -1,8 +1,6 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.exception.EmailCodeException;
-import com.example.project.auth.infrastructure.entity.AuthEntity;
-import com.example.project.auth.service.email.EmailConfirmService;
 import com.example.project.auth.service.email.EmailConfirmServiceImpl;
 import com.example.project.auth.service.email.EmailSenderServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @Slf4j
 @RequestMapping("/v1/authorization")

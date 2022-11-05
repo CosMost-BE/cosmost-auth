@@ -23,6 +23,7 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
                 .paths(PathSelectors.any())
                 .build();
     }
+
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("CosMost Back API ")
@@ -30,5 +31,4 @@ public class SwaggerConfiguration implements WebMvcConfigurer {
                 .version("1.0.0")
                 .build();
     }
-
 }

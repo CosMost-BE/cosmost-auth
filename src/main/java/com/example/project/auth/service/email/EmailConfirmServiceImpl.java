@@ -78,6 +78,8 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
         log.info("############" + authEntity.getId());
         log.info("############" + authEntity.getLoginPwd());
 
+//        authEntity.changePwd(newpwd);
+
         return authEntityRepository.save(
                 AuthEntity.builder()
                         .id(id)
