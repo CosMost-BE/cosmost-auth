@@ -42,6 +42,10 @@ public class AuthView {
 
     private AuthMarried married;
 
+//    public void changePw(String newpwd) {
+//        this.loginPwd = new BCryptPasswordEncoder().encode(newpwd);
+//    }
+
     public AuthView(Auth auth) {
         this.id = auth.getId();
         this.profileImgOriginName = auth.getProfileImgOriginName();
