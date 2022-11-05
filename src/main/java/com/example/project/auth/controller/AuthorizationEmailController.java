@@ -42,12 +42,12 @@ public class AuthorizationEmailController {
         return emailSenderService.sendConfirmCodeByEmail(email);
     }
 
-    // 중복이메일 체크
-    @GetMapping("/duplicate/email/{email}")
-    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String code, String email) throws Exception {
-        log.info("checkEmailDuplicate, {}", email);
-        return ResponseEntity.status(HttpStatus.OK).body(emailSenderService.checkEmailDuplicate(code, email));
-    }
+//    // 중복이메일 체크
+//    @GetMapping("/duplicate/email/{email}")
+//    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String code, String email) throws Exception {
+//        log.info("checkEmailDuplicate, {}", email);
+//        return ResponseEntity.status(HttpStatus.OK).body(emailSenderService.checkEmailDuplicate(code, email));
+//    }
 
     // 회원가입 시 이메일 인증코드 확인
     @GetMapping("/code/confirm/{code}/{email}")
