@@ -114,29 +114,30 @@ public class AuthServiceImpl implements AuthService {
 
     @Override // 회원 탈퇴
     @Transactional
-    public boolean deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest,
+    public void deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest,
                                   MultipartFile file) throws WithdrawalCheckNotFound {
-            String authId = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
-            Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(authId));
+        String authId = jwtTokenProvider.getUserPk(jwtTokenProvider.getToken(request));
+        Optional<AuthEntity> auth = authEntityRepository.findById(Long.valueOf(authId));
 
-            String securePwd = passwordEncoder.encode(updateAuthRequest.getLoginPwd());
-            System.out.println("@@@@@@@@@@@@@" + securePwd);
+        String securePwd = passwordEncoder.encode(updateAuthRequest.getLoginPwd());
+        System.out.println("@@@@@@@@@@@@@" + securePwd);
 
-            // 회원가입시 비밀번호
-            String oldPwd = auth.get().getLoginPwd();
-            // 회원탈퇴 시 비밀번호
-            String pwd = updateAuthRequest.getLoginPwd();
+        // 회원가입시 비밀번호
+        String oldPwd = auth.get().getLoginPwd();
+        // 회원탈퇴 시 비밀번호
+        String pwd = updateAuthRequest.getLoginPwd();
 
-            Optional<AuthEntity> authInfo = Optional.ofNullable(
-                    authEntityRepository.findById(Long.valueOf(authId)).orElseThrow(
-                            UpdateAuthFail::new));
+        Optional<AuthEntity> authInfo = Optional.ofNullable(
+                authEntityRepository.findById(Long.valueOf(authId)).orElseThrow(
+                        UpdateAuthFail::new));
 
-            if (authInfo.isPresent()) {
-                if (auth.isPresent() && passwordEncoder.matches(pwd, oldPwd)) {
-                    authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.get().getId(), updateAuthRequest, securePwd));
-                }
+        if (authInfo.isPresent()) {
+            if (auth.isPresent() && passwordEncoder.matches(pwd, oldPwd)) {
+                authEntityRepository.save(updateAuthRequest.infoDtoEntity(auth.get().getId(), updateAuthRequest, securePwd));
+            } else {
+                throw new WithdrawalCheckNotFound();
             }
-        return false;
+        }
     }
 
     @Override // 회원정보 수정

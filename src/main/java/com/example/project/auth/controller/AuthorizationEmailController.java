@@ -1,6 +1,7 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.exception.EmailCodeException;
+import com.example.project.auth.requestbody.UpdateEmailRequest;
 import com.example.project.auth.service.email.EmailConfirmServiceImpl;
 import com.example.project.auth.service.email.EmailSenderServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 
 @Slf4j
@@ -25,31 +29,36 @@ public class AuthorizationEmailController {
         this.emailSenderService = emailSenderService;
     }
 
-    // 이메일 인증코드 발송
-    @GetMapping("/id/confirm/{email}")
-    public String findId(@PathVariable String email) throws Exception {
-        return emailSenderService.sendEmailId(email);
-
-    }
-
-    @GetMapping("/pwd/confirm/{email}")
-    public String findPw(@PathVariable String email) throws Exception {
-        return emailSenderService.sendEmailPwd(email);
-    }
-
+    // 회원가입 시 이메일 인증코드 발송
     @GetMapping("/email/confirm/{email}")
     public String createConfirmCodeByEmail(@PathVariable String email) throws Exception {
         return emailSenderService.sendConfirmCodeByEmail(email);
     }
 
-//    // 중복이메일 체크
-//    @GetMapping("/duplicate/email/{email}")
-//    public ResponseEntity<Boolean> checkEmailDuplicate(@PathVariable String code, String email) throws Exception {
-//        log.info("checkEmailDuplicate, {}", email);
-//        return ResponseEntity.status(HttpStatus.OK).body(emailSenderService.checkEmailDuplicate(code, email));
-//    }
+    // 아이디 찾기 시 이메일 인증코드 발송
+    @GetMapping("/id/confirm/{email}")
+    public String findId(@PathVariable String email) throws Exception {
+        return emailSenderService.sendEmailId(email);
+    }
 
-    // 회원가입 시 이메일 인증코드 확인
+    // 비밀번호 찾기 시 이메일 인증코드 발송
+    @GetMapping("/pwd/confirm/{email}")
+    public String findPw(@PathVariable String email) throws Exception {
+        return emailSenderService.sendEmailPwd(email);
+    }
+
+    // 변경된 이메일로 이메일 코드 전송
+    @PutMapping("/newemail/confirm/{email}")
+    public String updateEmail(@PathVariable String email, @RequestBody UpdateEmailRequest updateEmailRequest, HttpServletRequest request) throws Exception {
+        return emailSenderService.sendEmailNewEmail(email, updateEmailRequest, request);
+    }
+
+
+
+
+
+    // 검증 단계
+    // 회원가입 시 이메일 인증코드 검증
     @GetMapping("/code/confirm/{code}/{email}")
     public ResponseEntity<Boolean> userEmailConfirm(@PathVariable String code, @PathVariable String email) {
         log.info("userEmailConfirm, {}, {}", code, email);
@@ -81,5 +90,14 @@ public class AuthorizationEmailController {
         log.info("userNewpasswordReissue, {}, {}", id, newpwd);
         emailConfirmService.userNewpasswordReissue(id, newpwd);
         return ResponseEntity.status(HttpStatus.OK).body("새로운 비밀번호가 저장되었습니다.");
+    }
+
+
+    // 이메일 인증 코드 검증 후 변경된 이메일 반영
+    @PutMapping("/newemail/reissue/{code}/{email}")
+    public ResponseEntity<Object> userNewEmailReissue(@PathVariable String code, @PathVariable String email, HttpServletRequest request, @Valid UpdateEmailRequest updateEmailRequest) throws EmailCodeException {
+        log.info("userPasswordReissue, {}, {}", code, email);
+        emailConfirmService.userNewEmailReissue(code, email, request, updateEmailRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userNewEmailReissue(code, email, request, updateEmailRequest));
     }
 }

@@ -1,6 +1,7 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.exception.TypeNotFound;
+import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.service.AuthService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Slf4j
 @RequestMapping(value = "/v1/auths")
@@ -35,25 +37,24 @@ public class AuthController {
     @PutMapping("")
     public ResponseEntity<?> updateAuthInfo(@RequestPart @Valid UpdateAuthRequest updateAuthRequest, HttpServletRequest request,
                                             @RequestPart(value="file", required = false) MultipartFile file) {
+
         if (updateAuthRequest.getType().equals("회원정보 수정")) {
             authService.updateAuthInfo(updateAuthRequest, request, file);
             return ResponseEntity.ok("회원정보가 수정되었습니다.");
-        }
-        else if (updateAuthRequest.getType().equals("회원 탈퇴")) {
-            Boolean auth = authService.deleteAuthInfo(request, updateAuthRequest, file);
-            if (auth != null) {
-                authService.deleteAuthInfo(request, updateAuthRequest, file);
-                return ResponseEntity.ok("회원탈퇴가 되었습니다.");
-            }
-            throw new TypeNotFound();
-        }
 
-        else if (updateAuthRequest.getType().equals("비밀번호 수정")) {
+        } else if (updateAuthRequest.getType().equals("회원 탈퇴")) {
+            authService.deleteAuthInfo(request, updateAuthRequest, file);
+            return ResponseEntity.ok("회원탈퇴가 되었습니다.");
+
+        } else if (updateAuthRequest.getType().equals("비밀번호 수정")) {
             authService.updatePassword(updateAuthRequest, request, file);
             return ResponseEntity.ok("비밀번호가 수정되었습니다.");
+
+        } else {
+            throw new TypeNotFound();
         }
-        return null;
     }
+
 
 
     // 사용자 조회

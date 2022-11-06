@@ -1,9 +1,12 @@
 package com.example.project.auth.service.email;
 
+import com.example.project.auth.configuration.util.JwtTokenProvider;
 import com.example.project.auth.exception.EmailCodeException;
+import com.example.project.auth.exception.UpdateAuthFail;
 import com.example.project.auth.infrastructure.entity.*;
 import com.example.project.auth.infrastructure.repository.AuthEntityRepository;
 import com.example.project.auth.infrastructure.repository.UserConfirmRepository;
+import com.example.project.auth.requestbody.UpdateEmailRequest;
 import com.example.project.auth.service.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @PropertySource(value = "classpath:/application-email.yml")
@@ -31,6 +35,7 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
     private final AuthEntityRepository authEntityRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RedisService redisService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     public boolean userEmailConfirm(String code, String email) {
@@ -69,7 +74,6 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
         }
     }
 
-
     // 비밀번호 찾기 시 새 비밀번호 입력 할 때
     @Override
     public AuthEntity userNewpasswordReissue(Long id, String newpwd) {
@@ -78,7 +82,7 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
         log.info("############" + authEntity.getId());
         log.info("############" + authEntity.getLoginPwd());
 
-//        authEntity.changePwd(newpwd);
+
 
         return authEntityRepository.save(
                 AuthEntity.builder()
@@ -97,5 +101,18 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
                         .profileImgSaveName(authEntity.getProfileImgSaveName())
                         .profileImgSaveUrl(authEntity.getProfileImgSaveUrl())
                         .build());
+    }
+
+    @Override
+    public AuthEntity userNewEmailReissue(String code, String email, HttpServletRequest request, UpdateEmailRequest updateEmailRequest) {
+
+        String token = jwtTokenProvider.getToken(request);
+        Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
+
+        Optional<AuthEntity> authInfo = Optional.ofNullable(
+                authEntityRepository.findById(id).orElseThrow(
+                        UpdateAuthFail::new));
+
+        return authEntityRepository.save(updateEmailRequest.infoEmailDtoEntity(id, updateEmailRequest, email));
     }
 }

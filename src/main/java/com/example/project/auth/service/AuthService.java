@@ -7,6 +7,7 @@ import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.requestbody.UpdateLoginRequest;
 import com.example.project.auth.requestbody.CreateOAuthRequest;
+import com.example.project.auth.view.AuthView;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +30,7 @@ public interface AuthService {
     String updateLoginAuth(UpdateLoginRequest updateLoginRequest);
 
     // 회원 탈퇴
-    boolean deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest,
+    void deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest,
                            MultipartFile file) throws WithdrawalCheckNotFound;
 
     // 회원정보 수정
