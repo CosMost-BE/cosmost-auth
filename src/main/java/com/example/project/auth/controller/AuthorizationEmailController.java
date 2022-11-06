@@ -57,11 +57,6 @@ public class AuthorizationEmailController {
 
 
 
-
-
-
-
-
     // 검증 단계
     // 회원가입 시 이메일 인증코드 검증
     @GetMapping("/code/confirm/{code}/{email}")
