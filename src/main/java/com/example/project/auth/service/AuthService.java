@@ -30,7 +30,7 @@ public interface AuthService {
     String updateLoginAuth(UpdateLoginRequest updateLoginRequest);
 
     // 회원 탈퇴
-    boolean deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest,
+    void deleteAuthInfo(HttpServletRequest request, UpdateAuthRequest updateAuthRequest,
                            MultipartFile file) throws WithdrawalCheckNotFound;
 
     // 회원정보 수정
