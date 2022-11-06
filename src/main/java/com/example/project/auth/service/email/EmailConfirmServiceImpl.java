@@ -103,16 +103,22 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
                         .build());
     }
 
-    @Override
-    public AuthEntity userNewEmailReissue(String code, String email, HttpServletRequest request, UpdateEmailRequest updateEmailRequest) {
+
+    // 이메일 변경 시 인증코드 검증
+   @Override
+    public void userNewEmailReissue(String code, String email, HttpServletRequest request, UpdateEmailRequest updateEmailRequest) {
 
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
 
-        Optional<AuthEntity> authInfo = Optional.ofNullable(
-                authEntityRepository.findById(id).orElseThrow(
-                        UpdateAuthFail::new));
+        BCryptPasswordEncoder bCryptPasswordEncoder1 = new BCryptPasswordEncoder();
 
-        return authEntityRepository.save(updateEmailRequest.infoEmailDtoEntity(id, updateEmailRequest, email));
+        Optional<AuthEntity> authInfo = Optional.ofNullable(
+               authEntityRepository.findById(id).orElseThrow(
+                       UpdateAuthFail::new));
+
+        String securePwd = bCryptPasswordEncoder1.encode(authInfo.get().getLoginPwd());
+
+        authEntityRepository.save(updateEmailRequest.infoEmailDtoEntity(id, updateEmailRequest, email, securePwd));
     }
 }

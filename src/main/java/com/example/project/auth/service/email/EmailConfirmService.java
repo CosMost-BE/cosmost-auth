@@ -18,5 +18,5 @@ public interface EmailConfirmService {
     AuthEntity userNewpasswordReissue(Long id, String newpwd);
 
     // 이메일 변경 시
-    AuthEntity userNewEmailReissue(String code, String email, HttpServletRequest request, UpdateEmailRequest updateEmailRequest);
+    void userNewEmailReissue(String code, String email, HttpServletRequest request, UpdateEmailRequest updateEmailRequest);
 }

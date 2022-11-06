@@ -57,7 +57,7 @@ public class AuthorizationEmailController {
 
 
 
-    // 검증 단계
+    // 검증 단계 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     // 회원가입 시 이메일 인증코드 검증
     @GetMapping("/code/confirm/{code}/{email}")
     public ResponseEntity<Boolean> userEmailConfirm(@PathVariable String code, @PathVariable String email) {
@@ -93,11 +93,15 @@ public class AuthorizationEmailController {
     }
 
 
+
+
+
+    // 검증 단계 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     // 이메일 인증 코드 검증 후 변경된 이메일 반영
     @PutMapping("/newemail/reissue/{code}/{email}")
-    public ResponseEntity<Object> userNewEmailReissue(@PathVariable String code, @PathVariable String email, HttpServletRequest request, @Valid UpdateEmailRequest updateEmailRequest) throws EmailCodeException {
+    public ResponseEntity<String> userNewEmailReissue(@PathVariable String code, @PathVariable String email, HttpServletRequest request, @RequestBody @Valid UpdateEmailRequest updateEmailRequest) throws EmailCodeException {
         log.info("userPasswordReissue, {}, {}", code, email);
         emailConfirmService.userNewEmailReissue(code, email, request, updateEmailRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(emailConfirmService.userNewEmailReissue(code, email, request, updateEmailRequest));
+        return ResponseEntity.status(HttpStatus.OK).body("이메일이 변경되었습니다.");
     }
 }
