@@ -1,5 +1,6 @@
 package com.example.project.auth.requestbody;
 
+import com.example.project.auth.configuration.util.JwtTokenProvider;
 import com.example.project.auth.infrastructure.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,10 +44,10 @@ public class UpdateEmailRequest {
 
     private String type;
 
-    public AuthEntity infoEmailDtoEntity(Long id, UpdateEmailRequest updateEmailRequest, String email) {
+    public AuthEntity infoEmailDtoEntity(Long id, UpdateEmailRequest updateEmailRequest, String email, String securePwd) {
         return AuthEntity.builder()
                 .id(id)
-                .loginPwd(updateEmailRequest.getLoginPwd())
+                .loginPwd(securePwd)
                 .loginId(updateEmailRequest.getLoginId())
                 .nickname(updateEmailRequest.getNickname())
                 .email(email)
