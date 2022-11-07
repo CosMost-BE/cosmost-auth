@@ -29,10 +29,11 @@ public class AuthorizationEmailController {
         this.emailSenderService = emailSenderService;
     }
 
+    // 발송
     // 회원가입 시 이메일 인증코드 발송
     @GetMapping("/email/confirm/{email}")
-    public String createConfirmCodeByEmail(@PathVariable String email) throws Exception {
-        return emailSenderService.sendConfirmCodeByEmail(email);
+    public String createConfirmCodeByEmail(@PathVariable String email, HttpServletRequest request) throws Exception {
+        return emailSenderService.sendConfirmCodeByEmail(email, request);
     }
 
     // 아이디 찾기 시 이메일 인증코드 발송
@@ -57,7 +58,7 @@ public class AuthorizationEmailController {
 
 
 
-    // 검증 단계 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // 검증
     // 회원가입 시 이메일 인증코드 검증
     @GetMapping("/code/confirm/{code}/{email}")
     public ResponseEntity<Boolean> userEmailConfirm(@PathVariable String code, @PathVariable String email) {
@@ -92,11 +93,6 @@ public class AuthorizationEmailController {
         return ResponseEntity.status(HttpStatus.OK).body("새로운 비밀번호가 저장되었습니다.");
     }
 
-
-
-
-
-    // 검증 단계 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     // 이메일 인증 코드 검증 후 변경된 이메일 반영
     @PutMapping("/newemail/reissue/{code}/{email}")
     public ResponseEntity<String> userNewEmailReissue(@PathVariable String code, @PathVariable String email, HttpServletRequest request, @RequestBody @Valid UpdateEmailRequest updateEmailRequest) throws EmailCodeException {

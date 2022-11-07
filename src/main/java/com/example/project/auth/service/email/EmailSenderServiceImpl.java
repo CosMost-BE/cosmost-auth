@@ -324,11 +324,14 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
 
     @Override
-    public String sendConfirmCodeByEmail(String email) throws Exception {
+    public String sendConfirmCodeByEmail(String email, HttpServletRequest request) throws Exception {
         String ePw = createKey();
         MimeMessage message = createEmailConfirmMessage(email, ePw); // 회원가입 시 이메일 사용 인증
 
-        try {
+        Optional<AuthEntity> authEntity = Optional.ofNullable(authEntityRepository.findByEmail(email));
+        if (authEntity.isPresent()) {
+            return "이메일이 중복됩니다.";
+        } else {
             emailSender.send(message);
             redisService.createEmailCertification(email, ePw);
             UserConfirmEntity userConfirmEntity = userConfirmRepository.findByEmail(email);
@@ -344,10 +347,6 @@ public class EmailSenderServiceImpl implements EmailSenderService {
 
             log.info("이메일 확인 인증 코드 전송, {}, pw", email, ePw);
             return "success";
-
-        } catch (MailException es) {
-            es.printStackTrace();
-            throw new IllegalArgumentException();
         }
     }
 

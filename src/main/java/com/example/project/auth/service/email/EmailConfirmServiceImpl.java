@@ -37,6 +37,8 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
     private final RedisService redisService;
     private final JwtTokenProvider jwtTokenProvider;
 
+
+    // 회원가입 시 인증코드 검증
     @Override
     public boolean userEmailConfirm(String code, String email) {
         if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
@@ -48,6 +50,8 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
         return true;
     }
 
+
+    // 아이디 찾기 시 인증코드 검증
     @Override
     public String userIdReissue(String code, String email) throws EmailCodeException {
         if (redisService.hasKey(email) && redisService.getEmailCertification(email).equals(code)) {
