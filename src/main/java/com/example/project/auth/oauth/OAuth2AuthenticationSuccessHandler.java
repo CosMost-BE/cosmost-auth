@@ -78,7 +78,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private String sendExistInfoToRedirectUrI(String token, Long userId) {
-        return UriComponentsBuilder.fromUriString("http://localhost:9001/login/oauth2/code/social"
+        return UriComponentsBuilder.fromUriString("https://cosmost-fe.vercel.app/"
                         + "/userId=" + userId + "/role=" + AuthRole.USER)
                 .build().toUriString();
     }
@@ -92,7 +92,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String encode = URLEncoder.encode(nickName, StandardCharsets.UTF_8);
 
-        return UriComponentsBuilder.fromUriString("http://localhost:9001/login/oauth2/code/social" + e + email + n + encode + p + profileImg + a + ageGroup + s + socialType)
+        return UriComponentsBuilder.fromUriString("https://cosmost-fe.vercel.app/" + e + email + n + encode + p + profileImg + a + ageGroup + s + socialType)
                 .build().toUriString();
     }
 
@@ -104,7 +104,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String s = "/socialType=";
 
         String encode = URLEncoder.encode(nickName, StandardCharsets.UTF_8);
-        return UriComponentsBuilder.fromUriString("http://localhost:9001/login/oauth2/code/social" + e + email
+        return UriComponentsBuilder.fromUriString("https://cosmost-fe.vercel.app/" + e + email
                         + n + encode + p + profileImg + a + ageGroup + s + socialType)
                 .build().toUriString();
     }
