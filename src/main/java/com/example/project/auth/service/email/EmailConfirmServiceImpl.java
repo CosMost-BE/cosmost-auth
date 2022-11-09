@@ -115,13 +115,11 @@ public class EmailConfirmServiceImpl implements EmailConfirmService {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
 
-        BCryptPasswordEncoder bCryptPasswordEncoder1 = new BCryptPasswordEncoder();
-
         Optional<AuthEntity> authInfo = Optional.ofNullable(
                authEntityRepository.findById(id).orElseThrow(
                        UpdateAuthFail::new));
 
-        String securePwd = bCryptPasswordEncoder1.encode(authInfo.get().getLoginPwd());
+        String securePwd = authInfo.get().getLoginPwd();
 
         authEntityRepository.save(updateEmailRequest.infoEmailDtoEntity(id, updateEmailRequest, email, securePwd));
     }

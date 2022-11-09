@@ -22,9 +22,6 @@ public class AuthView {
     private String profileImgSaveName;
     private String profileImgSaveUrl;
     private String nickname;
-
-    // loginId, email, address, role, sns, status
-
     private String loginId;
     private String email;
     private String address;
@@ -32,18 +29,10 @@ public class AuthView {
     private AuthRole role;
     private AuthSns sns;
     private AuthStatus status;
-
-
-    // front feedback
     private String loginPwd;
 
     private String ageGroup;
-
     private AuthMarried married;
-
-//    public void changePw(String newpwd) {
-//        this.loginPwd = new BCryptPasswordEncoder().encode(newpwd);
-//    }
 
     public AuthView(Auth auth) {
         this.id = auth.getId();
@@ -57,8 +46,6 @@ public class AuthView {
         this.role = auth.getRole();
         this.sns = auth.getSns();
         this.status = auth.getStatus();
-
-        // front feedback
         this.loginPwd = auth.getLoginPwd();
         this.ageGroup = auth.getAgeGroup();
         this.married = auth.getMarried();

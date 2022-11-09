@@ -1,7 +1,6 @@
 package com.example.project.auth.controller;
 
 import com.example.project.auth.exception.TypeNotFound;
-import com.example.project.auth.infrastructure.entity.AuthEntity;
 import com.example.project.auth.requestbody.CreateAuthRequest;
 import com.example.project.auth.requestbody.UpdateAuthRequest;
 import com.example.project.auth.service.AuthService;

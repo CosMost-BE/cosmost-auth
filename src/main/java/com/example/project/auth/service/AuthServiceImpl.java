@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
     @Override // 회원가입
     public AuthEntity createAuth(CreateAuthRequest createAuthRequest, MultipartFile file) {
 
-        FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img"); // 폴더이름
+        FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img");
         amazonS3ResourceStorage.store(fileInfoRequest, file);
 
         return authEntityRepository.save(
@@ -100,7 +100,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override // 로그인
     public String updateLoginAuth(UpdateLoginRequest updateLoginRequest) {
-        // optional
         Optional<AuthEntity> auth = authEntityRepository.findByLoginId(updateLoginRequest.getLoginId());
 
         // 회원가입했는지 비교, 넘겨받은 비밀번호와 암호화된 비밀번호 비교, 소셜 회원가입 여부 비교, 회원탈퇴 비교
@@ -147,17 +146,17 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtTokenProvider.getToken(request);
         Long id = Long.valueOf(jwtTokenProvider.getUserPk(token));
 
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        // 비밀번호 암호화하여 다시 user 객체에 저장
-//        String securePwd = encoder.encode(updateAuthRequest.getLoginPwd());
 
         Optional<AuthEntity> authInfo = Optional.ofNullable(
                 authEntityRepository.findById(id).orElseThrow(
                         UpdateAuthFail::new));
 
+        // 회원가입 시 비밀번호
         String securePwd = authInfo.get().getLoginPwd();
 
-        if (authInfo.isPresent()) {
+        if (authInfo.isPresent() && encoder.matches(updateAuthRequest.getLoginPwd(), securePwd)) {
             if (!file.isEmpty()) {
                 FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img"); // 폴더이름
                 amazonS3ResourceStorage.store(fileInfoRequest, file);
@@ -167,10 +166,15 @@ public class AuthServiceImpl implements AuthService {
                 authEntityRepository.save(authEntity);
 
             } else {
-                AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(),
-                        updateAuthRequest, securePwd);
+                FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img"); // 폴더이름
+                amazonS3ResourceStorage.store(fileInfoRequest, file);
+
+                AuthEntity authEntity = updateAuthRequest.infoAllDtoEntity(authInfo.get().getId(),
+                        updateAuthRequest, securePwd, fileInfoRequest);
                 authEntityRepository.save(authEntity);
             }
+        } else {
+            throw new UpdateAuthFail();
         }
     }
 
@@ -201,9 +205,7 @@ public class AuthServiceImpl implements AuthService {
                         updateAuthRequest, newPwd);
                 authEntityRepository.save(authEntity);
             } else {
-                AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(),
-                        updateAuthRequest, newPwd);
-                authEntityRepository.save(authEntity);
+                throw new UpdatePasswordFail();
             }
         }
     }

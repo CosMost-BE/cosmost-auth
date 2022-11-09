@@ -19,6 +19,8 @@ public class AuthControllerAdvice {
                 .body(exception.getMessage());
     }
 
+
+
     @ExceptionHandler(DuplicatedNickname.class)
     public ResponseEntity<String> DuplicatedNameException(DuplicatedNickname exception) {
         return ResponseEntity
@@ -64,7 +66,7 @@ public class AuthControllerAdvice {
     }
 
     @ExceptionHandler(UpdatePasswordFail.class)
-    public ResponseEntity<String> UpdatePasswordFailException(UpdateAuthFail exception) {
+    public ResponseEntity<String> UpdatePasswordFailException(UpdatePasswordFail exception) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(exception.getMessage());
