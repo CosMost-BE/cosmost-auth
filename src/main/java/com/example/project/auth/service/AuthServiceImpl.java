@@ -157,7 +157,9 @@ public class AuthServiceImpl implements AuthService {
         String securePwd = authInfo.get().getLoginPwd();
 
         if (authInfo.isPresent() && encoder.matches(updateAuthRequest.getLoginPwd(), securePwd)) {
-            if (!file.isEmpty()) {
+
+
+            if (file!= null && !file.isEmpty()) {
                 FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img"); // 폴더이름
                 amazonS3ResourceStorage.store(fileInfoRequest, file);
 
