@@ -168,11 +168,8 @@ public class AuthServiceImpl implements AuthService {
                 authEntityRepository.save(authEntity);
 
             } else {
-                FileInfoRequest fileInfoRequest = FileInfoRequest.multipartOf(file, "profile_img"); // 폴더이름
-                amazonS3ResourceStorage.store(fileInfoRequest, file);
-
-                AuthEntity authEntity = updateAuthRequest.infoAllDtoEntity(authInfo.get().getId(),
-                        updateAuthRequest, securePwd, fileInfoRequest);
+                AuthEntity authEntity = updateAuthRequest.infoDtoEntity(authInfo.get().getId(),
+                        updateAuthRequest, securePwd);
                 authEntityRepository.save(authEntity);
             }
         } else {
