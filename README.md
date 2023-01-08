@@ -63,7 +63,6 @@
 | Language | Java (JDK 11.0.15) </br>JavaScript |
 | IDE | Intellij IDEA </br>Visual Studio Code |
 | Collaboration tool | GitHub, Notion |
-| Build | Gradle |
  
   
   
