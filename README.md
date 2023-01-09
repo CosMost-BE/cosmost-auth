@@ -1,7 +1,7 @@
 
 # cosMost - 팀 NiceCream (백엔드)
 > ### [공유하세요 당신만의 코스를 바로 지금](https://cosmost.vercel.app/) 
-### [Notion](https://www.notion.so/cosMost-By-Team-NiceCream-e9dd51c66b0f4749917e041bd30087f2)
+### [Notion](https://colorful-dancer-5f4.notion.site/cosMost-By-Team-NiceCream-e9dd51c66b0f4749917e041bd30087f2)
    
 　  
 ## Description
